@@ -1,7 +1,8 @@
 {
   "env": {
     "es2021": true,
-    "node": true
+    "node": true,
+    "jest/globals": true
   },
   "extends": [
     "standard"
@@ -12,9 +13,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": [ "@typescript-eslint", "jest"],
   "rules": {
     "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/no-redeclare": ["error"],
@@ -22,6 +21,12 @@
     "brace-style": "off",
     "camelcase": 0,
     "comma-dangle": ["error", "always-multiline"],
+    "indent": ["error", 2, { "ignoredNodes": ["PropertyDefinition"] }],
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "warn",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error",
     "no-redeclare": "off",
     "no-useless-constructor": 0,
     "no-use-before-define": 0,
