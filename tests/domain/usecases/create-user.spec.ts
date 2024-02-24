@@ -43,4 +43,12 @@ describe('CreateUser', () => {
 
     await expect(promise).rejects.toThrow(new EmailAlreadyExistsError());
   });
+
+  it('should rethrow if LoadUserRepository throws', async () => {
+    loadUserRepository.load.mockRejectedValueOnce(new Error('load_user_repository_error'));
+
+    const promise = sut(user);
+
+    await expect(promise).rejects.toThrow(new Error('load_user_repository_error'));
+  });
 });
