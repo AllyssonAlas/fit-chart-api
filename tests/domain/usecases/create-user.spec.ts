@@ -1,8 +1,9 @@
 import { mock, MockProxy } from 'jest-mock-extended';
 
 import { CreateUser, setupCreateUser } from '@/domain/usecases';
-import { EmailAlreadyExistsError } from '@/domain/errors';
 import { LoadUserRepository } from '@/domain/contracts/repositories';
+import { HashGenerator } from '@/domain/contracts/gateways';
+import { EmailAlreadyExistsError } from '@/domain/errors';
 
 describe('CreateUser', () => {
   const user = {
@@ -21,12 +22,14 @@ describe('CreateUser', () => {
     },
   };
 
-  let loadUserRepository: MockProxy<LoadUserRepository>;
   let sut: MockProxy<CreateUser>;
+  let loadUserRepository: MockProxy<LoadUserRepository>;
+  let hashGenerator: MockProxy<HashGenerator>;
 
   beforeEach(() => {
+    hashGenerator = mock();
     loadUserRepository = mock();
-    sut = setupCreateUser(loadUserRepository);
+    sut = setupCreateUser(loadUserRepository, hashGenerator);
   });
 
   it('Should call LoadUserRepository with correct input', async () => {
@@ -50,5 +53,12 @@ describe('CreateUser', () => {
     const promise = sut(user);
 
     await expect(promise).rejects.toThrow(new Error('load_user_repository_error'));
+  });
+
+  it('Should call HashGenerator with correct input', async () => {
+    await sut(user);
+
+    expect(hashGenerator.generate).toHaveBeenCalledWith({ plainText: 'any_password' });
+    expect(hashGenerator.generate).toHaveBeenCalledTimes(1);
   });
 });
