@@ -1,4 +1,5 @@
 import { LoadUserRepository } from '@/domain/contracts/repositories';
+import { EmailAlreadyExistsError } from '@/domain/errors';
 
 type Input = {
   name: string;
@@ -22,6 +23,9 @@ type Setup = (loadUserRepository: LoadUserRepository) => CreateUser
 
 export const setupCreateUser: Setup = (loadUserRepository) => {
   return async (input) => {
-    await loadUserRepository.load({ email: input.email });
+    const user = await loadUserRepository.load({ email: input.email });
+    if (user) {
+      throw new EmailAlreadyExistsError();
+    }
   };
 };
