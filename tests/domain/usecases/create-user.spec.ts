@@ -47,7 +47,7 @@ describe('CreateUser', () => {
     await expect(promise).rejects.toThrow(new EmailAlreadyExistsError());
   });
 
-  it('should rethrow if LoadUserRepository throws', async () => {
+  it('Should rethrow if LoadUserRepository throws', async () => {
     loadUserRepository.load.mockRejectedValueOnce(new Error('load_user_repository_error'));
 
     const promise = sut(user);
@@ -60,5 +60,13 @@ describe('CreateUser', () => {
 
     expect(hashGenerator.generate).toHaveBeenCalledWith({ plainText: 'any_password' });
     expect(hashGenerator.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should rethrow if HashGenerator throws', async () => {
+    hashGenerator.generate.mockRejectedValueOnce(new Error('hahser_generator_error'));
+
+    const promise = sut(user);
+
+    await expect(promise).rejects.toThrow(new Error('hahser_generator_error'));
   });
 });
