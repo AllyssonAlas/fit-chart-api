@@ -1,6 +1,7 @@
 import { mock, MockProxy } from 'jest-mock-extended';
 
 import { CreateUser, setupCreateUser } from '@/domain/usecases';
+import { EmailAlreadyExistsError } from '@/domain/errors';
 import { LoadUserRepository } from '@/domain/contracts/repositories';
 
 describe('CreateUser', () => {
@@ -33,5 +34,13 @@ describe('CreateUser', () => {
 
     expect(loadUserRepository.load).toHaveBeenCalledWith({ email: 'any_email@mail.com' });
     expect(loadUserRepository.load).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should throw an EmailAlreadyExistsError if LoadUserRepository returns an user', async () => {
+    loadUserRepository.load.mockResolvedValue({ ...user, id: 'any_id' });
+
+    const promise = sut(user);
+
+    await expect(promise).rejects.toThrow(new EmailAlreadyExistsError());
   });
 });
