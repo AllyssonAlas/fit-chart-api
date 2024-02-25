@@ -75,6 +75,14 @@ describe('CreateUser', () => {
     await expect(promise).rejects.toThrow(new NonexistentRoleError());
   });
 
+  it('Should rethrow if LoadRoleRepository throws', async () => {
+    roleRepository.load.mockRejectedValueOnce(new Error('load_role_repository_error'));
+
+    const promise = sut(user);
+
+    await expect(promise).rejects.toThrow(new Error('load_role_repository_error'));
+  });
+
   it('Should call HashGenerator with correct input', async () => {
     await sut(user);
 
