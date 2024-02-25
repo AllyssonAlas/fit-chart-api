@@ -78,4 +78,12 @@ describe('CreateUser', () => {
     expect(userRepository.save).toHaveBeenCalledWith({ ...user, password: 'hashed_text' });
     expect(userRepository.save).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if SaveUserRepository throws', async () => {
+    userRepository.save.mockRejectedValueOnce(new Error('save_user_repository_error'));
+
+    const promise = sut(user);
+
+    await expect(promise).rejects.toThrow(new Error('save_user_repository_error'));
+  });
 });
