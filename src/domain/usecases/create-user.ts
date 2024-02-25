@@ -1,4 +1,4 @@
-import { LoadUserRepository, SaveUserRepository } from '@/domain/contracts/repositories';
+import { LoadUserRepository, SaveUserRepository, LoadRoleRepository } from '@/domain/contracts/repositories';
 import { HashGenerator } from '@/domain/contracts/gateways';
 import { EmailAlreadyExistsError } from '@/domain/errors';
 
@@ -20,14 +20,15 @@ type Input = {
 };
 type Output = void
 export type CreateUser = (input: Input) => Promise<Output>
-type Setup = (userRepository: LoadUserRepository & SaveUserRepository, hasher: HashGenerator) => CreateUser
+type Setup = (userRepository: LoadUserRepository & SaveUserRepository, roleRepository: LoadRoleRepository, hasher: HashGenerator) => CreateUser
 
-export const setupCreateUser: Setup = (userRepository, hasher) => {
+export const setupCreateUser: Setup = (userRepository, roleRepository, hasher) => {
   return async (input) => {
     const user = await userRepository.load({ email: input.email });
     if (user) {
       throw new EmailAlreadyExistsError();
     }
+    await roleRepository.load({ name: input.role });
     const { cipherText } = await hasher.generate({ plainText: input.password });
     await userRepository.save({ ...input, password: cipherText });
   };
