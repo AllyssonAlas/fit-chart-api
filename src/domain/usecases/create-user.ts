@@ -1,6 +1,6 @@
 import { LoadUserRepository, SaveUserRepository, LoadRoleRepository } from '@/domain/contracts/repositories';
 import { HashGenerator } from '@/domain/contracts/gateways';
-import { EmailAlreadyExistsError } from '@/domain/errors';
+import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 
 type Input = {
   name: string;
@@ -28,7 +28,10 @@ export const setupCreateUser: Setup = (userRepository, roleRepository, hasher) =
     if (user) {
       throw new EmailAlreadyExistsError();
     }
-    await roleRepository.load({ name: input.role });
+    const role = await roleRepository.load({ name: input.role });
+    if (!role) {
+      throw new NonexistentRoleError();
+    }
     const { cipherText } = await hasher.generate({ plainText: input.password });
     await userRepository.save({ ...input, password: cipherText });
   };
