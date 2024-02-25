@@ -27,13 +27,16 @@ describe('CreateUser', () => {
   let roleRepository: MockProxy<LoadRoleRepository>;
   let hashGenerator: MockProxy<HashGenerator>;
 
-  beforeEach(() => {
+  beforeAll(() => {
     hashGenerator = mock();
     roleRepository = mock();
     userRepository = mock();
     userRepository.load.mockResolvedValue(undefined);
     roleRepository.load.mockResolvedValue({ id: 'any_role_id', name: 'any_role_name' });
     hashGenerator.generate.mockResolvedValue({ cipherText: 'hashed_text' });
+  });
+
+  beforeEach(() => {
     sut = setupCreateUser(userRepository, roleRepository, hashGenerator);
   });
 
@@ -45,7 +48,7 @@ describe('CreateUser', () => {
   });
 
   it('Should throw an EmailAlreadyExistsError if LoadUserRepository returns an user', async () => {
-    userRepository.load.mockResolvedValue({ ...user, id: 'any_id' });
+    userRepository.load.mockResolvedValueOnce({ ...user, id: 'any_id' });
 
     const promise = sut(user);
 
@@ -68,7 +71,7 @@ describe('CreateUser', () => {
   });
 
   it('Should throw an NonexistentRoleError if LoadUserRepository returns undefined', async () => {
-    roleRepository.load.mockResolvedValue(undefined);
+    roleRepository.load.mockResolvedValueOnce(undefined);
 
     const promise = sut(user);
 
