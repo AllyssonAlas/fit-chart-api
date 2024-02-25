@@ -3,7 +3,9 @@ export namespace HashGenerator {
     plainText: string;
   };
 
-  export type Output = void
+  export type Output = {
+    cipherText: string
+  }
 }
 
 export interface HashGenerator {
