@@ -27,4 +27,14 @@ describe('BcryptAdapter', () => {
     expect(fakeBcrypt.hash).toHaveBeenCalledWith(plainText, salt);
     expect(fakeBcrypt.hash).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if hash throws', async () => {
+    jest.spyOn(fakeBcrypt, 'hash').mockImplementationOnce(() => {
+      throw new Error('bcrypt_error');
+    });
+
+    const promise = sut.generate({ plainText });
+
+    await expect(promise).rejects.toThrow(new Error('bcrypt_error'));
+  });
 });
