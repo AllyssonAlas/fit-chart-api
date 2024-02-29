@@ -55,4 +55,15 @@ describe('CreateUserController', () => {
       body: new Error('Field password is required'),
     });
   });
+
+  it('Should return 400 if field role is not provided', async () => {
+    const { role, ...requestWithoutField } = request;
+
+    const response = await sut.perform(requestWithoutField as any);
+
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new Error('Field role is required'),
+    });
+  });
 });
