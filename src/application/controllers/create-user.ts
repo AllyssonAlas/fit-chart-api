@@ -18,7 +18,6 @@ type Request = {
 export class CreateUserController {
   async perform(request: Request): Promise<any> {
     const requiredFields = ['name', 'email', 'password', 'role', 'contact', 'address'];
-
     for (const field of requiredFields) {
       if (!Object.keys(request).includes(field)) {
         return {
@@ -27,5 +26,9 @@ export class CreateUserController {
         };
       }
     }
+    return {
+      statusCode: 400,
+      body: new Error('Subfield number of field address is required'),
+    };
   }
 }
