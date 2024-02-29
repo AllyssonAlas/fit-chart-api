@@ -26,7 +26,7 @@ export class CreateUserController {
         };
       }
     }
-    const requiredAddressSubfields = ['number', 'street'];
+    const requiredAddressSubfields = ['number', 'street', 'neighborhood'];
     for (const field of requiredAddressSubfields) {
       if (!Object.keys(request.address).includes(field)) {
         return {
