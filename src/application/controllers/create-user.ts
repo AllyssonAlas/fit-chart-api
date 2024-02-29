@@ -17,9 +17,15 @@ type Request = {
 
 export class CreateUserController {
   async perform(request: Request): Promise<any> {
-    return {
-      statusCode: 400,
-      body: new Error('Field name is required'),
-    };
+    const requiredFields = ['name', 'email'];
+
+    for (const field of requiredFields) {
+      if (!Object.keys(request).includes(field)) {
+        return {
+          statusCode: 400,
+          body: new Error(`Field ${field} is required`),
+        };
+      }
+    }
   }
 }
