@@ -99,4 +99,15 @@ describe('CreateUserController', () => {
       body: new Error('Subfield number of field address is required'),
     });
   });
+
+  it('Should return 400 if address subfield street is not provided', async () => {
+    const { address: { street, ...addressWithouField }, ...requestWithoutField } = request;
+
+    const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
+
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new Error('Subfield street of field address is required'),
+    });
+  });
 });
