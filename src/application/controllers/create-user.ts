@@ -17,7 +17,7 @@ type Request = {
 
 export class CreateUserController {
   async perform(request: Request): Promise<any> {
-    const requiredFields = ['name', 'email', 'password', 'role'];
+    const requiredFields = ['name', 'email', 'password', 'role', 'contact'];
 
     for (const field of requiredFields) {
       if (!Object.keys(request).includes(field)) {
