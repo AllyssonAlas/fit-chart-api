@@ -77,4 +77,15 @@ describe('CreateUserController', () => {
       body: new Error('Field contact is required'),
     });
   });
+
+  it('Should return 400 if field address is not provided', async () => {
+    const { address, ...requestWithoutField } = request;
+
+    const response = await sut.perform(requestWithoutField as any);
+
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new Error('Field address is required'),
+    });
+  });
 });
