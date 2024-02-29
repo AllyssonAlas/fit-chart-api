@@ -26,9 +26,14 @@ export class CreateUserController {
         };
       }
     }
-    return {
-      statusCode: 400,
-      body: new Error('Subfield number of field address is required'),
-    };
+    const requiredAddressSubfields = ['number', 'street'];
+    for (const field of requiredAddressSubfields) {
+      if (!Object.keys(request.address).includes(field)) {
+        return {
+          statusCode: 400,
+          body: new Error(`Subfield ${field} of field address is required`),
+        };
+      }
+    }
   }
 }
