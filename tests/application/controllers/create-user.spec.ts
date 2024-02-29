@@ -33,4 +33,15 @@ describe('CreateUserController', () => {
       body: new Error('Field name is required'),
     });
   });
+
+  it('Should return 400 if field email is not provided', async () => {
+    const { email, ...requestWithoutField } = request;
+
+    const response = await sut.perform(requestWithoutField as any);
+
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new Error('Field email is required'),
+    });
+  });
 });
