@@ -66,4 +66,15 @@ describe('CreateUserController', () => {
       body: new Error('Field role is required'),
     });
   });
+
+  it('Should return 400 if field contact is not provided', async () => {
+    const { contact, ...requestWithoutField } = request;
+
+    const response = await sut.perform(requestWithoutField as any);
+
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new Error('Field contact is required'),
+    });
+  });
 });
