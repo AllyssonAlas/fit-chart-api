@@ -53,6 +53,10 @@ export class CreateUserController {
         };
       }
       await this.createUser(request);
+      return {
+        statusCode: 204,
+        body: null,
+      };
     } catch (error) {
       return {
         statusCode: 500,
