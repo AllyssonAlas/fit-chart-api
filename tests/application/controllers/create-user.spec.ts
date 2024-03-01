@@ -1,4 +1,5 @@
 import { CreateUserController } from '@/application/controllers';
+import { RequiredParamError, RequiredSubParamError, InvalidParamError, ServerError } from '@/application/errors';
 
 describe('CreateUserController', () => {
   const request = {
@@ -35,7 +36,7 @@ describe('CreateUserController', () => {
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Field name is required'),
+      body: new RequiredParamError('name'),
     });
   });
 
@@ -46,7 +47,7 @@ describe('CreateUserController', () => {
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Field email is required'),
+      body: new RequiredParamError('email'),
     });
   });
 
@@ -57,7 +58,7 @@ describe('CreateUserController', () => {
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Field password is required'),
+      body: new RequiredParamError('password'),
     });
   });
 
@@ -68,7 +69,7 @@ describe('CreateUserController', () => {
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Field role is required'),
+      body: new RequiredParamError('role'),
     });
   });
 
@@ -79,7 +80,7 @@ describe('CreateUserController', () => {
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Field contact is required'),
+      body: new RequiredParamError('contact'),
     });
   });
 
@@ -90,77 +91,77 @@ describe('CreateUserController', () => {
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Field address is required'),
+      body: new RequiredParamError('address'),
     });
   });
 
-  it('Should return 400 if address subfield number is not provided', async () => {
+  it('Should return 400 if address sub param number is not provided', async () => {
     const { address: { number, ...addressWithouField }, ...requestWithoutField } = request;
 
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Subfield number of field address is required'),
+      body: new RequiredSubParamError('address', 'number'),
     });
   });
 
-  it('Should return 400 if address subfield street is not provided', async () => {
+  it('Should return 400 if address sub param street is not provided', async () => {
     const { address: { street, ...addressWithouField }, ...requestWithoutField } = request;
 
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Subfield street of field address is required'),
+      body: new RequiredSubParamError('address', 'street'),
     });
   });
 
-  it('Should return 400 if address subfield neighborhood is not provided', async () => {
+  it('Should return 400 if address sub param neighborhood is not provided', async () => {
     const { address: { neighborhood, ...addressWithouField }, ...requestWithoutField } = request;
 
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Subfield neighborhood of field address is required'),
+      body: new RequiredSubParamError('address', 'neighborhood'),
     });
   });
 
-  it('Should return 400 if address subfield city is not provided', async () => {
+  it('Should return 400 if address sub param city is not provided', async () => {
     const { address: { city, ...addressWithouField }, ...requestWithoutField } = request;
 
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Subfield city of field address is required'),
+      body: new RequiredSubParamError('address', 'city'),
     });
   });
 
-  it('Should return 400 if address subfield state is not provided', async () => {
+  it('Should return 400 if address sub param state is not provided', async () => {
     const { address: { state, ...addressWithouField }, ...requestWithoutField } = request;
 
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Subfield state of field address is required'),
+      body: new RequiredSubParamError('address', 'state'),
     });
   });
 
-  it('Should return 400 if address subfield postalCode is not provided', async () => {
+  it('Should return 400 if address sub param postalCode is not provided', async () => {
     const { address: { postalCode, ...addressWithouField }, ...requestWithoutField } = request;
 
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Subfield postalCode of field address is required'),
+      body: new RequiredSubParamError('address', 'postalCode'),
     });
   });
 
-  it('Should return 400 if address subfield postalCode is invalid', async () => {
+  it('Should return 400 if address sub param postalCode is invalid', async () => {
     const invalidRequest = { ...request, address: { ...request.address } };
     invalidRequest.address.postalCode = '000-000';
 
@@ -168,7 +169,7 @@ describe('CreateUserController', () => {
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Field postalCode is invalid'),
+      body: new InvalidParamError('postalCode'),
     });
   });
 
@@ -177,7 +178,7 @@ describe('CreateUserController', () => {
 
     expect(response).toEqual({
       statusCode: 400,
-      body: new Error('Field email is invalid'),
+      body: new InvalidParamError('email'),
     });
   });
 
@@ -189,13 +190,14 @@ describe('CreateUserController', () => {
   });
 
   it('Should return 500 if CreateUser throws', async () => {
-    createUser.mockRejectedValueOnce(new Error('create_user_error'));
+    const error = new Error('create_user_error');
+    createUser.mockRejectedValueOnce(error);
 
     const response = await sut.perform(request);
 
     expect(response).toEqual({
       statusCode: 500,
-      body: new Error('create_user_error'),
+      body: new ServerError(error),
     });
   });
 

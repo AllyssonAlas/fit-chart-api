@@ -1,4 +1,5 @@
 import { CreateUser } from '@/domain/usecases';
+import { InvalidParamError, RequiredParamError, RequiredSubParamError, ServerError } from '@/application/errors';
 
 type Request = {
   name: string;
@@ -22,34 +23,34 @@ export class CreateUserController {
 
   async perform(request: Request): Promise<any> {
     try {
-      const requiredFields = ['name', 'email', 'password', 'role', 'contact', 'address'];
-      for (const field of requiredFields) {
+      const requiredParams = ['name', 'email', 'password', 'role', 'contact', 'address'];
+      for (const field of requiredParams) {
         if (!Object.keys(request).includes(field)) {
           return {
             statusCode: 400,
-            body: new Error(`Field ${field} is required`),
+            body: new RequiredParamError(field),
           };
         }
       }
-      const requiredAddressSubfields = ['number', 'street', 'neighborhood', 'city', 'state', 'postalCode'];
-      for (const field of requiredAddressSubfields) {
+      const requiredAddressSubParams = ['number', 'street', 'neighborhood', 'city', 'state', 'postalCode'];
+      for (const field of requiredAddressSubParams) {
         if (!Object.keys(request.address).includes(field)) {
           return {
             statusCode: 400,
-            body: new Error(`Subfield ${field} of field address is required`),
+            body: new RequiredSubParamError('address', field),
           };
         }
       }
       if (!(/^[0-9]{5}-[0-9]{3}$/).test(request.address.postalCode)) {
         return {
           statusCode: 400,
-          body: new Error('Field postalCode is invalid'),
+          body: new InvalidParamError('postalCode'),
         };
       }
       if (!(/^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi).test(request.email)) {
         return {
           statusCode: 400,
-          body: new Error('Field email is invalid'),
+          body: new InvalidParamError('email'),
         };
       }
       await this.createUser(request);
@@ -60,7 +61,7 @@ export class CreateUserController {
     } catch (error) {
       return {
         statusCode: 500,
-        body: error,
+        body: new ServerError(error instanceof Error ? error : undefined),
       };
     }
   }
