@@ -187,4 +187,15 @@ describe('CreateUserController', () => {
     expect(createUser).toHaveBeenCalledWith(request);
     expect(createUser).toHaveBeenCalledTimes(1);
   });
+
+  it('Should return 500 if CreateUser throws', async () => {
+    createUser.mockRejectedValueOnce(new Error('create_user_error'));
+
+    const response = await sut.perform(request);
+
+    expect(response).toEqual({
+      statusCode: 500,
+      body: new Error('create_user_error'),
+    });
+  });
 });
