@@ -166,4 +166,13 @@ describe('CreateUserController', () => {
       body: new Error('Field postalCode is invalid'),
     });
   });
+
+  it('Should return 400 if email is invalid', async () => {
+    const response = await sut.perform({ ...request, email: 'invalid_email' });
+
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new Error('Field email is invalid'),
+    });
+  });
 });
