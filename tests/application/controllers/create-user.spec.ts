@@ -11,7 +11,7 @@ describe('CreateUserController', () => {
       city: 'any_city',
       neighborhood: 'any_neighborhood',
       number: 'any_number',
-      postalCode: 'any_postal_code',
+      postalCode: '00000-000',
       state: 'any_state',
       street: 'any_street',
     },
@@ -152,6 +152,18 @@ describe('CreateUserController', () => {
     expect(response).toEqual({
       statusCode: 400,
       body: new Error('Subfield postalCode of field address is required'),
+    });
+  });
+
+  it('Should return 400 if address subfield postalCode is invalid', async () => {
+    const invalidRequest = { ...request, address: { ...request.address } };
+    invalidRequest.address.postalCode = '000-000';
+
+    const response = await sut.perform(invalidRequest);
+
+    expect(response).toEqual({
+      statusCode: 400,
+      body: new Error('Field postalCode is invalid'),
     });
   });
 });
