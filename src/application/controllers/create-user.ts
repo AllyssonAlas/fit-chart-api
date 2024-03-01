@@ -21,36 +21,43 @@ export class CreateUserController {
   constructor(private readonly createUser: CreateUser) {}
 
   async perform(request: Request): Promise<any> {
-    const requiredFields = ['name', 'email', 'password', 'role', 'contact', 'address'];
-    for (const field of requiredFields) {
-      if (!Object.keys(request).includes(field)) {
+    try {
+      const requiredFields = ['name', 'email', 'password', 'role', 'contact', 'address'];
+      for (const field of requiredFields) {
+        if (!Object.keys(request).includes(field)) {
+          return {
+            statusCode: 400,
+            body: new Error(`Field ${field} is required`),
+          };
+        }
+      }
+      const requiredAddressSubfields = ['number', 'street', 'neighborhood', 'city', 'state', 'postalCode'];
+      for (const field of requiredAddressSubfields) {
+        if (!Object.keys(request.address).includes(field)) {
+          return {
+            statusCode: 400,
+            body: new Error(`Subfield ${field} of field address is required`),
+          };
+        }
+      }
+      if (!(/^[0-9]{5}-[0-9]{3}$/).test(request.address.postalCode)) {
         return {
           statusCode: 400,
-          body: new Error(`Field ${field} is required`),
+          body: new Error('Field postalCode is invalid'),
         };
       }
-    }
-    const requiredAddressSubfields = ['number', 'street', 'neighborhood', 'city', 'state', 'postalCode'];
-    for (const field of requiredAddressSubfields) {
-      if (!Object.keys(request.address).includes(field)) {
+      if (!(/^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi).test(request.email)) {
         return {
           statusCode: 400,
-          body: new Error(`Subfield ${field} of field address is required`),
+          body: new Error('Field email is invalid'),
         };
       }
-    }
-    if (!(/^[0-9]{5}-[0-9]{3}$/).test(request.address.postalCode)) {
+      await this.createUser(request);
+    } catch (error) {
       return {
-        statusCode: 400,
-        body: new Error('Field postalCode is invalid'),
+        statusCode: 500,
+        body: error,
       };
     }
-    if (!(/^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi).test(request.email)) {
-      return {
-        statusCode: 400,
-        body: new Error('Field email is invalid'),
-      };
-    }
-    await this.createUser(request);
   }
 }
