@@ -1,5 +1,6 @@
 import { CreateUser } from '@/domain/usecases';
-import { InvalidParamError, RequiredParamError, RequiredSubParamError, ServerError } from '@/application/errors';
+import { HttpResponse, badRequest, noContent, serverError } from '@/application/helpers';
+import { InvalidParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
 
 type Request = {
   name: string;
@@ -21,48 +22,30 @@ type Request = {
 export class CreateUserController {
   constructor(private readonly createUser: CreateUser) {}
 
-  async perform(request: Request): Promise<any> {
+  async perform(request: Request): Promise<HttpResponse> {
     try {
       const requiredParams = ['name', 'email', 'password', 'role', 'contact', 'address'];
       for (const field of requiredParams) {
         if (!Object.keys(request).includes(field)) {
-          return {
-            statusCode: 400,
-            body: new RequiredParamError(field),
-          };
+          return badRequest(new RequiredParamError(field));
         }
       }
       const requiredAddressSubParams = ['number', 'street', 'neighborhood', 'city', 'state', 'postalCode'];
       for (const field of requiredAddressSubParams) {
         if (!Object.keys(request.address).includes(field)) {
-          return {
-            statusCode: 400,
-            body: new RequiredSubParamError('address', field),
-          };
+          return badRequest(new RequiredSubParamError('address', field));
         }
       }
       if (!(/^[0-9]{5}-[0-9]{3}$/).test(request.address.postalCode)) {
-        return {
-          statusCode: 400,
-          body: new InvalidParamError('postalCode'),
-        };
+        return badRequest(new InvalidParamError('postalCode'));
       }
       if (!(/^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi).test(request.email)) {
-        return {
-          statusCode: 400,
-          body: new InvalidParamError('email'),
-        };
+        return badRequest(new InvalidParamError('email'));
       }
       await this.createUser(request);
-      return {
-        statusCode: 204,
-        body: null,
-      };
+      return noContent();
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: new ServerError(error instanceof Error ? error : undefined),
-      };
+      return serverError(error instanceof Error ? error : undefined);
     }
   }
 }
