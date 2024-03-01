@@ -41,5 +41,11 @@ export class CreateUserController {
         body: new Error('Field postalCode is invalid'),
       };
     }
+    if (!(/^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi).test(request.email)) {
+      return {
+        statusCode: 400,
+        body: new Error('Field email is invalid'),
+      };
+    }
   }
 }
