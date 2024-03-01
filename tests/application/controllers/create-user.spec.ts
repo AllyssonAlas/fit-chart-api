@@ -198,4 +198,13 @@ describe('CreateUserController', () => {
       body: new Error('create_user_error'),
     });
   });
+
+  it('Should return 204 on success', async () => {
+    const response = await sut.perform(request);
+
+    expect(response).toEqual({
+      statusCode: 204,
+      body: null,
+    });
+  });
 });
