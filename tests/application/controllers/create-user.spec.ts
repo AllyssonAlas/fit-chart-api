@@ -35,8 +35,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(requestWithoutField as any);
 
     expect(response).toEqual({
+      data: new RequiredParamError('name'),
       statusCode: 400,
-      body: new RequiredParamError('name'),
     });
   });
 
@@ -46,8 +46,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(requestWithoutField as any);
 
     expect(response).toEqual({
+      data: new RequiredParamError('email'),
       statusCode: 400,
-      body: new RequiredParamError('email'),
     });
   });
 
@@ -57,8 +57,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(requestWithoutField as any);
 
     expect(response).toEqual({
+      data: new RequiredParamError('password'),
       statusCode: 400,
-      body: new RequiredParamError('password'),
     });
   });
 
@@ -68,8 +68,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(requestWithoutField as any);
 
     expect(response).toEqual({
+      data: new RequiredParamError('role'),
       statusCode: 400,
-      body: new RequiredParamError('role'),
     });
   });
 
@@ -79,8 +79,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(requestWithoutField as any);
 
     expect(response).toEqual({
+      data: new RequiredParamError('contact'),
       statusCode: 400,
-      body: new RequiredParamError('contact'),
     });
   });
 
@@ -90,8 +90,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(requestWithoutField as any);
 
     expect(response).toEqual({
+      data: new RequiredParamError('address'),
       statusCode: 400,
-      body: new RequiredParamError('address'),
     });
   });
 
@@ -101,8 +101,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
+      data: new RequiredSubParamError('address', 'number'),
       statusCode: 400,
-      body: new RequiredSubParamError('address', 'number'),
     });
   });
 
@@ -112,8 +112,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
+      data: new RequiredSubParamError('address', 'street'),
       statusCode: 400,
-      body: new RequiredSubParamError('address', 'street'),
     });
   });
 
@@ -123,8 +123,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
+      data: new RequiredSubParamError('address', 'neighborhood'),
       statusCode: 400,
-      body: new RequiredSubParamError('address', 'neighborhood'),
     });
   });
 
@@ -134,8 +134,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
+      data: new RequiredSubParamError('address', 'city'),
       statusCode: 400,
-      body: new RequiredSubParamError('address', 'city'),
     });
   });
 
@@ -145,8 +145,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
+      data: new RequiredSubParamError('address', 'state'),
       statusCode: 400,
-      body: new RequiredSubParamError('address', 'state'),
     });
   });
 
@@ -156,8 +156,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
 
     expect(response).toEqual({
+      data: new RequiredSubParamError('address', 'postalCode'),
       statusCode: 400,
-      body: new RequiredSubParamError('address', 'postalCode'),
     });
   });
 
@@ -168,8 +168,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(invalidRequest);
 
     expect(response).toEqual({
+      data: new InvalidParamError('postalCode'),
       statusCode: 400,
-      body: new InvalidParamError('postalCode'),
     });
   });
 
@@ -177,8 +177,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform({ ...request, email: 'invalid_email' });
 
     expect(response).toEqual({
+      data: new InvalidParamError('email'),
       statusCode: 400,
-      body: new InvalidParamError('email'),
     });
   });
 
@@ -196,8 +196,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(request);
 
     expect(response).toEqual({
+      data: new ServerError(error),
       statusCode: 500,
-      body: new ServerError(error),
     });
   });
 
@@ -205,8 +205,8 @@ describe('CreateUserController', () => {
     const response = await sut.perform(request);
 
     expect(response).toEqual({
+      data: null,
       statusCode: 204,
-      body: null,
     });
   });
 });

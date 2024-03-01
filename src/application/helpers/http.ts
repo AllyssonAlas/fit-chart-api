@@ -1,21 +1,21 @@
 import { ServerError } from '@/application/errors';
 
 export type HttpResponse = {
-  body: any;
+  data: any;
   statusCode: number;
 }
 
 export const noContent = (): HttpResponse => ({
-  body: null,
+  data: null,
   statusCode: 204,
 });
 
 export const badRequest = (error: Error): HttpResponse => ({
-  body: error,
+  data: error,
   statusCode: 400,
 });
 
 export const serverError = (error?: Error): HttpResponse => ({
-  body: new ServerError(error),
+  data: new ServerError(error),
   statusCode: 500,
 });
