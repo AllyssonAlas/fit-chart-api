@@ -35,5 +35,11 @@ export class CreateUserController {
         };
       }
     }
+    if (!(/^[0-9]{5}-[0-9]{3}$/).test(request.address.postalCode)) {
+      return {
+        statusCode: 400,
+        body: new Error('Field postalCode is invalid'),
+      };
+    }
   }
 }
