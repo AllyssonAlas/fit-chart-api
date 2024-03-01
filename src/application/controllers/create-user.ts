@@ -1,3 +1,5 @@
+import { CreateUser } from '@/domain/usecases';
+
 type Request = {
   name: string;
   email: string;
@@ -16,6 +18,8 @@ type Request = {
 };
 
 export class CreateUserController {
+  constructor(private readonly createUser: CreateUser) {}
+
   async perform(request: Request): Promise<any> {
     const requiredFields = ['name', 'email', 'password', 'role', 'contact', 'address'];
     for (const field of requiredFields) {
@@ -47,5 +51,6 @@ export class CreateUserController {
         body: new Error('Field email is invalid'),
       };
     }
+    await this.createUser(request);
   }
 }
