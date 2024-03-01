@@ -18,9 +18,14 @@ describe('CreateUserController', () => {
   };
 
   let sut: CreateUserController;
+  let createUser: jest.Mock;
+
+  beforeAll(() => {
+    createUser = jest.fn();
+  });
 
   beforeEach(() => {
-    sut = new CreateUserController();
+    sut = new CreateUserController(createUser);
   });
 
   it('Should return 400 if field name is not provided', async () => {
@@ -174,5 +179,12 @@ describe('CreateUserController', () => {
       statusCode: 400,
       body: new Error('Field email is invalid'),
     });
+  });
+
+  it('Should call CreateUser with correct input', async () => {
+    await sut.perform(request);
+
+    expect(createUser).toHaveBeenCalledWith(request);
+    expect(createUser).toHaveBeenCalledTimes(1);
   });
 });
