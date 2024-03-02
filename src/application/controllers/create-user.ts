@@ -19,10 +19,12 @@ type Request = {
   };
 };
 
+type Model = null | Error
+
 export class CreateUserController {
   constructor(private readonly createUser: CreateUser) {}
 
-  async perform(request: Request): Promise<HttpResponse> {
+  async perform(request: Request): Promise<HttpResponse<Model>> {
     try {
       const requiredParams = ['name', 'email', 'password', 'role', 'contact', 'address'];
       for (const field of requiredParams) {
