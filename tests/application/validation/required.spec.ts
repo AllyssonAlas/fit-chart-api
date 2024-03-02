@@ -9,4 +9,12 @@ describe('Required', () => {
 
     expect(error).toEqual(new RequiredParamError('field'));
   });
+
+  it('Should return RequiredParamError if value is undefined', () => {
+    const sut = new Required(undefined, 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new RequiredParamError('field'));
+  });
 });
