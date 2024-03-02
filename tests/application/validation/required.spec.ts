@@ -17,4 +17,12 @@ describe('Required', () => {
 
     expect(error).toEqual(new RequiredParamError('field'));
   });
+
+  it('Should return RequiredParamError if value is empty', () => {
+    const sut = new Required('', 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new RequiredParamError('field'));
+  });
 });
