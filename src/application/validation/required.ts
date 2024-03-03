@@ -17,7 +17,7 @@ export class RequiredParam extends Required {
   }
 
   validate(): Error | undefined {
-    if (!super.validate() && !Object.keys(this.value).includes(this.fieldName)) {
+    if (super.validate() || !Object.keys(this.value).includes(this.fieldName)) {
       return new RequiredParamError(this.fieldName);
     }
   }
@@ -29,7 +29,7 @@ export class RequiredString extends Required {
   }
 
   validate(): Error | undefined {
-    if (!super.validate() && !(typeof this.value === 'string')) {
+    if (super.validate() || !(typeof this.value === 'string')) {
       return new InvalidParamError(this.fieldName);
     }
   }
@@ -41,7 +41,7 @@ export class RequiredPattern extends RequiredString {
   }
 
   validate(): Error | undefined {
-    if (!super.validate() && !this.pattern.test(this.value)) {
+    if (super.validate() || !this.pattern.test(this.value)) {
       return new InvalidParamError(this.fieldName);
     }
   }
