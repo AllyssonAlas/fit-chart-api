@@ -16,7 +16,9 @@ export class RequiredParam extends Required {
     super(value, fieldName);
   }
 
-  validate(): Error {
-    return new RequiredParamError(this.fieldName);
+  validate(): Error | undefined {
+    if (!super.validate() && !Object.keys(this.value).includes(this.fieldName)) {
+      return new RequiredParamError(this.fieldName);
+    }
   }
 }
