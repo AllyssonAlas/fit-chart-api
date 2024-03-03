@@ -1,4 +1,4 @@
-import { InvalidParamError, RequiredParamError } from '@/application/errors';
+import { InvalidParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
 import { Validator } from '@/application/validation';
 
 export class Required<T = any> implements Validator {
@@ -12,13 +12,15 @@ export class Required<T = any> implements Validator {
 }
 
 export class RequiredParam extends Required {
-  constructor(override readonly value: object, override readonly fieldName: string) {
+  constructor(override readonly value: object, override readonly fieldName: string, readonly subFieldFrom?: string) {
     super(value, fieldName);
   }
 
   validate(): Error | undefined {
     if (super.validate() || !Object.keys(this.value).includes(this.fieldName)) {
-      return new RequiredParamError(this.fieldName);
+      return this.subFieldFrom
+        ? new RequiredSubParamError(this.subFieldFrom, this.fieldName)
+        : new RequiredParamError(this.fieldName);
     }
   }
 }
