@@ -57,4 +57,12 @@ describe('RequiredParam', () => {
 
     expect(error).toEqual(new RequiredParamError('field'));
   });
+
+  it('Should return undefined if validation succeeds', () => {
+    const sut = new RequiredParam({ field: 'any_value' }, 'field');
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
+  });
 });
