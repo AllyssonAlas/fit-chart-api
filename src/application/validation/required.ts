@@ -40,7 +40,9 @@ export class RequiredPattern extends RequiredString {
     super(value, fieldName);
   }
 
-  validate(): Error {
-    return new InvalidParamError(this.fieldName);
+  validate(): Error | undefined {
+    if (!super.validate() && !this.pattern.test(this.value)) {
+      return new InvalidParamError(this.fieldName);
+    }
   }
 }
