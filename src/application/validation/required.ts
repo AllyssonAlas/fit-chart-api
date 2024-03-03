@@ -10,3 +10,9 @@ export class Required<T = any> implements Validator {
     }
   }
 }
+
+export class RequiredParam extends Required {
+  constructor(override readonly value: object, override readonly fieldName: string) {
+    super(value, fieldName);
+  }
+}
