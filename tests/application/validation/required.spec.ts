@@ -1,5 +1,5 @@
 import { Required, RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
-import { InvalidParamError, RequiredParamError } from '@/application/errors';
+import { InvalidParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
 
 describe('Required', () => {
   it('Should return RequiredParamError if value is null', () => {
@@ -56,6 +56,14 @@ describe('RequiredParam', () => {
     const error = sut.validate();
 
     expect(error).toEqual(new RequiredParamError('field'));
+  });
+
+  it('Should return RequiredSubParamError if subParamFrom is received', () => {
+    const sut = new RequiredParam({}, 'subField', 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new RequiredSubParamError('field', 'subField'));
   });
 
   it('Should return undefined if validation succeeds', () => {
