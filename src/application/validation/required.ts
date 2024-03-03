@@ -1,4 +1,4 @@
-import { RequiredParamError } from '@/application/errors';
+import { InvalidParamError, RequiredParamError } from '@/application/errors';
 import { Validator } from '@/application/validation';
 
 export class Required<T = any> implements Validator {
@@ -26,5 +26,9 @@ export class RequiredParam extends Required {
 export class RequiredString extends Required {
   constructor(override readonly value: string, override readonly fieldName: string) {
     super(value, fieldName);
+  }
+
+  validate(): Error {
+    return new InvalidParamError(this.fieldName);
   }
 }
