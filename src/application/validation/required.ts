@@ -28,7 +28,9 @@ export class RequiredString extends Required {
     super(value, fieldName);
   }
 
-  validate(): Error {
-    return new InvalidParamError(this.fieldName);
+  validate(): Error | undefined {
+    if (!super.validate() && !(typeof this.value === 'string')) {
+      return new InvalidParamError(this.fieldName);
+    }
   }
 }
