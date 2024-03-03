@@ -34,3 +34,9 @@ export class RequiredString extends Required {
     }
   }
 }
+
+export class RequiredPattern extends RequiredString {
+  constructor(override readonly value: string, override readonly fieldName: string, readonly pattern: RegExp) {
+    super(value, fieldName);
+  }
+}
