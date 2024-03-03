@@ -93,7 +93,7 @@ describe('RequiredString', () => {
 
 describe('RequiredPattern', () => {
   it('Should be instance of Required', () => {
-    const sut = new RequiredPattern('any_value', 'field', /{any_pattern}/);
+    const sut = new RequiredPattern('any_value', 'field', /any_pattern/);
 
     expect(sut).toBeInstanceOf(RequiredString);
   });
