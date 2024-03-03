@@ -97,4 +97,12 @@ describe('RequiredPattern', () => {
 
     expect(sut).toBeInstanceOf(RequiredString);
   });
+
+  it('Should return InvalidParamError if value does not fit in pattern', () => {
+    const sut = new RequiredPattern('any_value', 'field', /any_pattern/);
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new InvalidParamError('field'));
+  });
 });
