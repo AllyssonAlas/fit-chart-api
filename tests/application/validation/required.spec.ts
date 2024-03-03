@@ -49,4 +49,12 @@ describe('RequiredParam', () => {
 
     expect(error).toEqual(new RequiredParamError('field'));
   });
+
+  it('Should return RequiredParamError if value does not contain fieldName', () => {
+    const sut = new RequiredParam({}, 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new RequiredParamError('field'));
+  });
 });
