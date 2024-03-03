@@ -15,4 +15,8 @@ export class RequiredParam extends Required {
   constructor(override readonly value: object, override readonly fieldName: string) {
     super(value, fieldName);
   }
+
+  validate(): Error {
+    return new RequiredParamError(this.fieldName);
+  }
 }
