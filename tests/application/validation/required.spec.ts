@@ -1,4 +1,4 @@
-import { Required } from '@/application/validation';
+import { Required, RequiredParam } from '@/application/validation';
 import { RequiredParamError } from '@/application/errors';
 
 describe('Required', () => {
@@ -32,5 +32,13 @@ describe('Required', () => {
     const error = sut.validate();
 
     expect(error).toBeUndefined();
+  });
+});
+
+describe('RequiredParam', () => {
+  it('Should be instance of Required', () => {
+    const sut = new RequiredParam({}, 'field');
+
+    expect(sut).toBeInstanceOf(Required);
   });
 });
