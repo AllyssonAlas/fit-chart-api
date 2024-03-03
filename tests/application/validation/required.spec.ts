@@ -25,4 +25,12 @@ describe('Required', () => {
 
     expect(error).toEqual(new RequiredParamError('field'));
   });
+
+  it('Should return undefined if validation succeeds', () => {
+    const sut = new Required('any_value', 'field');
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
+  });
 });
