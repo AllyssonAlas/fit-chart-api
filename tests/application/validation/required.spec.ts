@@ -41,4 +41,12 @@ describe('RequiredParam', () => {
 
     expect(sut).toBeInstanceOf(Required);
   });
+
+  it('Should return RequiredParamError if value is not an object', () => {
+    const sut = new RequiredParam('field' as any, 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new RequiredParamError('field'));
+  });
 });
