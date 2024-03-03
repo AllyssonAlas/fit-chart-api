@@ -1,5 +1,5 @@
 import { Required, RequiredParam, RequiredString } from '@/application/validation';
-import { RequiredParamError } from '@/application/errors';
+import { InvalidParamError, RequiredParamError } from '@/application/errors';
 
 describe('Required', () => {
   it('Should return RequiredParamError if value is null', () => {
@@ -72,5 +72,13 @@ describe('RequiredString', () => {
     const sut = new RequiredString('any_value', 'field');
 
     expect(sut).toBeInstanceOf(Required);
+  });
+
+  it('Should return InvalidParamError if value is not a string', () => {
+    const sut = new RequiredString(100 as any, 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new InvalidParamError('field'));
   });
 });
