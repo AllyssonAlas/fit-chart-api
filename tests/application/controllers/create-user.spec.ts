@@ -1,5 +1,8 @@
 import { CreateUserController } from '@/application/controllers';
-import { RequiredParamError, RequiredSubParamError, InvalidParamError, ServerError } from '@/application/errors';
+import { ServerError } from '@/application/errors';
+import { RequiredParam, RequiredPattern, RequiredString, ValidatorComposite } from '@/application/validation';
+
+jest.mock('@/application/validation/composite');
 
 describe('CreateUserController', () => {
   const request = {
@@ -28,158 +31,48 @@ describe('CreateUserController', () => {
   beforeEach(() => {
     sut = new CreateUserController(createUser);
   });
+  it('Should return 400 if ValidationComposite returns an error', async () => {
+    const error = new Error('validation_error');
+    const ValidatorCompositeSpy = jest.fn().mockImplementationOnce(() => ({
+      validate: jest.fn().mockReturnValueOnce(error),
+    }));
+    jest.mocked(ValidatorComposite).mockImplementationOnce(ValidatorCompositeSpy);
 
-  it('Should return 400 if field name is not provided', async () => {
-    const { name, ...requestWithoutField } = request;
+    const response = await sut.perform(request);
 
-    const response = await sut.perform(requestWithoutField as any);
-
-    expect(response).toEqual({
-      data: new RequiredParamError('name'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if field email is not provided', async () => {
-    const { email, ...requestWithoutField } = request;
-
-    const response = await sut.perform(requestWithoutField as any);
-
-    expect(response).toEqual({
-      data: new RequiredParamError('email'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if field password is not provided', async () => {
-    const { password, ...requestWithoutField } = request;
-
-    const response = await sut.perform(requestWithoutField as any);
-
-    expect(response).toEqual({
-      data: new RequiredParamError('password'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if field role is not provided', async () => {
-    const { role, ...requestWithoutField } = request;
-
-    const response = await sut.perform(requestWithoutField as any);
-
-    expect(response).toEqual({
-      data: new RequiredParamError('role'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if field contact is not provided', async () => {
-    const { contact, ...requestWithoutField } = request;
-
-    const response = await sut.perform(requestWithoutField as any);
-
-    expect(response).toEqual({
-      data: new RequiredParamError('contact'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if field address is not provided', async () => {
-    const { address, ...requestWithoutField } = request;
-
-    const response = await sut.perform(requestWithoutField as any);
-
-    expect(response).toEqual({
-      data: new RequiredParamError('address'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if address sub param number is not provided', async () => {
-    const { address: { number, ...addressWithouField }, ...requestWithoutField } = request;
-
-    const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
-
-    expect(response).toEqual({
-      data: new RequiredSubParamError('address', 'number'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if address sub param street is not provided', async () => {
-    const { address: { street, ...addressWithouField }, ...requestWithoutField } = request;
-
-    const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
-
-    expect(response).toEqual({
-      data: new RequiredSubParamError('address', 'street'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if address sub param neighborhood is not provided', async () => {
-    const { address: { neighborhood, ...addressWithouField }, ...requestWithoutField } = request;
-
-    const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
-
-    expect(response).toEqual({
-      data: new RequiredSubParamError('address', 'neighborhood'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if address sub param city is not provided', async () => {
-    const { address: { city, ...addressWithouField }, ...requestWithoutField } = request;
-
-    const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
-
-    expect(response).toEqual({
-      data: new RequiredSubParamError('address', 'city'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if address sub param state is not provided', async () => {
-    const { address: { state, ...addressWithouField }, ...requestWithoutField } = request;
-
-    const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
-
-    expect(response).toEqual({
-      data: new RequiredSubParamError('address', 'state'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if address sub param postalCode is not provided', async () => {
-    const { address: { postalCode, ...addressWithouField }, ...requestWithoutField } = request;
-
-    const response = await sut.perform({ ...requestWithoutField, address: addressWithouField } as any);
-
-    expect(response).toEqual({
-      data: new RequiredSubParamError('address', 'postalCode'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if address sub param postalCode is invalid', async () => {
-    const invalidRequest = { ...request, address: { ...request.address } };
-    invalidRequest.address.postalCode = '000-000';
-
-    const response = await sut.perform(invalidRequest);
-
-    expect(response).toEqual({
-      data: new InvalidParamError('postalCode'),
-      statusCode: 400,
-    });
-  });
-
-  it('Should return 400 if email is invalid', async () => {
-    const response = await sut.perform({ ...request, email: 'invalid_email' });
-
-    expect(response).toEqual({
-      data: new InvalidParamError('email'),
-      statusCode: 400,
-    });
+    expect(ValidatorComposite).toHaveBeenCalledWith([
+      new RequiredParam(request, 'name'),
+      new RequiredString(request.name, 'name'),
+      new RequiredParam(request, 'email'),
+      new RequiredString(request.email, 'email'),
+      new RequiredPattern(request.email, 'email', /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi),
+      new RequiredParam(request, 'password'),
+      new RequiredString(request.password, 'password'),
+      new RequiredParam(request, 'role'),
+      new RequiredString(request.role, 'role'),
+      new RequiredParam(request, 'contact'),
+      new RequiredString(request.contact, 'contact'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'number', 'address'),
+      new RequiredString(request.address.number, 'number'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'street', 'address'),
+      new RequiredString(request.address.street, 'street'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'neighborhood', 'address'),
+      new RequiredString(request.address.neighborhood, 'neighborhood'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'city', 'address'),
+      new RequiredString(request.address.city, 'city'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'state', 'address'),
+      new RequiredString(request.address.state, 'state'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'postalCode', 'address'),
+      new RequiredString(request.address.postalCode, 'postalCode'),
+      new RequiredPattern(request.address.postalCode, 'postalCode', /^[0-9]{5}-[0-9]{3}$/),
+    ]);
+    expect(response).toEqual({ data: error, statusCode: 400 });
   });
 
   it('Should call CreateUser with correct input', async () => {

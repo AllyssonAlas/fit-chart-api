@@ -1,6 +1,6 @@
 import { CreateUser } from '@/domain/usecases';
 import { HttpResponse, badRequest, noContent, serverError } from '@/application/helpers';
-import { InvalidParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
+import { RequiredParam, RequiredPattern, RequiredString, ValidatorComposite } from '@/application/validation';
 
 type Request = {
   name: string;
@@ -26,28 +26,49 @@ export class CreateUserController {
 
   async perform(request: Request): Promise<HttpResponse<Model>> {
     try {
-      const requiredParams = ['name', 'email', 'password', 'role', 'contact', 'address'];
-      for (const field of requiredParams) {
-        if (!Object.keys(request).includes(field)) {
-          return badRequest(new RequiredParamError(field));
-        }
-      }
-      const requiredAddressSubParams = ['number', 'street', 'neighborhood', 'city', 'state', 'postalCode'];
-      for (const field of requiredAddressSubParams) {
-        if (!Object.keys(request.address).includes(field)) {
-          return badRequest(new RequiredSubParamError('address', field));
-        }
-      }
-      if (!(/^[0-9]{5}-[0-9]{3}$/).test(request.address.postalCode)) {
-        return badRequest(new InvalidParamError('postalCode'));
-      }
-      if (!(/^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi).test(request.email)) {
-        return badRequest(new InvalidParamError('email'));
+      const error = this.validate(request);
+      if (error) {
+        return badRequest(error);
       }
       await this.createUser(request);
       return noContent();
     } catch (error) {
       return serverError(error instanceof Error ? error : undefined);
     }
+  }
+
+  private validate(request: Request): Error | undefined {
+    return new ValidatorComposite([
+      new RequiredParam(request, 'name'),
+      new RequiredString(request.name, 'name'),
+      new RequiredParam(request, 'email'),
+      new RequiredString(request.email, 'email'),
+      new RequiredPattern(request.email, 'email', /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi),
+      new RequiredParam(request, 'password'),
+      new RequiredString(request.password, 'password'),
+      new RequiredParam(request, 'role'),
+      new RequiredString(request.role, 'role'),
+      new RequiredParam(request, 'contact'),
+      new RequiredString(request.contact, 'contact'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'number', 'address'),
+      new RequiredString(request.address.number, 'number'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'street', 'address'),
+      new RequiredString(request.address.street, 'street'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'neighborhood', 'address'),
+      new RequiredString(request.address.neighborhood, 'neighborhood'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'city', 'address'),
+      new RequiredString(request.address.city, 'city'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'state', 'address'),
+      new RequiredString(request.address.state, 'state'),
+      new RequiredParam(request, 'address'),
+      new RequiredParam(request.address, 'postalCode', 'address'),
+      new RequiredString(request.address.postalCode, 'postalCode'),
+      new RequiredPattern(request.address.postalCode, 'postalCode', /^[0-9]{5}-[0-9]{3}$/),
+    ]).validate();
   }
 }
