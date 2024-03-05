@@ -1,5 +1,12 @@
+import { Validator } from '@/application/validation';
+
 export class ValidatorComposite {
-  validate(): undefined {
-    return undefined;
+  constructor(private readonly validators: Validator[]) {}
+
+  validate(): Error | undefined {
+    for (const validator of this.validators) {
+      const error = validator.validate();
+      if (error) return error;
+    }
   }
 }
