@@ -1,6 +1,6 @@
 import { CreateUser } from '@/domain/usecases';
 import { HttpResponse, badRequest, noContent, serverError } from '@/application/helpers';
-import { RequiredParam, RequiredPattern, RequiredString, ValidatorComposite } from '@/application/validation';
+import { RequiredParam, RequiredPattern, RequiredString, ValidationComposite } from '@/application/validation';
 
 type Request = {
   name: string;
@@ -38,7 +38,7 @@ export class CreateUserController {
   }
 
   private validate(request: Request): Error | undefined {
-    return new ValidatorComposite([
+    return new ValidationComposite([
       new RequiredParam(request, 'name'),
       new RequiredString(request.name, 'name'),
       new RequiredParam(request, 'email'),

@@ -1,6 +1,6 @@
 import { Validator } from '@/application/validation';
 
-export class ValidatorComposite {
+export class ValidationComposite {
   constructor(private readonly validators: Validator[]) {}
 
   validate(): Error | undefined {

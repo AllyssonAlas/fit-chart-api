@@ -1,6 +1,6 @@
 import { CreateUserController } from '@/application/controllers';
 import { ServerError } from '@/application/errors';
-import { RequiredParam, RequiredPattern, RequiredString, ValidatorComposite } from '@/application/validation';
+import { RequiredParam, RequiredPattern, RequiredString, ValidationComposite } from '@/application/validation';
 
 jest.mock('@/application/validation/composite');
 
@@ -33,14 +33,14 @@ describe('CreateUserController', () => {
   });
   it('Should return 400 if ValidationComposite returns an error', async () => {
     const error = new Error('validation_error');
-    const ValidatorCompositeSpy = jest.fn().mockImplementationOnce(() => ({
+    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
       validate: jest.fn().mockReturnValueOnce(error),
     }));
-    jest.mocked(ValidatorComposite).mockImplementationOnce(ValidatorCompositeSpy);
+    jest.mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy);
 
     const response = await sut.perform(request);
 
-    expect(ValidatorComposite).toHaveBeenCalledWith([
+    expect(ValidationComposite).toHaveBeenCalledWith([
       new RequiredParam(request, 'name'),
       new RequiredString(request.name, 'name'),
       new RequiredParam(request, 'email'),
