@@ -34,4 +34,12 @@ describe('ValidatorComposite', () => {
 
     expect(error).toEqual(new Error('validator_1_error'));
   });
+
+  it('Should return correct error', () => {
+    validator2.validate.mockReturnValueOnce(new Error('validator_2_error'));
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new Error('validator_2_error'));
+  });
 });
