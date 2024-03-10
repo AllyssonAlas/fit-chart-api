@@ -17,7 +17,7 @@ export class RequiredParam extends Required {
   }
 
   validate(): Error | undefined {
-    if (super.validate() || !Object.keys(this.value).includes(this.fieldName)) {
+    if (super.validate() || !this.value[this.fieldName as keyof typeof this.value]) {
       return this.subFieldFrom
         ? new RequiredSubParamError(this.subFieldFrom, this.fieldName)
         : new RequiredParamError(this.fieldName);

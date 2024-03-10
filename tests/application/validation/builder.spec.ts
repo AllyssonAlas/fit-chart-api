@@ -1,4 +1,4 @@
-import { Required, RequiredParam, RequiredPattern, RequiredString, ValidationBuilder } from '@/application/validation';
+import { RequiredParam, RequiredPattern, RequiredString, ValidationBuilder } from '@/application/validation';
 
 describe('ValidationBuilder', () => {
   it('Should return RequiredParam and Required validators', () => {
@@ -10,7 +10,6 @@ describe('ValidationBuilder', () => {
 
     expect(validators).toEqual([
       new RequiredParam(data, 'value'),
-      new Required(data.value, 'value'),
     ]);
   });
 
@@ -23,8 +22,6 @@ describe('ValidationBuilder', () => {
       .build();
 
     expect(validators).toEqual([
-      new RequiredParam(data.value, 'field'),
-      new Required(data.value.field, 'field'),
       new RequiredParam(data.value, 'field', 'value'),
     ]);
   });

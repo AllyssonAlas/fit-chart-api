@@ -1,4 +1,4 @@
-import { Required, RequiredParam, RequiredPattern, RequiredString, Validator } from '@/application/validation';
+import { RequiredParam, RequiredPattern, RequiredString, Validator } from '@/application/validation';
 
 export class ValidationBuilder {
   private constructor(
@@ -12,10 +12,10 @@ export class ValidationBuilder {
   }
 
   required(subFieldFrom?: string): ValidationBuilder {
-    this.validators.push(new RequiredParam(this.value, this.fieldName));
-    this.validators.push(new Required(this.value[this.fieldName], this.fieldName));
     if (subFieldFrom) {
       this.validators.push(new RequiredParam(this.value, this.fieldName, subFieldFrom));
+    } else {
+      this.validators.push(new RequiredParam(this.value, this.fieldName));
     }
     return this;
   }

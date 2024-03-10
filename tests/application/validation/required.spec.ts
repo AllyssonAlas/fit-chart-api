@@ -58,6 +58,14 @@ describe('RequiredParam', () => {
     expect(error).toEqual(new RequiredParamError('field'));
   });
 
+  it('Should return RequiredParamError if field from value is falsy', () => {
+    const sut = new RequiredParam({ field: '' }, 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new RequiredParamError('field'));
+  });
+
   it('Should return RequiredSubParamError if subParamFrom is received', () => {
     const sut = new RequiredParam({}, 'subField', 'field');
 
