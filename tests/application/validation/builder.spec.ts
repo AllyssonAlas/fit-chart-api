@@ -1,4 +1,4 @@
-import { Required, RequiredParam, RequiredString, ValidationBuilder } from '@/application/validation';
+import { Required, RequiredParam, RequiredPattern, RequiredString, ValidationBuilder } from '@/application/validation';
 
 describe('ValidationBuilder', () => {
   it('Should return RequiredParam and Required validators', () => {
@@ -23,6 +23,20 @@ describe('ValidationBuilder', () => {
 
     expect(validators).toEqual([
       new RequiredString(data.value, 'value'),
+    ]);
+  });
+
+  it('Should return RequiredPattern validator with email regex', () => {
+    const data = { value: 'any_value' };
+    const validators = ValidationBuilder
+      .of({ value: data, fieldName: 'value' })
+      .string()
+      .email()
+      .build();
+
+    expect(validators).toEqual([
+      new RequiredString(data.value, 'value'),
+      new RequiredPattern(data.value, 'value', /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi),
     ]);
   });
 });
