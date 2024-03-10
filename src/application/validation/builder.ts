@@ -11,9 +11,12 @@ export class ValidationBuilder {
     return new ValidationBuilder(value, fieldName);
   }
 
-  required(): ValidationBuilder {
+  required(subFieldFrom?: string): ValidationBuilder {
     this.validators.push(new RequiredParam(this.value, this.fieldName));
     this.validators.push(new Required(this.value[this.fieldName], this.fieldName));
+    if (subFieldFrom) {
+      this.validators.push(new RequiredParam(this.value, this.fieldName, subFieldFrom));
+    }
     return this;
   }
 
