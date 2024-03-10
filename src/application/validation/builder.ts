@@ -7,7 +7,7 @@ export class ValidationBuilder {
     private readonly validators: Validator[] = [],
   ) {}
 
-  static of({ value, fieldName }: { value: any, fieldName: string }): ValidationBuilder {
+  static of(value: any, fieldName: string): ValidationBuilder {
     return new ValidationBuilder(value, fieldName);
   }
 

@@ -4,7 +4,7 @@ describe('ValidationBuilder', () => {
   it('Should return RequiredParam and Required validators', () => {
     const data = { value: 'any_value' };
     const validators = ValidationBuilder
-      .of({ value: data, fieldName: 'value' })
+      .of(data, 'value')
       .required()
       .build();
 
@@ -17,7 +17,7 @@ describe('ValidationBuilder', () => {
     const data = { value: { field: 'any_value' } };
 
     const validators = ValidationBuilder
-      .of({ value: data.value, fieldName: 'field' })
+      .of(data.value, 'field')
       .required('value')
       .build();
 
@@ -29,7 +29,7 @@ describe('ValidationBuilder', () => {
   it('Should return RequiredString validator', () => {
     const data = { value: 'any_value' };
     const validators = ValidationBuilder
-      .of({ value: data, fieldName: 'value' })
+      .of(data, 'value')
       .string()
       .build();
 
@@ -41,7 +41,7 @@ describe('ValidationBuilder', () => {
   it('Should return RequiredPattern validator with email regex', () => {
     const data = { value: 'any_value' };
     const validators = ValidationBuilder
-      .of({ value: data, fieldName: 'value' })
+      .of(data, 'value')
       .string()
       .email()
       .build();
@@ -55,7 +55,7 @@ describe('ValidationBuilder', () => {
   it('Should return RequiredPattern validator with postal code regex', () => {
     const data = { value: 'any_value' };
     const validators = ValidationBuilder
-      .of({ value: data, fieldName: 'value' })
+      .of(data, 'value')
       .string()
       .postalCode()
       .build();

@@ -38,19 +38,20 @@ export class CreateUserController {
   }
 
   private validate(request: Request): Error | undefined {
+    const { of } = Builder;
     return new ValidationComposite([
-      ...Builder.of({ value: request, fieldName: 'name' }).required().string().build(),
-      ...Builder.of({ value: request, fieldName: 'email' }).required().string().email().build(),
-      ...Builder.of({ value: request, fieldName: 'password' }).required().string().build(),
-      ...Builder.of({ value: request, fieldName: 'role' }).required().string().build(),
-      ...Builder.of({ value: request, fieldName: 'contact' }).required().string().build(),
-      ...Builder.of({ value: request, fieldName: 'address' }).required().build(),
-      ...Builder.of({ value: request.address, fieldName: 'number' }).required('address').string().build(),
-      ...Builder.of({ value: request.address, fieldName: 'street' }).required('address').string().build(),
-      ...Builder.of({ value: request.address, fieldName: 'neighborhood' }).required('address').string().build(),
-      ...Builder.of({ value: request.address, fieldName: 'city' }).required('address').string().build(),
-      ...Builder.of({ value: request.address, fieldName: 'state' }).required('address').string().build(),
-      ...Builder.of({ value: request.address, fieldName: 'postalCode' }).required('address').string().postalCode().build(),
+      ...of(request, 'name').required().string().build(),
+      ...of(request, 'email').required().string().email().build(),
+      ...of(request, 'password').required().string().build(),
+      ...of(request, 'role').required().string().build(),
+      ...of(request, 'contact').required().string().build(),
+      ...of(request, 'address').required().build(),
+      ...of(request.address, 'number').required('address').string().build(),
+      ...of(request.address, 'street').required('address').string().build(),
+      ...of(request.address, 'neighborhood').required('address').string().build(),
+      ...of(request.address, 'city').required('address').string().build(),
+      ...of(request.address, 'state').required('address').string().build(),
+      ...of(request.address, 'postalCode').required('address').string().postalCode().build(),
     ]).validate();
   }
 }
