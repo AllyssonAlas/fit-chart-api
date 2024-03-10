@@ -1,4 +1,4 @@
-import { Required, RequiredParam, Validator } from '@/application/validation';
+import { Required, RequiredParam, RequiredString, Validator } from '@/application/validation';
 
 export class ValidationBuilder {
   private constructor(
@@ -14,6 +14,11 @@ export class ValidationBuilder {
   required(): ValidationBuilder {
     this.validators.push(new RequiredParam(this.value, this.fieldName));
     this.validators.push(new Required(this.value[this.fieldName], this.fieldName));
+    return this;
+  }
+
+  string(): ValidationBuilder {
+    this.validators.push(new RequiredString(this.value[this.fieldName], this.fieldName));
     return this;
   }
 
