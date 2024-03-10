@@ -14,6 +14,21 @@ describe('ValidationBuilder', () => {
     ]);
   });
 
+  it('Should return RequiredParam with subFieldFrom and Required validators', () => {
+    const data = { value: { field: 'any_value' } };
+
+    const validators = ValidationBuilder
+      .of({ value: data.value, fieldName: 'field' })
+      .required('value')
+      .build();
+
+    expect(validators).toEqual([
+      new RequiredParam(data.value, 'field'),
+      new Required(data.value.field, 'field'),
+      new RequiredParam(data.value, 'field', 'value'),
+    ]);
+  });
+
   it('Should return RequiredString validator', () => {
     const data = { value: 'any_value' };
     const validators = ValidationBuilder
