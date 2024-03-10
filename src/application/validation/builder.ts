@@ -27,6 +27,11 @@ export class ValidationBuilder {
     return this;
   }
 
+  postalCode(): ValidationBuilder {
+    this.validators.push(new RequiredPattern(this.value[this.fieldName], this.fieldName, /^[0-9]{5}-[0-9]{3}$/));
+    return this;
+  }
+
   build(): Validator[] {
     return this.validators;
   }
