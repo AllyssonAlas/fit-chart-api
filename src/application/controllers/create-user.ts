@@ -38,20 +38,23 @@ export class CreateUserController {
   }
 
   private validate(request: Request): Error | undefined {
-    const { of } = Builder;
     return new ValidationComposite([
-      ...of(request, 'name').required().string().build(),
-      ...of(request, 'email').required().string().email().build(),
-      ...of(request, 'password').required().string().build(),
-      ...of(request, 'role').required().string().build(),
-      ...of(request, 'contact').required().string().build(),
-      ...of(request, 'address').required().build(),
-      ...of(request.address, 'number').required('address').string().build(),
-      ...of(request.address, 'street').required('address').string().build(),
-      ...of(request.address, 'neighborhood').required('address').string().build(),
-      ...of(request.address, 'city').required('address').string().build(),
-      ...of(request.address, 'state').required('address').string().build(),
-      ...of(request.address, 'postalCode').required('address').string().postalCode().build(),
+      ...Builder.of(request)
+        .field('name').required().string()
+        .field('email').required().string().email()
+        .field('password').required().string()
+        .field('role').required().string()
+        .field('contact').required().string()
+        .field('address').required()
+        .build(),
+      ...Builder.of(request.address)
+        .field('number').required('address').string()
+        .field('street').required('address').string()
+        .field('neighborhood').required('address').string()
+        .field('city').required('address').string()
+        .field('state').required('address').string()
+        .field('postalCode').required('address').string().postalCode()
+        .build(),
     ]).validate();
   }
 }

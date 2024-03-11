@@ -3,12 +3,17 @@ import { RequiredParam, RequiredPattern, RequiredString, Validator } from '@/app
 export class ValidationBuilder {
   private constructor(
     private readonly value: any,
-    private readonly fieldName: string,
+    private fieldName: string = '',
     private readonly validators: Validator[] = [],
   ) {}
 
-  static of(value: any, fieldName: string): ValidationBuilder {
-    return new ValidationBuilder(value, fieldName);
+  static of(value: any): ValidationBuilder {
+    return new ValidationBuilder(value);
+  }
+
+  field(fieldName: string): ValidationBuilder {
+    this.fieldName = fieldName;
+    return this;
   }
 
   required(subFieldFrom?: string): ValidationBuilder {
