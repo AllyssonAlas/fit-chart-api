@@ -1,6 +1,7 @@
 import { CreateUser } from '@/domain/usecases';
-import { HttpResponse, badRequest, noContent, serverError } from '@/application/helpers';
-import { ValidationBuilder as Builder, ValidationComposite } from '@/application/validation';
+import { Controller } from '@/application/controllers';
+import { HttpResponse, noContent } from '@/application/helpers';
+import { ValidationBuilder as Builder, Validator } from '@/application/validation';
 
 type Request = {
   name: string;
@@ -21,24 +22,18 @@ type Request = {
 
 type Model = null | Error
 
-export class CreateUserController {
-  constructor(private readonly createUser: CreateUser) {}
-
-  async perform(request: Request): Promise<HttpResponse<Model>> {
-    try {
-      const error = this.validate(request);
-      if (error) {
-        return badRequest(error);
-      }
-      await this.createUser(request);
-      return noContent();
-    } catch (error) {
-      return serverError(error instanceof Error ? error : undefined);
-    }
+export class CreateUserController extends Controller {
+  constructor(private readonly createUser: CreateUser) {
+    super();
   }
 
-  private validate(request: Request): Error | undefined {
-    return new ValidationComposite([
+  async perform(request: Request): Promise<HttpResponse<Model>> {
+    await this.createUser(request);
+    return noContent();
+  }
+
+  override buildValidators(request: any): Validator[] {
+    return [
       ...Builder.of(request)
         .field('name').required().string()
         .field('email').required().string().email()
@@ -55,6 +50,6 @@ export class CreateUserController {
         .field('state').required('address').string()
         .field('postalCode').required('address').string().postalCode()
         .build(),
-    ]).validate();
-  }
+    ];
+  };
 }

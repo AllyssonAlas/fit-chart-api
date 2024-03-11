@@ -1,6 +1,5 @@
 import { CreateUserController } from '@/application/controllers';
-import { ServerError } from '@/application/errors';
-import { RequiredParam, RequiredPattern, RequiredString, ValidationComposite } from '@/application/validation';
+import { RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
 
 jest.mock('@/application/validation/composite');
 
@@ -31,16 +30,11 @@ describe('CreateUserController', () => {
   beforeEach(() => {
     sut = new CreateUserController(createUser);
   });
-  it('Should return 400 if ValidationComposite returns an error', async () => {
-    const error = new Error('validation_error');
-    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
-      validate: jest.fn().mockReturnValueOnce(error),
-    }));
-    jest.mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy);
 
-    const response = await sut.perform(request);
+  it('Should build Validators correctly', () => {
+    const validators = sut.buildValidators(request);
 
-    expect(ValidationComposite).toHaveBeenCalledWith([
+    expect(validators).toEqual([
       new RequiredParam(request, 'name'),
       new RequiredString(request.name, 'name'),
       new RequiredParam(request, 'email'),
@@ -67,30 +61,17 @@ describe('CreateUserController', () => {
       new RequiredString(request.address.postalCode, 'postalCode'),
       new RequiredPattern(request.address.postalCode, 'postalCode', /^[0-9]{5}-[0-9]{3}$/),
     ]);
-    expect(response).toEqual({ data: error, statusCode: 400 });
   });
 
   it('Should call CreateUser with correct input', async () => {
-    await sut.perform(request);
+    await sut.handle(request);
 
     expect(createUser).toHaveBeenCalledWith(request);
     expect(createUser).toHaveBeenCalledTimes(1);
   });
 
-  it('Should return 500 if CreateUser throws', async () => {
-    const error = new Error('create_user_error');
-    createUser.mockRejectedValueOnce(error);
-
-    const response = await sut.perform(request);
-
-    expect(response).toEqual({
-      data: new ServerError(error),
-      statusCode: 500,
-    });
-  });
-
   it('Should return 204 on success', async () => {
-    const response = await sut.perform(request);
+    const response = await sut.handle(request);
 
     expect(response).toEqual({
       data: null,

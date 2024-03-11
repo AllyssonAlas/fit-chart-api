@@ -1,0 +1,67 @@
+import { Controller } from '@/application/controllers';
+import { HttpResponse } from '@/application/helpers';
+import { ServerError } from '@/application/errors';
+import { ValidationComposite } from '@/application/validation';
+
+jest.mock('@/application/validation/composite');
+
+class ControllerStub extends Controller {
+  result: HttpResponse = {
+    statusCode: 200,
+    data: 'any_value',
+  };
+
+  async perform(request: any): Promise<HttpResponse> {
+    return this.result;
+  };
+}
+
+describe('Controller', () => {
+  let sut: ControllerStub;
+
+  beforeEach(() => {
+    sut = new ControllerStub();
+  });
+
+  it('Should return 400 if ValidationComposite returns an error', async () => {
+    const error = new Error('validation_error');
+    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
+      validate: jest.fn().mockReturnValueOnce(error),
+    }));
+    jest.mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy);
+
+    const response = await sut.handle('any_value');
+
+    expect(ValidationComposite).toHaveBeenCalledWith([]);
+    expect(response).toEqual({ data: error, statusCode: 400 });
+  });
+
+  it('should return 500 if perform throws', async () => {
+    const error = new Error('perform_error');
+    jest.spyOn(sut, 'perform').mockRejectedValueOnce(error);
+
+    const httpResponse = await sut.handle('any_value');
+
+    expect(httpResponse).toEqual({
+      statusCode: 500,
+      data: new ServerError(error),
+    });
+  });
+
+  it('should return 500 if perform throws if undefined error', async () => {
+    jest.spyOn(sut, 'perform').mockRejectedValueOnce(undefined);
+
+    const httpResponse = await sut.handle('any_value');
+
+    expect(httpResponse).toEqual({
+      statusCode: 500,
+      data: new ServerError(undefined),
+    });
+  });
+
+  it('should return same result as perform', async () => {
+    const httpResponse = await sut.handle('any_value');
+
+    expect(httpResponse).toEqual(sut.result);
+  });
+});
