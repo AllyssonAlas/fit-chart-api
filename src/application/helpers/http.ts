@@ -3,7 +3,7 @@ import { ServerError } from '@/application/errors';
 export type HttpResponse<T = any> = {
   data: T;
   statusCode: number;
-}
+};
 
 export const noContent = (): HttpResponse<null> => ({
   data: null,

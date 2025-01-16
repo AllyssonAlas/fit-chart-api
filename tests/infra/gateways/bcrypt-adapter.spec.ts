@@ -8,7 +8,7 @@ describe('BcryptAdapter', () => {
   let plainText: string;
   let salt: number;
 
-  let sut : BcryptAdapter;
+  let sut: BcryptAdapter;
   let fakeBcrypt: jest.Mocked<typeof bcrypt>;
 
   beforeAll(() => {

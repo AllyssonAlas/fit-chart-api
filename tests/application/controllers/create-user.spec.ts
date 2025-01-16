@@ -39,7 +39,7 @@ describe('CreateUserController', () => {
       new RequiredString(request.name, 'name'),
       new RequiredParam(request, 'email'),
       new RequiredString(request.email, 'email'),
-      new RequiredPattern(request.email, 'email', /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi),
+      new RequiredPattern(request.email, 'email', /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gim),
       new RequiredParam(request, 'password'),
       new RequiredString(request.password, 'password'),
       new RequiredParam(request, 'role'),

@@ -1,6 +1,6 @@
 import { Controller } from '@/application/controllers';
-import { HttpResponse } from '@/application/helpers';
 import { ServerError } from '@/application/errors';
+import type { HttpResponse } from '@/application/helpers';
 import { ValidationComposite } from '@/application/validation';
 
 jest.mock('@/application/validation/composite');
@@ -13,7 +13,7 @@ class ControllerStub extends Controller {
 
   async perform(request: any): Promise<HttpResponse> {
     return this.result;
-  };
+  }
 }
 
 describe('Controller', () => {

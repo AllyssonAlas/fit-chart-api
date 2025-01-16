@@ -1,8 +1,11 @@
 import { InvalidParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
-import { Validator } from '@/application/validation';
+import type { Validator } from '@/application/validation';
 
 export class Required<T = any> implements Validator {
-  constructor(readonly value: T, readonly fieldName: string) {}
+  constructor(
+    readonly value: T,
+    readonly fieldName: string,
+  ) {}
 
   validate(): Error | undefined {
     if (!this.value) {
@@ -12,7 +15,11 @@ export class Required<T = any> implements Validator {
 }
 
 export class RequiredParam extends Required {
-  constructor(override readonly value: object, override readonly fieldName: string, readonly subFieldFrom?: string) {
+  constructor(
+    override readonly value: object,
+    override readonly fieldName: string,
+    readonly subFieldFrom?: string,
+  ) {
     super(value, fieldName);
   }
 
@@ -26,7 +33,10 @@ export class RequiredParam extends Required {
 }
 
 export class RequiredString extends Required {
-  constructor(override readonly value: string, override readonly fieldName: string) {
+  constructor(
+    override readonly value: string,
+    override readonly fieldName: string,
+  ) {
     super(value, fieldName);
   }
 
@@ -38,7 +48,11 @@ export class RequiredString extends Required {
 }
 
 export class RequiredPattern extends RequiredString {
-  constructor(override readonly value: string, override readonly fieldName: string, readonly pattern: RegExp) {
+  constructor(
+    override readonly value: string,
+    override readonly fieldName: string,
+    readonly pattern: RegExp,
+  ) {
     super(value, fieldName);
   }
 

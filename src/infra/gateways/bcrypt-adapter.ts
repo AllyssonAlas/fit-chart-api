@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import { HashGenerator } from '@/domain/contracts/gateways';
+import type { HashGenerator } from '@/domain/contracts/gateways';
 
 export class BcryptAdapter implements HashGenerator {
   constructor(private readonly salt: number) {}

@@ -3,12 +3,14 @@ export namespace LoadRoleRepository {
     name: string;
   };
 
-  export type Output = {
-    id: string;
-    name: string;
-  } | undefined;
+  export type Output =
+    | {
+        id: string;
+        name: string;
+      }
+    | undefined;
 }
 
 export interface LoadRoleRepository {
-  load (input: LoadRoleRepository.Input): Promise<LoadRoleRepository.Output>
+  load(input: LoadRoleRepository.Input): Promise<LoadRoleRepository.Output>;
 }

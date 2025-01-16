@@ -4,4 +4,4 @@ export class ServerError extends Error {
     this.name = 'ServerError';
     this.stack = error?.stack;
   }
-};
+}

@@ -1,10 +1,10 @@
-import { mock, MockProxy } from 'jest-mock-extended';
+import { type MockProxy, mock } from 'jest-mock-extended';
 
+import type { HashGenerator } from '@/domain/contracts/gateways';
+import type { LoadRoleRepository, LoadUserRepository, SaveUserRepository } from '@/domain/contracts/repositories';
 import { User } from '@/domain/entities';
-import { CreateUser, setupCreateUser } from '@/domain/usecases';
-import { LoadUserRepository, SaveUserRepository, LoadRoleRepository } from '@/domain/contracts/repositories';
-import { HashGenerator } from '@/domain/contracts/gateways';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
+import { type CreateUser, setupCreateUser } from '@/domain/usecases';
 
 jest.mock('@/domain/entities/user');
 

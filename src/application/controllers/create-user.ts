@@ -1,7 +1,7 @@
-import { CreateUser } from '@/domain/usecases';
 import { Controller } from '@/application/controllers';
-import { HttpResponse, noContent } from '@/application/helpers';
-import { ValidationBuilder as Builder, Validator } from '@/application/validation';
+import { type HttpResponse, noContent } from '@/application/helpers';
+import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
+import type { CreateUser } from '@/domain/usecases';
 
 type Request = {
   name: string;
@@ -10,17 +10,17 @@ type Request = {
   role: string;
   contact: string;
   address: {
-    number: string
-    street: string
-    neighborhood: string
-    city: string
-    state: string
-    postalCode: string
-    complement?: string
+    number: string;
+    street: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    complement?: string;
   };
 };
 
-type Model = null | Error
+type Model = null | Error;
 
 export class CreateUserController extends Controller {
   constructor(private readonly createUser: CreateUser) {
@@ -33,6 +33,7 @@ export class CreateUserController extends Controller {
   }
 
   override buildValidators(request: any): Validator[] {
+    // biome-ignore format: this array should not be formatted
     return [
       ...Builder.of(request)
         .field('name').required().string()
@@ -51,5 +52,5 @@ export class CreateUserController extends Controller {
         .field('postalCode').required('address').string().postalCode()
         .build(),
     ];
-  };
+  }
 }

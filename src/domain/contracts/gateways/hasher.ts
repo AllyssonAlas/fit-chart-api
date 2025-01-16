@@ -4,10 +4,10 @@ export namespace HashGenerator {
   };
 
   export type Output = {
-    cipherText: string
-  }
+    cipherText: string;
+  };
 }
 
 export interface HashGenerator {
-  generate (input: HashGenerator.Input): Promise<HashGenerator.Output>
+  generate(input: HashGenerator.Input): Promise<HashGenerator.Output>;
 }

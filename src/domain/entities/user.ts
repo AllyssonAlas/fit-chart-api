@@ -5,15 +5,15 @@ type Data = {
   role: string;
   contact: string;
   address: {
-    number: string
-    street: string
-    neighborhood: string
-    city: string
-    state: string
-    postalCode: string
-    complement?: string
+    number: string;
+    street: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    complement?: string;
   };
-}
+};
 
 export class User {
   name: string;
@@ -22,13 +22,13 @@ export class User {
   role: string;
   contact: string;
   address: {
-    number: string
-    street: string
-    neighborhood: string
-    city: string
-    state: string
-    postalCode: string
-    complement?: string
+    number: string;
+    street: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    complement?: string;
   };
 
   constructor(data: Data) {

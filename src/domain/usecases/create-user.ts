@@ -1,12 +1,16 @@
+import type { HashGenerator } from '@/domain/contracts/gateways';
+import type { LoadRoleRepository, LoadUserRepository, SaveUserRepository } from '@/domain/contracts/repositories';
 import { User } from '@/domain/entities';
-import { LoadUserRepository, SaveUserRepository, LoadRoleRepository } from '@/domain/contracts/repositories';
-import { HashGenerator } from '@/domain/contracts/gateways';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 
-type Input = User
-type Output = void
-export type CreateUser = (input: Input) => Promise<Output>
-type Setup = (userRepository: LoadUserRepository & SaveUserRepository, roleRepository: LoadRoleRepository, hasher: HashGenerator) => CreateUser
+type Input = User;
+type Output = void;
+export type CreateUser = (input: Input) => Promise<Output>;
+type Setup = (
+  userRepository: LoadUserRepository & SaveUserRepository,
+  roleRepository: LoadRoleRepository,
+  hasher: HashGenerator,
+) => CreateUser;
 
 export const setupCreateUser: Setup = (userRepository, roleRepository, hasher) => {
   return async (input) => {

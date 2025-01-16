@@ -1,9 +1,9 @@
-import { RequiredParam, RequiredPattern, RequiredString, Validator } from '@/application/validation';
+import { RequiredParam, RequiredPattern, RequiredString, type Validator } from '@/application/validation';
 
 export class ValidationBuilder {
   private constructor(
     private readonly value: any,
-    private fieldName: string = '',
+    private fieldName = '',
     private readonly validators: Validator[] = [],
   ) {}
 
@@ -31,7 +31,9 @@ export class ValidationBuilder {
   }
 
   email(): ValidationBuilder {
-    this.validators.push(new RequiredPattern(this.value[this.fieldName], this.fieldName, /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gmi));
+    this.validators.push(
+      new RequiredPattern(this.value[this.fieldName], this.fieldName, /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gim),
+    );
     return this;
   }
 
