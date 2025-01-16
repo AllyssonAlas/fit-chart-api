@@ -25,11 +25,11 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "npx @biomejs/biome check",
-    "lint:fix": "yarn lint -- --write",
+    "lint:fix": "npm run lint -- --write",
     "test": "jest --passWithNoTests --no-cache --runInBand",
-    "test:coverage": "yarn test -- --coverage",
-    "test:watch": "yarn test -- --watch",
-    "test:staged": "yarn test -- --findRelatedTests",
+    "test:coverage": "npm t -- --coverage",
+    "test:watch": "npm t -- --watch",
+    "test:staged": "npm t -- --findRelatedTests",
     "prepare": "husky"
   }
 }
