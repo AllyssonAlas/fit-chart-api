@@ -14,10 +14,13 @@
     "jest": "^29.7.0",
     "jest-mock-extended": "^3.0.5",
     "lint-staged": "^15.2.2",
+    "prisma": "^6.2.1",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.33.0",
+    "@prisma/client": "^6.2.1",
     "bcrypt": "^5.1.1",
     "module-alias": "^2.2.3",
     "rimraf": "^6.0.1"
@@ -26,10 +29,16 @@
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "npx @biomejs/biome check",
     "lint:fix": "npm run lint -- --write",
-    "test": "jest --passWithNoTests --no-cache --runInBand",
+    "env:test": "npx dotenvx run -f .env.test --",
+    "prisma:migrate:dev": "npx prisma migrate dev",
+    "prisma:migrate:test": "npm run env:test npm run prisma:migrate:dev",
+    "test": "npm run env:test -- jest --passWithNoTests --no-cache --runInBand",
     "test:coverage": "npm t -- --coverage",
     "test:watch": "npm t -- --watch",
     "test:staged": "npm t -- --findRelatedTests",
     "prepare": "husky"
+  },
+  "prisma": {
+    "schema": "src/infra/database/postgres/prisma/schema.prisma"
   }
 }
