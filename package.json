@@ -29,6 +29,8 @@
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "npx @biomejs/biome check",
     "lint:fix": "npm run lint -- --write",
+    "test:docker:up": "docker-compose -f docker-compose-test-db.yml up -d",
+    "test:docker:down": "docker-compose -f docker-compose-test-db.yml down",
     "env:test": "npx dotenvx run -f .env.test --",
     "prisma:migrate:dev": "npx prisma migrate dev",
     "prisma:migrate:test": "npm run env:test npm run prisma:migrate:dev",
