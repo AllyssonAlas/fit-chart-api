@@ -8,7 +8,7 @@ export abstract class Controller {
     return [];
   }
 
-  async handle(request: any): Promise<HttpResponse | any> {
+  async handle(request: any): Promise<HttpResponse> {
     const error = this.validate(request);
     if (error) return badRequest(error);
     try {
