@@ -3,12 +3,10 @@ export namespace LoadRoleRepository {
     name: string;
   };
 
-  export type Output =
-    | {
-        id: string;
-        name: string;
-      }
-    | undefined;
+  export type Output = {
+    id: string;
+    name: string;
+  } | null;
 }
 
 export interface LoadRoleRepository {

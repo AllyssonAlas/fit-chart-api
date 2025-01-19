@@ -35,7 +35,7 @@ describe('CreateUser', () => {
     hashGenerator = mock();
     roleRepository = mock();
     userRepository = mock();
-    userRepository.load.mockResolvedValue(undefined);
+    userRepository.load.mockResolvedValue(null);
     roleRepository.load.mockResolvedValue({ id: 'any_role_id', name: 'any_role_name' });
     hashGenerator.generate.mockResolvedValue({ cipherText: 'hashed_text' });
   });
@@ -74,8 +74,8 @@ describe('CreateUser', () => {
     expect(roleRepository.load).toHaveBeenCalledTimes(1);
   });
 
-  it('Should throw an NonexistentRoleError if LoadUserRepository returns undefined', async () => {
-    roleRepository.load.mockResolvedValueOnce(undefined);
+  it('Should throw an NonexistentRoleError if LoadUserRepository returns null', async () => {
+    roleRepository.load.mockResolvedValueOnce(null);
 
     const promise = sut(user);
 
