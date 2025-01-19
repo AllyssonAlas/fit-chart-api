@@ -17,6 +17,7 @@ describe('CreateUserController', () => {
       postalCode: '00000-000',
       state: 'any_state',
       street: 'any_street',
+      complement: 'any_complement',
     },
   };
 
