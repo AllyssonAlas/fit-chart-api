@@ -33,4 +33,20 @@ describe('NullableParam', () => {
 
     expect(error).toBeUndefined();
   });
+
+  it('Should return undefined if value is null', () => {
+    const sut = new NullableParam({ field: '' }, 'field', 'string');
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
+  });
+
+  it('Should return undefined if value is null', () => {
+    const sut = new NullableParam({ field: 'any_value' }, 'field', 'string');
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
+  });
 });
