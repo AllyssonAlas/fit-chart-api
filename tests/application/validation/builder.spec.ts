@@ -1,4 +1,10 @@
-import { RequiredParam, RequiredPattern, RequiredString, ValidationBuilder } from '@/application/validation';
+import {
+  NullableParam,
+  RequiredParam,
+  RequiredPattern,
+  RequiredString,
+  ValidationBuilder,
+} from '@/application/validation';
 
 describe('ValidationBuilder', () => {
   it('Should return RequiredParam and Required validators', () => {
@@ -40,6 +46,16 @@ describe('ValidationBuilder', () => {
     expect(validators).toEqual([
       new RequiredString(data.value, 'value'),
       new RequiredPattern(data.value, 'value', /^[0-9]{5}-[0-9]{3}$/),
+    ]);
+  });
+
+  it('Should return NullableParam validator', () => {
+    const data = { value: 'any_value' };
+    const validators = ValidationBuilder.of(data).field('value').nullable('string').string().build();
+
+    expect(validators).toEqual([
+      new NullableParam(data.value, 'value', 'string'),
+      new RequiredString(data.value, 'value'),
     ]);
   });
 });
