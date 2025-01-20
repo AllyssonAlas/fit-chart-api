@@ -8,7 +8,9 @@ export class NullableParam {
   ) {}
 
   validate(): Error | undefined {
-    if (this.value[this.fieldName] !== null) {
+    const fieldValue = this.value[this.fieldName];
+    // biome-ignore lint/suspicious/useValidTypeof: This validation needs to use typeof dynamically
+    if (fieldValue !== null && typeof fieldValue !== this.valueType) {
       return new InvalidParamError(this.fieldName);
     }
   }
