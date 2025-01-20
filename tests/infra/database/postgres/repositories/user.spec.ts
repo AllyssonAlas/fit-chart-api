@@ -3,10 +3,21 @@ import { PrismaClient } from '@prisma/client';
 import { UserRepository } from '@/infra/database/postgres/repositories';
 
 describe('UserRepository', () => {
+  let prisma: PrismaClient;
   let sut: UserRepository;
+
+  beforeAll(() => {
+    prisma = new PrismaClient();
+  });
 
   beforeEach(() => {
     sut = new UserRepository();
+  });
+
+  afterEach(async () => {
+    await prisma.user.deleteMany({});
+    await prisma.role.deleteMany({});
+    await prisma.permission.deleteMany({});
   });
 
   describe('load', () => {
@@ -14,6 +25,35 @@ describe('UserRepository', () => {
       const user = await sut.load({ email: 'any_email@mail.com' });
 
       expect(user).toBeNull();
+    });
+
+    it('Should return an User if email exists', async () => {
+      await prisma.role.create({
+        data: {
+          id: 'any_role_id',
+          name: 'any_role_name',
+          permissions: { create: [{ name: 'any_permission_1' }, { name: 'any_permission_2' }] },
+        },
+      });
+      await prisma.user.create({
+        data: {
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          role: 'any_role_name',
+          contact: 'any_contact',
+        },
+      });
+
+      const user = await sut.load({ email: 'any_email@mail.com' });
+
+      expect(user?.id).toBeTruthy();
+      expect(user?.name).toBe('any_name');
+      expect(user?.email).toBe('any_email@mail.com');
+      expect(user?.password).toBe('any_password');
+      expect(user?.role).toBe('any_role_name');
+      expect(user?.contact).toBe('any_contact');
+      expect(user?.address).toBeUndefined();
     });
   });
 });
