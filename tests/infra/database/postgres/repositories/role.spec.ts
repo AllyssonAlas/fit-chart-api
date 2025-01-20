@@ -16,6 +16,7 @@ describe('RoleRepository', () => {
 
   afterEach(async () => {
     await prisma.role.deleteMany({});
+    await prisma.permission.deleteMany({});
   });
 
   describe('load', () => {
@@ -26,12 +27,20 @@ describe('RoleRepository', () => {
     });
 
     it('Should return a Role if name exists', async () => {
-      await prisma.role.create({ data: { name: 'any_role_name' } });
+      await prisma.role.create({
+        data: {
+          name: 'any_role_name',
+          permissions: {
+            create: [{ name: 'permission_1' }, { name: 'permission_2' }, { name: 'permission_3' }],
+          },
+        },
+      });
 
       const role = await sut.load({ name: 'any_role_name' });
 
       expect(role?.id).toBeTruthy();
       expect(role?.name).toBe('any_role_name');
+      expect(role?.permissions).toEqual(['permission_1', 'permission_2', 'permission_3']);
     });
   });
 });
