@@ -1,4 +1,10 @@
-import { RequiredParam, RequiredPattern, RequiredString, type Validator } from '@/application/validation';
+import {
+  NullableParam,
+  RequiredParam,
+  RequiredPattern,
+  RequiredString,
+  type Validator,
+} from '@/application/validation';
 
 export class ValidationBuilder {
   private constructor(
@@ -39,6 +45,11 @@ export class ValidationBuilder {
 
   postalCode(): ValidationBuilder {
     this.validators.push(new RequiredPattern(this.value[this.fieldName], this.fieldName, /^[0-9]{5}-[0-9]{3}$/));
+    return this;
+  }
+
+  nullable(type: string): ValidationBuilder {
+    this.validators.push(new NullableParam(this.value[this.fieldName], this.fieldName, type));
     return this;
   }
 
