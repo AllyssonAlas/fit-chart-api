@@ -7,7 +7,9 @@ export class NullableParam {
     private readonly valueType: string,
   ) {}
 
-  validate(): Error {
-    return new InvalidParamError(this.fieldName);
+  validate(): Error | undefined {
+    if (this.value[this.fieldName] !== null) {
+      return new InvalidParamError(this.fieldName);
+    }
   }
 }
