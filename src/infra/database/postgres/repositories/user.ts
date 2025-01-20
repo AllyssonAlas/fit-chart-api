@@ -4,6 +4,8 @@ import type { LoadUserRepository } from '@/domain/contracts/repositories';
 
 export class UserRepository implements LoadUserRepository {
   async load(input: LoadUserRepository.Input): Promise<LoadUserRepository.Output> {
-    return null;
+    const prisma = new PrismaClient();
+    const user = await prisma.user.findUnique({ where: input });
+    return user;
   }
 }
