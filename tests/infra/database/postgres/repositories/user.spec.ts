@@ -56,4 +56,50 @@ describe('UserRepository', () => {
       expect(user?.address).toBeUndefined();
     });
   });
+
+  describe('save', () => {
+    it('Should return an User if email exists', async () => {
+      await prisma.role.create({
+        data: {
+          id: 'any_role_id',
+          name: 'any_role_name',
+          permissions: { create: [{ name: 'any_permission_1' }, { name: 'any_permission_2' }] },
+        },
+      });
+
+      await sut.save({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        role: 'any_role_name',
+        contact: 'any_contact',
+        address: {
+          city: 'any_city',
+          complement: 'any_complement',
+          neighborhood: 'any_neighborhood',
+          number: 'any_number',
+          postalCode: 'any_postalCode',
+          state: 'st',
+          street: 'any_street',
+        },
+      });
+      const user = await prisma.user.findUnique({ where: { email: 'any_email@mail.com' }, include: { address: true } });
+
+      expect(user?.id).toBeTruthy();
+      expect(user?.name).toBe('any_name');
+      expect(user?.email).toBe('any_email@mail.com');
+      expect(user?.password).toBe('any_password');
+      expect(user?.role).toBe('any_role_name');
+      expect(user?.contact).toBe('any_contact');
+      // expect(user?.address).toEqual({
+      //   city: 'any_city',
+      //   complement: 'any_complement',
+      //   neighborhood: 'any_neighborhood',
+      //   number: 'any_number',
+      //   postalCode: 'any_postalCode',
+      //   state: 'st',
+      //   street: 'any_street',
+      // });
+    });
+  });
 });
