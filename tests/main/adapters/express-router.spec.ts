@@ -16,16 +16,29 @@ describe('ExpressRouter', () => {
     req = getMockReq({ body: { any: 'any' } });
     res = getMockRes().res;
     controller = mock();
+    controller.handle.mockResolvedValue({
+      data: { result: 'any' },
+      statusCode: 200,
+    });
   });
 
   beforeEach(() => {
     sut = adaptExpressRoute(controller);
   });
 
-  it('Should call handle with correct data', () => {
-    sut(req, res);
+  it('Should call handle with correct data', async () => {
+    await sut(req, res);
 
     expect(controller.handle).toHaveBeenCalledWith({ any: 'any' });
     expect(controller.handle).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should respond with 200 and correct data', async () => {
+    await sut(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({ result: 'any' });
+    expect(res.json).toHaveBeenCalledTimes(1);
   });
 });
