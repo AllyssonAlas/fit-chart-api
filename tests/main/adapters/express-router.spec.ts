@@ -55,4 +55,32 @@ describe('ExpressRouter', () => {
     expect(res.json).toHaveBeenCalledWith(null);
     expect(res.json).toHaveBeenCalledTimes(1);
   });
+
+  it('Should respond with 400 and correct error', async () => {
+    controller.handle.mockResolvedValueOnce({
+      data: new Error('any_error'),
+      statusCode: 400,
+    });
+
+    await sut(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({ error: 'any_error' });
+    expect(res.json).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should respond with 500 and correct error', async () => {
+    controller.handle.mockResolvedValueOnce({
+      data: new Error('any_error'),
+      statusCode: 500,
+    });
+
+    await sut(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({ error: 'any_error' });
+    expect(res.json).toHaveBeenCalledTimes(1);
+  });
 });
