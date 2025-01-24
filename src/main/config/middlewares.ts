@@ -1,7 +1,8 @@
 import type { Router } from 'express';
 
-import { bodyParser } from '@/main/middlewares';
+import { bodyParser, cors } from '@/main/middlewares';
 
 export const setupMiddlewares = (app: Router) => {
   app.use(bodyParser);
+  app.use(cors);
 };
