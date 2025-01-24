@@ -4,7 +4,7 @@ import type { Controller } from '@/application/controllers';
 
 export const adaptExpressRoute = (controller: Controller) => {
   return async (req: Request, res: Response) => {
-    const { data } = await controller.handle(req.body);
-    res.status(200).json(data);
+    const { data, statusCode } = await controller.handle(req.body);
+    res.status(statusCode).json(data);
   };
 };
