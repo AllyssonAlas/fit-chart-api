@@ -7,6 +7,18 @@ import {
 } from '@/application/validation';
 
 describe('ValidationBuilder', () => {
+  it('Should return a validators array if value is null', () => {
+    const validators = ValidationBuilder.of(null).field('value').required().build();
+
+    expect(validators).toEqual([new RequiredParam({}, 'value')]);
+  });
+
+  it('Should return a validators array if value is undefined', () => {
+    const validators = ValidationBuilder.of(undefined).field('value').required().build();
+
+    expect(validators).toEqual([new RequiredParam({}, 'value')]);
+  });
+
   it('Should return RequiredParam and Required validators', () => {
     const data = { value: 'any_value' };
     const validators = ValidationBuilder.of(data).field('value').required().build();
