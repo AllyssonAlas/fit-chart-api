@@ -18,3 +18,10 @@ export class InvalidParamError extends Error {
     this.name = 'InvalidParamError';
   }
 }
+
+export class LengthParamError extends Error {
+  constructor(param: string, length: number) {
+    super(`Param ${param} length should be ${length}`);
+    this.name = 'LengthParamError';
+  }
+}

@@ -1,4 +1,4 @@
-import { InvalidParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
+import { InvalidParamError, LengthParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
 import type { Validator } from '@/application/validation';
 
 export class Required<T = any> implements Validator {
@@ -70,5 +70,9 @@ export class RequiredLength extends RequiredString {
     readonly length: number,
   ) {
     super(value, fieldName);
+  }
+
+  validate(): Error {
+    return new LengthParamError(this.fieldName, this.length);
   }
 }
