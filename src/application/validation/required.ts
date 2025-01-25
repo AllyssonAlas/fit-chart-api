@@ -72,7 +72,9 @@ export class RequiredLength extends RequiredString {
     super(value, fieldName);
   }
 
-  validate(): Error {
-    return new LengthParamError(this.fieldName, this.length);
+  validate(): Error | undefined {
+    if (super.validate() || this.value.length !== this.length) {
+      return new LengthParamError(this.fieldName, this.length);
+    }
   }
 }
