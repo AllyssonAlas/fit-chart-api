@@ -1,5 +1,5 @@
 import { CreateUserController } from '@/application/controllers';
-import { RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
+import { RequiredLength, RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
 
 jest.mock('@/application/validation/composite');
 
@@ -58,6 +58,7 @@ describe('CreateUserController', () => {
       new RequiredString(request.address.city, 'city'),
       new RequiredParam(request.address, 'state', 'address'),
       new RequiredString(request.address.state, 'state'),
+      new RequiredLength(request.address.state, 'state', 2),
       new RequiredParam(request.address, 'postalCode', 'address'),
       new RequiredString(request.address.postalCode, 'postalCode'),
       new RequiredPattern(request.address.postalCode, 'postalCode', /^[0-9]{5}-[0-9]{3}$/),
