@@ -1,4 +1,4 @@
-import { InvalidParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
+import { InvalidParamError, LengthParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
 import { Required, RequiredLength, RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
 
 describe('Required', () => {
@@ -136,5 +136,13 @@ describe('RequiredLength', () => {
     const sut = new RequiredLength('any_value', 'field', 5);
 
     expect(sut).toBeInstanceOf(RequiredString);
+  });
+
+  it('Should return LengthParamError if value length is not equal to required length', () => {
+    const sut = new RequiredLength('1234', 'field', 5);
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new LengthParamError('field', 5));
   });
 });
