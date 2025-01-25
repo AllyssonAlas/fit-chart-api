@@ -1,5 +1,6 @@
 import {
   NullableParam,
+  RequiredLength,
   RequiredParam,
   RequiredPattern,
   RequiredString,
@@ -59,6 +60,13 @@ describe('ValidationBuilder', () => {
       new RequiredString(data.value, 'value'),
       new RequiredPattern(data.value, 'value', /^[0-9]{5}-[0-9]{3}$/),
     ]);
+  });
+
+  it('Should return RequiredLength validator', () => {
+    const data = { value: 'any_value' };
+    const validators = ValidationBuilder.of(data).field('value').string().length(5).build();
+
+    expect(validators).toEqual([new RequiredString(data.value, 'value'), new RequiredLength(data.value, 'value', 5)]);
   });
 
   it('Should return NullableParam validator', () => {
