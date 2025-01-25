@@ -145,4 +145,12 @@ describe('RequiredLength', () => {
 
     expect(error).toEqual(new LengthParamError('field', 5));
   });
+
+  it('Should return undefined if value length is equal to required length', () => {
+    const sut = new RequiredLength('12345', 'field', 5);
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
+  });
 });
