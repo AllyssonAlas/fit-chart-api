@@ -14,7 +14,7 @@ export class ValidationBuilder {
   ) {}
 
   static of(value: any): ValidationBuilder {
-    return new ValidationBuilder(value);
+    return new ValidationBuilder(value || {});
   }
 
   field(fieldName: string): ValidationBuilder {
