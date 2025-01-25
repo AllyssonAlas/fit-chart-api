@@ -48,7 +48,7 @@ export class CreateUserController extends Controller {
         .field('street').required('address').string()
         .field('neighborhood').required('address').string()
         .field('city').required('address').string()
-        .field('state').required('address').string()
+        .field('state').required('address').string().length(2)
         .field('postalCode').required('address').string().postalCode()
         .build(),
     ];
