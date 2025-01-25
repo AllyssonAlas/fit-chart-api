@@ -1,5 +1,6 @@
 import {
   NullableParam,
+  RequiredLength,
   RequiredParam,
   RequiredPattern,
   RequiredString,
@@ -40,6 +41,11 @@ export class ValidationBuilder {
     this.validators.push(
       new RequiredPattern(this.value[this.fieldName], this.fieldName, /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gim),
     );
+    return this;
+  }
+
+  length(length: number): ValidationBuilder {
+    this.validators.push(new RequiredLength(this.value[this.fieldName], this.fieldName, length));
     return this;
   }
 
