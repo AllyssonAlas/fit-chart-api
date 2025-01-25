@@ -62,3 +62,13 @@ export class RequiredPattern extends RequiredString {
     }
   }
 }
+
+export class RequiredLength extends RequiredString {
+  constructor(
+    override readonly value: string,
+    override readonly fieldName: string,
+    readonly length: number,
+  ) {
+    super(value, fieldName);
+  }
+}
