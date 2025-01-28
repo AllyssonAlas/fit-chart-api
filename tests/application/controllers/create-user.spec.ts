@@ -1,7 +1,7 @@
 import { CreateUserController } from '@/application/controllers';
 import { ServerError } from '@/application/errors';
 import { RequiredLength, RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
-import { EmailAlreadyExistsError } from '@/domain/errors';
+import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 
 jest.mock('@/application/validation/composite');
 
@@ -72,6 +72,17 @@ describe('CreateUserController', () => {
 
     expect(createUser).toHaveBeenCalledWith(request);
     expect(createUser).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return 403 on NonexistentRoleError', async () => {
+    createUser.mockRejectedValueOnce(new NonexistentRoleError());
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: new NonexistentRoleError(),
+      statusCode: 403,
+    });
   });
 
   it('Should return 403 on EmailAlreadyExistsError', async () => {
