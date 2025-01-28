@@ -1,6 +1,7 @@
 import { Controller } from '@/application/controllers';
-import { type HttpResponse, noContent } from '@/application/helpers';
+import { type HttpResponse, forbidden, noContent } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
+import { EmailAlreadyExistsError } from '@/domain/errors';
 import type { CreateUser } from '@/domain/usecases';
 
 type Request = {
@@ -28,8 +29,13 @@ export class CreateUserController extends Controller {
   }
 
   async perform(request: Request): Promise<HttpResponse<Model>> {
-    await this.createUser(request);
-    return noContent();
+    try {
+      await this.createUser(request);
+      return noContent();
+    } catch (error) {
+      if (error instanceof EmailAlreadyExistsError) return forbidden(new EmailAlreadyExistsError());
+      throw error;
+    }
   }
 
   override buildValidators(request: any): Validator[] {
