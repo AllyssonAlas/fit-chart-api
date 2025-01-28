@@ -1,4 +1,5 @@
 import { CreateUserController } from '@/application/controllers';
+import { ServerError } from '@/application/errors';
 import { RequiredLength, RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
 
 jest.mock('@/application/validation/composite');
@@ -70,6 +71,18 @@ describe('CreateUserController', () => {
 
     expect(createUser).toHaveBeenCalledWith(request);
     expect(createUser).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return 500 on infra error', async () => {
+    const error = new Error('infra_error');
+    createUser.mockRejectedValueOnce(error);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: new ServerError(error),
+      statusCode: 500,
+    });
   });
 
   it('Should return 204 on success', async () => {
