@@ -1,7 +1,7 @@
 import { Controller } from '@/application/controllers';
 import { type HttpResponse, forbidden, noContent } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
-import { EmailAlreadyExistsError } from '@/domain/errors';
+import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 import type { CreateUser } from '@/domain/usecases';
 
 type Request = {
@@ -33,7 +33,9 @@ export class CreateUserController extends Controller {
       await this.createUser(request);
       return noContent();
     } catch (error) {
-      if (error instanceof EmailAlreadyExistsError) return forbidden(new EmailAlreadyExistsError());
+      const errors: Error[] = [new EmailAlreadyExistsError(), new NonexistentRoleError()];
+      const findError = errors.find(({ name }) => error instanceof Error && error.name === name);
+      if (findError) return forbidden(findError);
       throw error;
     }
   }
