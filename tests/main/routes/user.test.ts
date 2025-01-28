@@ -38,5 +38,34 @@ describe('User Routes', () => {
         })
         .expect(403);
     });
+
+    it('Should return 204 on success', async () => {
+      await prisma.role.create({
+        data: {
+          name: 'admin',
+          permissions: { create: [{ name: 'any_permission_1' }, { name: 'any_permission_2' }] },
+        },
+      });
+
+      await request(app)
+        .post('/api/user/create')
+        .send({
+          name: 'Edmundo Girão',
+          email: 'ed_girao05@mail.com',
+          password: 'ed_gir@0.123',
+          role: 'admin',
+          contact: '(41) 99709-0876',
+          address: {
+            city: 'São Paulo',
+            neighborhood: 'Jardim Itapeva',
+            number: '08',
+            postalCode: '04674-070',
+            state: 'SP',
+            street: 'Rua General Antônio Tavares da Motta',
+            complement: '',
+          },
+        })
+        .expect(204);
+    });
   });
 });
