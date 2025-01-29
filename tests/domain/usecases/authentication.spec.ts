@@ -28,6 +28,7 @@ describe('Authentication', () => {
       role: 'any_role',
     });
     hasher = mock();
+    hasher.compare.mockResolvedValue({ isValid: true });
   });
 
   beforeEach(() => {
@@ -72,5 +73,13 @@ describe('Authentication', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
+  });
+
+  it('Should throw InvalidCredentialsError if HasherComparer returns isValid false', async () => {
+    hasher.compare.mockResolvedValueOnce({ isValid: false });
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new InvalidCredentialsError());
   });
 });
