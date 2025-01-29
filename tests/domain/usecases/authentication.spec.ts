@@ -64,4 +64,13 @@ describe('Authentication', () => {
     expect(hasher.compare).toHaveBeenCalledWith({ plainText: 'any_password', digest: 'any_hashed_password' });
     expect(hasher.compare).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if HasherComparer throws', async () => {
+    const error = new Error('hasher_comparer_error');
+    userRepository.load.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
