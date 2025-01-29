@@ -1,6 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { LoadUserRepository } from '@/domain/contracts/repositories';
+import { InvalidCredentialsError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
 
 jest.mock('@/domain/entities/user');
@@ -44,5 +45,13 @@ describe('Authentication', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
+  });
+
+  it('Should throw InvalidCredentialsError if LoadUserRepository returns null', async () => {
+    userRepository.load.mockResolvedValueOnce(null);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new InvalidCredentialsError());
   });
 });
