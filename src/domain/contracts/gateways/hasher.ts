@@ -11,3 +11,16 @@ export namespace HashGenerator {
 export interface HashGenerator {
   generate(input: HashGenerator.Input): Promise<HashGenerator.Output>;
 }
+
+export namespace HashComparer {
+  export type Input = {
+    plainText: string;
+    digest: string;
+  };
+
+  export type Output = void;
+}
+
+export interface HashComparer {
+  compare(input: HashComparer.Input): Promise<HashComparer.Output>;
+}
