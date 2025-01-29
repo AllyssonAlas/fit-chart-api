@@ -18,7 +18,9 @@ export namespace HashComparer {
     digest: string;
   };
 
-  export type Output = void;
+  export type Output = {
+    isValid: boolean;
+  };
 }
 
 export interface HashComparer {

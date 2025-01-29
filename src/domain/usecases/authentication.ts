@@ -12,6 +12,7 @@ export const setupAuthentication: Setup = (userRepository, hasher) => {
   return async ({ email, password }) => {
     const user = await userRepository.load({ email });
     if (!user) throw new InvalidCredentialsError();
-    await hasher.compare({ plainText: password, digest: user.password });
+    const { isValid } = await hasher.compare({ plainText: password, digest: user.password });
+    if (!isValid) throw new InvalidCredentialsError();
   };
 };
