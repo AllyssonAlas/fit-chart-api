@@ -16,6 +16,14 @@ describe('Authentication', () => {
 
   beforeAll(() => {
     userRepository = mock();
+    userRepository.load.mockResolvedValue({
+      id: 'any_id',
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      contact: 'any_contact',
+      role: 'any_role',
+    });
   });
 
   beforeEach(() => {
@@ -27,5 +35,14 @@ describe('Authentication', () => {
 
     expect(userRepository.load).toHaveBeenCalledWith({ email: 'any_email@mail.com' });
     expect(userRepository.load).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should rethrow if LoadUserRepository throws', async () => {
+    const error = new Error('load_user_repository_error');
+    userRepository.load.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
   });
 });
