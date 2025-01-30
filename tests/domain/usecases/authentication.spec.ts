@@ -1,7 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { HashComparer } from '@/domain/contracts/gateways';
-import type { LoadUserRepository } from '@/domain/contracts/repositories';
+import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
 import { InvalidCredentialsError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
 
@@ -16,6 +16,7 @@ describe('Authentication', () => {
   let sut: MockProxy<Authentication>;
   let userRepository: MockProxy<LoadUserRepository>;
   let hasher: MockProxy<HashComparer>;
+  let roleRepository: MockProxy<LoadRoleRepository>;
 
   beforeAll(() => {
     userRepository = mock();
@@ -29,10 +30,11 @@ describe('Authentication', () => {
     });
     hasher = mock();
     hasher.compare.mockResolvedValue({ isValid: true });
+    roleRepository = mock();
   });
 
   beforeEach(() => {
-    sut = setupAuthentication(userRepository, hasher);
+    sut = setupAuthentication(userRepository, hasher, roleRepository);
   });
 
   it('Should call LoadUserRepository with correct input', async () => {
@@ -81,5 +83,12 @@ describe('Authentication', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(new InvalidCredentialsError());
+  });
+
+  it('Should call LoadRoleRepository with correct input', async () => {
+    await sut(input);
+
+    expect(roleRepository.load).toHaveBeenCalledWith({ name: 'any_role' });
+    expect(roleRepository.load).toHaveBeenCalledTimes(1);
   });
 });
