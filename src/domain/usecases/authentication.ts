@@ -1,7 +1,7 @@
 import type { HashComparer } from '@/domain/contracts/gateways';
 import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
 import type { User } from '@/domain/entities';
-import { InvalidCredentialsError } from '@/domain/errors';
+import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 
 type Input = Pick<User, 'email' | 'password'>;
 type Output = void;
@@ -19,5 +19,6 @@ export const setupAuthentication: Setup = (userRepository, hasher, roleRepositor
     const { isValid } = await hasher.compare({ plainText: password, digest: user.password });
     if (!isValid) throw new InvalidCredentialsError();
     const role = await roleRepository.load({ name: user.role });
+    if (!role) throw new NonexistentRoleError();
   };
 };
