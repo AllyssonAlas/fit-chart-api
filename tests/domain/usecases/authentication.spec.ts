@@ -2,7 +2,7 @@ import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { HashComparer } from '@/domain/contracts/gateways';
 import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
-import { InvalidCredentialsError } from '@/domain/errors';
+import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
 
 jest.mock('@/domain/entities/user');
@@ -31,6 +31,11 @@ describe('Authentication', () => {
     hasher = mock();
     hasher.compare.mockResolvedValue({ isValid: true });
     roleRepository = mock();
+    roleRepository.load.mockResolvedValue({
+      id: 'any_role_id',
+      name: 'any_role_name',
+      permissions: ['permission_1', 'permission_2'],
+    });
   });
 
   beforeEach(() => {
@@ -99,5 +104,13 @@ describe('Authentication', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
+  });
+
+  it('Should throw an NonexistentRoleError if LoadUserRepository returns null', async () => {
+    roleRepository.load.mockResolvedValueOnce(null);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new NonexistentRoleError());
   });
 });
