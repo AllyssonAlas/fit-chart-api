@@ -4,7 +4,7 @@ import type { User } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 
 type Input = Pick<User, 'email' | 'password'>;
-type Output = void;
+type Output = { name: string; email: string; authToken: string };
 export type Authentication = (input: Input) => Promise<Output>;
 type Setup = (
   userRepository: LoadUserRepository,
@@ -21,11 +21,12 @@ export const setupAuthentication: Setup = (userRepository, hasher, roleRepositor
     if (!isValid) throw new InvalidCredentialsError();
     const role = await roleRepository.load({ name: user.role });
     if (!role) throw new NonexistentRoleError();
-    await authToken.generate({
+    const { token } = await authToken.generate({
       id: user.id,
       permissions: role?.permissions,
       role: role?.name,
       expirationInMs: 1 * 1000 * 60 * 60,
     });
+    return { name: user.name, email: user.email, authToken: token };
   };
 };
