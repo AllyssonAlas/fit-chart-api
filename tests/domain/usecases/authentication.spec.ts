@@ -38,6 +38,7 @@ describe('Authentication', () => {
       permissions: ['permission_1', 'permission_2'],
     });
     authToken = mock();
+    authToken.generate.mockResolvedValue({ token: 'any_token' });
   });
 
   beforeEach(() => {
@@ -126,5 +127,14 @@ describe('Authentication', () => {
       expirationInMs: 1 * 1000 * 60 * 60,
     });
     expect(authToken.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should rethrow if JwtTokenGenerator throws', async () => {
+    const error = new Error('jwt_token_generator_error');
+    authToken.generate.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
   });
 });
