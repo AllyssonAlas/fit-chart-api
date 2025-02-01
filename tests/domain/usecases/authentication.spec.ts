@@ -1,6 +1,6 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
-import type { HashComparer } from '@/domain/contracts/gateways';
+import type { HashComparer, JwtTokenGenerator } from '@/domain/contracts/gateways';
 import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
@@ -17,11 +17,12 @@ describe('Authentication', () => {
   let userRepository: MockProxy<LoadUserRepository>;
   let hasher: MockProxy<HashComparer>;
   let roleRepository: MockProxy<LoadRoleRepository>;
+  let authToken: MockProxy<JwtTokenGenerator>;
 
   beforeAll(() => {
     userRepository = mock();
     userRepository.load.mockResolvedValue({
-      id: 'any_id',
+      id: 'any_user_id',
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_hashed_password',
@@ -36,10 +37,11 @@ describe('Authentication', () => {
       name: 'any_role_name',
       permissions: ['permission_1', 'permission_2'],
     });
+    authToken = mock();
   });
 
   beforeEach(() => {
-    sut = setupAuthentication(userRepository, hasher, roleRepository);
+    sut = setupAuthentication(userRepository, hasher, roleRepository, authToken);
   });
 
   it('Should call LoadUserRepository with correct input', async () => {
@@ -112,5 +114,17 @@ describe('Authentication', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(new NonexistentRoleError());
+  });
+
+  it('Should call JwtTokenGenerator with correct input', async () => {
+    await sut(input);
+
+    expect(authToken.generate).toHaveBeenCalledWith({
+      id: 'any_user_id',
+      role: 'any_role_name',
+      permissions: ['permission_1', 'permission_2'],
+      expirationInMs: 1 * 1000 * 60 * 60,
+    });
+    expect(authToken.generate).toHaveBeenCalledTimes(1);
   });
 });
