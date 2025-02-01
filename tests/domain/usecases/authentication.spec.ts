@@ -23,7 +23,7 @@ describe('Authentication', () => {
     userRepository = mock();
     userRepository.load.mockResolvedValue({
       id: 'any_user_id',
-      name: 'any_name',
+      name: 'any_user_name',
       email: 'any_email@mail.com',
       password: 'any_hashed_password',
       contact: 'any_contact',
@@ -136,5 +136,15 @@ describe('Authentication', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
+  });
+
+  it('Should return correct output on success', async () => {
+    const result = await sut(input);
+
+    expect(result).toEqual({
+      authToken: 'any_token',
+      name: 'any_user_name',
+      email: 'any_email@mail.com',
+    });
   });
 });
