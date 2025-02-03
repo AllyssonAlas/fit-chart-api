@@ -2,6 +2,7 @@ import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { HashComparer, JwtTokenGenerator } from '@/domain/contracts/gateways';
 import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
+import { AuthToken } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
 
@@ -124,7 +125,7 @@ describe('Authentication', () => {
       id: 'any_user_id',
       role: 'any_role_name',
       permissions: ['permission_1', 'permission_2'],
-      expirationInMs: 1 * 1000 * 60 * 60,
+      expirationInMs: AuthToken.expirationInMs,
     });
     expect(authToken.generate).toHaveBeenCalledTimes(1);
   });
