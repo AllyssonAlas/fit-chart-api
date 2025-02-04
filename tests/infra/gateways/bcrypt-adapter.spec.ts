@@ -5,11 +5,10 @@ import { BcryptAdapter } from '@/infra/gateways';
 jest.mock('bcrypt');
 
 describe('BcryptAdapter', () => {
-  let plainText: string;
-  let salt: number;
-
   let sut: BcryptAdapter;
   let fakeBcrypt: jest.Mocked<typeof bcrypt>;
+  let salt: number;
+  let plainText: string;
 
   beforeAll(() => {
     plainText = 'any_value';
@@ -22,26 +21,43 @@ describe('BcryptAdapter', () => {
     sut = new BcryptAdapter(salt);
   });
 
-  it('Should call hash with correct input', async () => {
-    await sut.generate({ plainText });
+  describe('generate', () => {
+    it('Should call hash with correct input', async () => {
+      await sut.generate({ plainText });
 
-    expect(fakeBcrypt.hash).toHaveBeenCalledWith(plainText, salt);
-    expect(fakeBcrypt.hash).toHaveBeenCalledTimes(1);
-  });
-
-  it('Should rethrow if hash throws', async () => {
-    jest.spyOn(fakeBcrypt, 'hash').mockImplementationOnce(() => {
-      throw new Error('bcrypt_error');
+      expect(fakeBcrypt.hash).toHaveBeenCalledWith(plainText, salt);
+      expect(fakeBcrypt.hash).toHaveBeenCalledTimes(1);
     });
 
-    const promise = sut.generate({ plainText });
+    it('Should rethrow if hash throws', async () => {
+      jest.spyOn(fakeBcrypt, 'hash').mockImplementationOnce(() => {
+        throw new Error('bcrypt_error');
+      });
 
-    await expect(promise).rejects.toThrow(new Error('bcrypt_error'));
+      const promise = sut.generate({ plainText });
+
+      await expect(promise).rejects.toThrow(new Error('bcrypt_error'));
+    });
+
+    it('Should return correct output', async () => {
+      const result = await sut.generate({ plainText });
+
+      expect(result).toEqual({ cipherText: 'hashed_value' });
+    });
   });
 
-  it('Should return correct output', async () => {
-    const result = await sut.generate({ plainText });
+  describe('compare', () => {
+    let digest: string;
 
-    expect(result).toEqual({ cipherText: 'hashed_value' });
+    beforeAll(() => {
+      digest = 'any_digest';
+    });
+
+    it('Should call compare with correct input', async () => {
+      await sut.compare({ plainText, digest });
+
+      expect(fakeBcrypt.compare).toHaveBeenCalledWith(plainText, digest);
+      expect(fakeBcrypt.compare).toHaveBeenCalledTimes(1);
+    });
   });
 });
