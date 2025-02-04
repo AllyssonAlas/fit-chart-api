@@ -10,7 +10,8 @@ export class BcryptAdapter implements HashGenerator {
     return { cipherText };
   }
 
-  async compare({ plainText, digest }: HashComparer.Input): Promise<void> {
-    await compare(plainText, digest);
+  async compare({ plainText, digest }: HashComparer.Input): Promise<any> {
+    const isValid = await compare(plainText, digest);
+    return { isValid };
   }
 }
