@@ -7,7 +7,7 @@ jest.mock('@/application/validation/composite');
 
 describe('CreateUserController', () => {
   const request = {
-    name: 'any_name',
+    name: 'any_user_name',
     email: 'any_email@mail.com',
     password: 'any_password',
     role: 'any_role_name',
@@ -30,6 +30,11 @@ describe('CreateUserController', () => {
   beforeAll(() => {
     createUser = jest.fn();
     authentication = jest.fn();
+    authentication.mockResolvedValue({
+      name: 'any_user_name',
+      email: 'any_email@mail.com',
+      authToken: 'any_token',
+    });
   });
 
   beforeEach(() => {
@@ -129,12 +134,16 @@ describe('CreateUserController', () => {
     });
   });
 
-  it('Should return 204 on success', async () => {
+  it('Should return 200 on success', async () => {
     const response = await sut.handle(request);
 
     expect(response).toEqual({
-      data: null,
-      statusCode: 204,
+      data: {
+        authToken: 'any_token',
+        name: 'any_user_name',
+        email: 'any_email@mail.com',
+      },
+      statusCode: 200,
     });
   });
 });
