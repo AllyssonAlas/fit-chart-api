@@ -30,13 +30,14 @@ describe('BcryptAdapter', () => {
     });
 
     it('Should rethrow if hash throws', async () => {
+      const error = new Error('hash_error');
       jest.spyOn(fakeBcrypt, 'hash').mockImplementationOnce(() => {
-        throw new Error('bcrypt_error');
+        throw error;
       });
 
       const promise = sut.generate({ plainText });
 
-      await expect(promise).rejects.toThrow(new Error('bcrypt_error'));
+      await expect(promise).rejects.toThrow(error);
     });
 
     it('Should return correct output', async () => {
@@ -58,6 +59,17 @@ describe('BcryptAdapter', () => {
 
       expect(fakeBcrypt.compare).toHaveBeenCalledWith(plainText, digest);
       expect(fakeBcrypt.compare).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should rethrow if compare throws', async () => {
+      const error = new Error('compare_error');
+      jest.spyOn(fakeBcrypt, 'compare').mockImplementationOnce(() => {
+        throw error;
+      });
+
+      const promise = sut.compare({ plainText, digest });
+
+      await expect(promise).rejects.toThrow(error);
     });
   });
 });
