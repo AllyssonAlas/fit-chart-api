@@ -33,4 +33,14 @@ describe('JwtAdapter,', () => {
     expect(fakeJwt.sign).toHaveBeenCalledWith(input, secret, { expiresIn: expirationInMs });
     expect(fakeJwt.sign).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if sign throws', async () => {
+    jest.spyOn(fakeJwt, 'sign').mockImplementationOnce(() => {
+      throw new Error('sign_error');
+    });
+
+    const promise = sut.generate({ ...input, expirationInMs });
+
+    await expect(promise).rejects.toThrow(new Error('sign_error'));
+  });
 });
