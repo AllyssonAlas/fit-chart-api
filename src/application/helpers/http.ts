@@ -5,6 +5,11 @@ export type HttpResponse<T = any> = {
   statusCode: number;
 };
 
+export const ok = <T = any>(data: T): HttpResponse<T> => ({
+  data,
+  statusCode: 200,
+});
+
 export const noContent = (): HttpResponse<null> => ({
   data: null,
   statusCode: 204,

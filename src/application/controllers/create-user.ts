@@ -1,5 +1,5 @@
 import { Controller } from '@/application/controllers';
-import { type HttpResponse, forbidden, noContent } from '@/application/helpers';
+import { type HttpResponse, forbidden, ok } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 import type { Authentication, CreateUser } from '@/domain/usecases';
@@ -21,7 +21,13 @@ type Request = {
   };
 };
 
-type Model = null | Error;
+type Model =
+  | {
+      name: string;
+      email: string;
+      authToken: string;
+    }
+  | Error;
 
 export class CreateUserController extends Controller {
   constructor(
@@ -34,8 +40,8 @@ export class CreateUserController extends Controller {
   async perform(request: Request): Promise<HttpResponse<Model>> {
     try {
       await this.createUser(request);
-      await this.authentication({ email: request.email, password: request.password });
-      return noContent();
+      const authedUser = await this.authentication({ email: request.email, password: request.password });
+      return ok(authedUser);
     } catch (error) {
       const errors: Error[] = [new EmailAlreadyExistsError(), new NonexistentRoleError()];
       const findError = errors.find(({ name }) => error instanceof Error && error.name === name);
