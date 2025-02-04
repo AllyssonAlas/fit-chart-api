@@ -25,13 +25,15 @@ describe('CreateUserController', () => {
 
   let sut: CreateUserController;
   let createUser: jest.Mock;
+  let authentication: jest.Mock;
 
   beforeAll(() => {
     createUser = jest.fn();
+    authentication = jest.fn();
   });
 
   beforeEach(() => {
-    sut = new CreateUserController(createUser);
+    sut = new CreateUserController(createUser, authentication);
   });
 
   it('Should build Validators correctly', () => {
@@ -74,7 +76,7 @@ describe('CreateUserController', () => {
     expect(createUser).toHaveBeenCalledTimes(1);
   });
 
-  it('Should return 403 on NonexistentRoleError', async () => {
+  it('Should return 403 if CreateUser throws NonexistentRoleError', async () => {
     createUser.mockRejectedValueOnce(new NonexistentRoleError());
 
     const response = await sut.handle(request);
@@ -85,7 +87,7 @@ describe('CreateUserController', () => {
     });
   });
 
-  it('Should return 403 on EmailAlreadyExistsError', async () => {
+  it('Should return 403 if CreateUser throws EmailAlreadyExistsError', async () => {
     createUser.mockRejectedValueOnce(new EmailAlreadyExistsError());
 
     const response = await sut.handle(request);
@@ -96,7 +98,7 @@ describe('CreateUserController', () => {
     });
   });
 
-  it('Should return 500 on infra error', async () => {
+  it('Should return 500 if CreateUser throws infra error', async () => {
     const error = new Error('infra_error');
     createUser.mockRejectedValueOnce(error);
 
@@ -106,6 +108,13 @@ describe('CreateUserController', () => {
       data: new ServerError(error),
       statusCode: 500,
     });
+  });
+
+  it('Should call Authentication with correct input', async () => {
+    await sut.handle(request);
+
+    expect(authentication).toHaveBeenCalledWith({ email: request.email, password: request.password });
+    expect(authentication).toHaveBeenCalledTimes(1);
   });
 
   it('Should return 204 on success', async () => {
