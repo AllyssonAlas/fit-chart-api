@@ -52,6 +52,7 @@ describe('BcryptAdapter', () => {
 
     beforeAll(() => {
       digest = 'any_digest';
+      fakeBcrypt.compare.mockImplementation(() => true);
     });
 
     it('Should call compare with correct input', async () => {
@@ -70,6 +71,12 @@ describe('BcryptAdapter', () => {
       const promise = sut.compare({ plainText, digest });
 
       await expect(promise).rejects.toThrow(error);
+    });
+
+    it('Should return correct output on success', async () => {
+      const result = await sut.compare({ plainText, digest });
+
+      expect(result).toEqual({ isValid: true });
     });
   });
 });
