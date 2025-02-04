@@ -39,7 +39,7 @@ describe('User Routes', () => {
         .expect(403);
     });
 
-    it('Should return 204 on success', async () => {
+    it('Should return 200 on success', async () => {
       await prisma.role.create({
         data: {
           name: 'admin',
@@ -65,7 +65,7 @@ describe('User Routes', () => {
             complement: '',
           },
         })
-        .expect(204);
+        .expect(200);
     });
   });
 });
