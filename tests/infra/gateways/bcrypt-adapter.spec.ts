@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 
+import type { HashComparer, HashGenerator } from '@/domain/contracts/gateways';
 import { BcryptAdapter } from '@/infra/gateways';
 
 jest.mock('bcrypt');
@@ -14,7 +15,6 @@ describe('BcryptAdapter', () => {
     plainText = 'any_value';
     salt = 1;
     fakeBcrypt = bcrypt as jest.Mocked<typeof bcrypt>;
-    fakeBcrypt.hash.mockImplementation(() => 'hashed_value');
   });
 
   beforeEach(() => {
@@ -22,8 +22,17 @@ describe('BcryptAdapter', () => {
   });
 
   describe('generate', () => {
+    let input: HashGenerator.Input;
+    let output: HashGenerator.Output;
+
+    beforeAll(() => {
+      input = { plainText };
+      output = { cipherText: 'hashed_value' };
+      fakeBcrypt.hash.mockImplementation(() => output.cipherText);
+    });
+
     it('Should call hash with correct input', async () => {
-      await sut.generate({ plainText });
+      await sut.generate(input);
 
       expect(fakeBcrypt.hash).toHaveBeenCalledWith(plainText, salt);
       expect(fakeBcrypt.hash).toHaveBeenCalledTimes(1);
@@ -35,30 +44,32 @@ describe('BcryptAdapter', () => {
         throw error;
       });
 
-      const promise = sut.generate({ plainText });
+      const promise = sut.generate(input);
 
       await expect(promise).rejects.toThrow(error);
     });
 
     it('Should return correct output', async () => {
-      const result = await sut.generate({ plainText });
+      const result = await sut.generate(input);
 
-      expect(result).toEqual({ cipherText: 'hashed_value' });
+      expect(result).toEqual(output);
     });
   });
 
   describe('compare', () => {
-    let digest: string;
+    let input: HashComparer.Input;
+    let output: HashComparer.Output;
 
     beforeAll(() => {
-      digest = 'any_digest';
-      fakeBcrypt.compare.mockImplementation(() => true);
+      input = { plainText, digest: 'any_digest' };
+      output = { isValid: true };
+      fakeBcrypt.compare.mockImplementation(() => output.isValid);
     });
 
     it('Should call compare with correct input', async () => {
-      await sut.compare({ plainText, digest });
+      await sut.compare(input);
 
-      expect(fakeBcrypt.compare).toHaveBeenCalledWith(plainText, digest);
+      expect(fakeBcrypt.compare).toHaveBeenCalledWith(plainText, input.digest);
       expect(fakeBcrypt.compare).toHaveBeenCalledTimes(1);
     });
 
@@ -68,15 +79,15 @@ describe('BcryptAdapter', () => {
         throw error;
       });
 
-      const promise = sut.compare({ plainText, digest });
+      const promise = sut.compare(input);
 
       await expect(promise).rejects.toThrow(error);
     });
 
     it('Should return correct output on success', async () => {
-      const result = await sut.compare({ plainText, digest });
+      const result = await sut.compare(input);
 
-      expect(result).toEqual({ isValid: true });
+      expect(result).toEqual(output);
     });
   });
 });

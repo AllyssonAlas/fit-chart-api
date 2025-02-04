@@ -9,8 +9,8 @@ describe('JwtAdapter,', () => {
   let sut: JwtAdapter;
   let fakeJwt: jest.Mocked<typeof jsonwebtoken>;
   let input: JwtTokenGenerator.Input;
+  let output: JwtTokenGenerator.Output;
   let secret: string;
-  let token: string;
 
   beforeAll(() => {
     fakeJwt = jsonwebtoken as jest.Mocked<typeof jsonwebtoken>;
@@ -21,8 +21,8 @@ describe('JwtAdapter,', () => {
       permissions: ['any_permission'],
       expirationInMs: 10000,
     };
-    token = 'any_token';
-    fakeJwt.sign.mockImplementation(() => token);
+    output = { token: 'any_token' };
+    fakeJwt.sign.mockImplementation(() => output.token);
   });
 
   beforeEach(() => {
@@ -39,18 +39,19 @@ describe('JwtAdapter,', () => {
   });
 
   it('Should rethrow if sign throws', async () => {
+    const error = new Error('sign_error');
     jest.spyOn(fakeJwt, 'sign').mockImplementationOnce(() => {
-      throw new Error('sign_error');
+      throw error;
     });
 
     const promise = sut.generate(input);
 
-    await expect(promise).rejects.toThrow(new Error('sign_error'));
+    await expect(promise).rejects.toThrow(error);
   });
 
   it('Should return correct output on success', async () => {
     const result = await sut.generate(input);
 
-    expect(result).toEqual({ token });
+    expect(result).toEqual(output);
   });
 });
