@@ -1,4 +1,4 @@
-import { CreateUserController } from '@/application/controllers';
+import { Controller, CreateUserController } from '@/application/controllers';
 import { ServerError } from '@/application/errors';
 import { RequiredLength, RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
@@ -39,6 +39,10 @@ describe('CreateUserController', () => {
 
   beforeEach(() => {
     sut = new CreateUserController(createUser, authentication);
+  });
+
+  it('Should extend controller', () => {
+    expect(sut).toBeInstanceOf(Controller);
   });
 
   it('Should build Validators correctly', () => {
