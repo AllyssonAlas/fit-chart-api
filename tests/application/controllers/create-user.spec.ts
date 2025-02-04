@@ -117,6 +117,18 @@ describe('CreateUserController', () => {
     expect(authentication).toHaveBeenCalledTimes(1);
   });
 
+  it('Should return 500 if Authentication throws infra error', async () => {
+    const error = new Error('infra_error');
+    authentication.mockRejectedValueOnce(error);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: new ServerError(error),
+      statusCode: 500,
+    });
+  });
+
   it('Should return 204 on success', async () => {
     const response = await sut.handle(request);
 
