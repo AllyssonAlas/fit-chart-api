@@ -2,7 +2,7 @@ import { Controller } from '@/application/controllers';
 import { type HttpResponse, forbidden, noContent } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
-import type { CreateUser } from '@/domain/usecases';
+import type { Authentication, CreateUser } from '@/domain/usecases';
 
 type Request = {
   name: string;
@@ -24,13 +24,17 @@ type Request = {
 type Model = null | Error;
 
 export class CreateUserController extends Controller {
-  constructor(private readonly createUser: CreateUser) {
+  constructor(
+    private readonly createUser: CreateUser,
+    private readonly authentication: Authentication,
+  ) {
     super();
   }
 
   async perform(request: Request): Promise<HttpResponse<Model>> {
     try {
       await this.createUser(request);
+      await this.authentication({ email: request.email, password: request.password });
       return noContent();
     } catch (error) {
       const errors: Error[] = [new EmailAlreadyExistsError(), new NonexistentRoleError()];
