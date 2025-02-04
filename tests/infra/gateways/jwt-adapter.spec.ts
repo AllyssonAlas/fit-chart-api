@@ -11,6 +11,7 @@ describe('JwtAdapter,', () => {
   let input: Omit<JwtTokenGenerator.Input, 'expirationInMs'>;
   let secret: string;
   let expirationInMs: number;
+  let token: string;
 
   beforeAll(() => {
     fakeJwt = jsonwebtoken as jest.Mocked<typeof jsonwebtoken>;
@@ -21,6 +22,8 @@ describe('JwtAdapter,', () => {
       permissions: ['any_permission'],
     };
     expirationInMs = 10000;
+    token = 'any_token';
+    fakeJwt.sign.mockImplementation(() => token);
   });
 
   beforeEach(() => {
@@ -42,5 +45,11 @@ describe('JwtAdapter,', () => {
     const promise = sut.generate({ ...input, expirationInMs });
 
     await expect(promise).rejects.toThrow(new Error('sign_error'));
+  });
+
+  it('Should return correct output on success', async () => {
+    const result = await sut.generate({ ...input, expirationInMs });
+
+    expect(result).toEqual({ token });
   });
 });
