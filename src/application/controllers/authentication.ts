@@ -21,6 +21,7 @@ export class AuthenticationController extends Controller {
       if (error instanceof InvalidCredentialsError) {
         return unauthorized(new InvalidCredentialsError());
       }
+      throw error;
     }
   }
 
