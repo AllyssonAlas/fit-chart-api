@@ -14,6 +14,11 @@ describe('AuthenticationController', () => {
 
   beforeAll(() => {
     authentication = jest.fn();
+    authentication.mockResolvedValue({
+      name: 'any_user_name',
+      email: 'any_email@mail.com',
+      authToken: 'any_token',
+    });
   });
 
   beforeEach(() => {
@@ -63,6 +68,19 @@ describe('AuthenticationController', () => {
     expect(response).toEqual({
       data: new ServerError(error),
       statusCode: 500,
+    });
+  });
+
+  it('Should return 200 on success', async () => {
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: {
+        authToken: 'any_token',
+        name: 'any_user_name',
+        email: 'any_email@mail.com',
+      },
+      statusCode: 200,
     });
   });
 });
