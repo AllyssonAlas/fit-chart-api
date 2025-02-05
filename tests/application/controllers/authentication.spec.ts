@@ -1,4 +1,5 @@
 import { AuthenticationController, Controller } from '@/application/controllers';
+import { ServerError } from '@/application/errors';
 import { RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
 import { InvalidCredentialsError } from '@/domain/errors';
 
@@ -50,6 +51,18 @@ describe('AuthenticationController', () => {
     expect(response).toEqual({
       data: new InvalidCredentialsError(),
       statusCode: 401,
+    });
+  });
+
+  it('Should return 500 if CreateUser throws infra error', async () => {
+    const error = new Error('infra_error');
+    authentication.mockRejectedValueOnce(error);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: new ServerError(error),
+      statusCode: 500,
     });
   });
 });
