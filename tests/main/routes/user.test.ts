@@ -68,4 +68,16 @@ describe('User Routes', () => {
         .expect(200);
     });
   });
+
+  describe('POST /login', () => {
+    it('Should return 401 if credentials are invalid', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'ed_girao05@mail.com',
+          password: 'ed_gir@0.123',
+        })
+        .expect(401);
+    });
+  });
 });
