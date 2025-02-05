@@ -1,5 +1,7 @@
 import { Controller } from '@/application/controllers';
+import { unauthorized } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
+import { InvalidCredentialsError } from '@/domain/errors';
 import type { Authentication } from '@/domain/usecases';
 
 type Request = {
@@ -13,7 +15,13 @@ export class AuthenticationController extends Controller {
   }
 
   async perform(request: Request): Promise<any> {
-    await this.authentication(request);
+    try {
+      await this.authentication(request);
+    } catch (error) {
+      if (error instanceof InvalidCredentialsError) {
+        return unauthorized(new InvalidCredentialsError());
+      }
+    }
   }
 
   override buildValidators(request: any): Validator[] {
