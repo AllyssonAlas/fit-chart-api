@@ -3,6 +3,8 @@ import { ServerError } from '@/application/errors';
 import { RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
 import { InvalidCredentialsError } from '@/domain/errors';
 
+import { authedUser } from '@/tests/mocks/domain';
+
 describe('AuthenticationController', () => {
   let sut: AuthenticationController;
   let authentication: jest.Mock;
@@ -14,11 +16,7 @@ describe('AuthenticationController', () => {
 
   beforeAll(() => {
     authentication = jest.fn();
-    authentication.mockResolvedValue({
-      name: 'any_user_name',
-      email: 'any_email@mail.com',
-      authToken: 'any_token',
-    });
+    authentication.mockResolvedValue(authedUser());
   });
 
   beforeEach(() => {
@@ -75,11 +73,7 @@ describe('AuthenticationController', () => {
     const response = await sut.handle(request);
 
     expect(response).toEqual({
-      data: {
-        authToken: 'any_token',
-        name: 'any_user_name',
-        email: 'any_email@mail.com',
-      },
+      data: authedUser(),
       statusCode: 200,
     });
   });

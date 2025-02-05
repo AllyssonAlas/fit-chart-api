@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client';
 
 import { UserRepository } from '@/infra/database/postgres/repositories';
 
+import { clearAllTables, createRole } from '@/tests/mocks/infra';
+
 describe('UserRepository', () => {
   let prisma: PrismaClient;
   let sut: UserRepository;
@@ -15,9 +17,7 @@ describe('UserRepository', () => {
   });
 
   afterEach(async () => {
-    await prisma.user.deleteMany({});
-    await prisma.role.deleteMany({});
-    await prisma.permission.deleteMany({});
+    await clearAllTables(prisma);
   });
 
   describe('load', () => {
@@ -28,13 +28,7 @@ describe('UserRepository', () => {
     });
 
     it('Should return an User if email exists', async () => {
-      await prisma.role.create({
-        data: {
-          id: 'any_role_id',
-          name: 'any_role_name',
-          permissions: { create: [{ name: 'any_permission_1' }, { name: 'any_permission_2' }] },
-        },
-      });
+      await createRole(prisma);
       await prisma.user.create({
         data: {
           name: 'any_name',
@@ -59,13 +53,7 @@ describe('UserRepository', () => {
 
   describe('save', () => {
     it('Should return an User if email exists', async () => {
-      await prisma.role.create({
-        data: {
-          id: 'any_role_id',
-          name: 'any_role_name',
-          permissions: { create: [{ name: 'any_permission_1' }, { name: 'any_permission_2' }] },
-        },
-      });
+      await createRole(prisma);
 
       await sut.save({
         name: 'any_name',

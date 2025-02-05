@@ -6,6 +6,8 @@ import { AuthToken } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
 
+import { authedUser } from '@/tests/mocks/domain';
+
 jest.mock('@/domain/entities/user');
 
 describe('Authentication', () => {
@@ -142,10 +144,6 @@ describe('Authentication', () => {
   it('Should return correct output on success', async () => {
     const result = await sut(input);
 
-    expect(result).toEqual({
-      authToken: 'any_token',
-      name: 'any_user_name',
-      email: 'any_email@mail.com',
-    });
+    expect(result).toEqual(authedUser());
   });
 });

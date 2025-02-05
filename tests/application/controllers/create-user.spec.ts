@@ -3,6 +3,8 @@ import { ServerError } from '@/application/errors';
 import { RequiredLength, RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 
+import { authedUser } from '@/tests/mocks/domain';
+
 jest.mock('@/application/validation/composite');
 
 describe('CreateUserController', () => {
@@ -30,11 +32,7 @@ describe('CreateUserController', () => {
   beforeAll(() => {
     createUser = jest.fn();
     authentication = jest.fn();
-    authentication.mockResolvedValue({
-      name: 'any_user_name',
-      email: 'any_email@mail.com',
-      authToken: 'any_token',
-    });
+    authentication.mockResolvedValue(authedUser());
   });
 
   beforeEach(() => {
@@ -142,11 +140,7 @@ describe('CreateUserController', () => {
     const response = await sut.handle(request);
 
     expect(response).toEqual({
-      data: {
-        authToken: 'any_token',
-        name: 'any_user_name',
-        email: 'any_email@mail.com',
-      },
+      data: authedUser(),
       statusCode: 200,
     });
   });

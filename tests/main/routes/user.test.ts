@@ -5,6 +5,8 @@ import request from 'supertest';
 import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 
+import { clearAllTables, createRole } from '@/tests/mocks/infra';
+
 describe('User Routes', () => {
   let prisma: PrismaClient;
 
@@ -13,9 +15,7 @@ describe('User Routes', () => {
   });
 
   afterEach(async () => {
-    await prisma.user.deleteMany({});
-    await prisma.role.deleteMany({});
-    await prisma.permission.deleteMany({});
+    clearAllTables(prisma);
   });
 
   describe('POST /user/create', () => {
@@ -42,12 +42,7 @@ describe('User Routes', () => {
     });
 
     it('Should return 200 on success', async () => {
-      await prisma.role.create({
-        data: {
-          name: 'admin',
-          permissions: { create: [{ name: 'any_permission_1' }, { name: 'any_permission_2' }] },
-        },
-      });
+      await createRole(prisma, 'admin');
 
       await request(app)
         .post('/api/user/create')
@@ -83,12 +78,7 @@ describe('User Routes', () => {
     });
 
     it('Should return 200 on success', async () => {
-      await prisma.role.create({
-        data: {
-          name: 'admin',
-          permissions: { create: [{ name: 'any_permission_1' }, { name: 'any_permission_2' }] },
-        },
-      });
+      await createRole(prisma, 'admin');
 
       const password = await hash('ed_gir@0.123', env.salt);
 
