@@ -3,14 +3,19 @@ import { RequiredParam, RequiredPattern, RequiredString } from '@/application/va
 
 describe('AuthenticationController', () => {
   let sut: AuthenticationController;
+  let authentication: jest.Mock;
 
   const request = {
     email: 'any_email@mail.com',
     password: 'any_password',
   };
 
+  beforeAll(() => {
+    authentication = jest.fn();
+  });
+
   beforeEach(() => {
-    sut = new AuthenticationController();
+    sut = new AuthenticationController(authentication);
   });
 
   it('Should extend controller', () => {
@@ -27,5 +32,12 @@ describe('AuthenticationController', () => {
       new RequiredParam(request, 'password'),
       new RequiredString(request.password, 'password'),
     ]);
+  });
+
+  it('Should call Authentication with correct input', async () => {
+    await sut.handle(request);
+
+    expect(authentication).toHaveBeenCalledWith(request);
+    expect(authentication).toHaveBeenCalledTimes(1);
   });
 });
