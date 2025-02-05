@@ -2,6 +2,7 @@ import { Controller } from '@/application/controllers';
 import { type HttpResponse, ok, unauthorized } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
 import { InvalidCredentialsError } from '@/domain/errors';
+import type { AuthedUser } from '@/domain/models';
 import type { Authentication } from '@/domain/usecases';
 
 type Request = {
@@ -9,13 +10,7 @@ type Request = {
   password: string;
 };
 
-type Model =
-  | {
-      authToken: string;
-      name: string;
-      email: string;
-    }
-  | Error;
+type Model = AuthedUser | Error;
 
 export class AuthenticationController extends Controller {
   constructor(private readonly authentication: Authentication) {

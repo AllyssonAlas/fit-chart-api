@@ -2,6 +2,7 @@ import { Controller } from '@/application/controllers';
 import { type HttpResponse, forbidden, ok } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
+import type { AuthedUser } from '@/domain/models';
 import type { Authentication, CreateUser } from '@/domain/usecases';
 
 type Request = {
@@ -21,13 +22,7 @@ type Request = {
   };
 };
 
-type Model =
-  | {
-      name: string;
-      email: string;
-      authToken: string;
-    }
-  | Error;
+type Model = AuthedUser | Error;
 
 export class CreateUserController extends Controller {
   constructor(

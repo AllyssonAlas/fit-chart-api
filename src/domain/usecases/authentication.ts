@@ -2,9 +2,10 @@ import type { HashComparer, JwtTokenGenerator } from '@/domain/contracts/gateway
 import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
 import { AuthToken, type User } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
+import type { AuthedUser } from '@/domain/models';
 
 type Input = Pick<User, 'email' | 'password'>;
-type Output = { name: string; email: string; authToken: string };
+type Output = AuthedUser;
 export type Authentication = (input: Input) => Promise<Output>;
 type Setup = (
   userRepository: LoadUserRepository,
