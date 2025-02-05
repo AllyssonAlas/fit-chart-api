@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
+import { hash } from 'bcrypt';
 import request from 'supertest';
 
 import { app } from '@/main/config/app';
+import { env } from '@/main/config/env';
 
 describe('User Routes', () => {
   let prisma: PrismaClient;
@@ -78,6 +80,35 @@ describe('User Routes', () => {
           password: 'ed_gir@0.123',
         })
         .expect(401);
+    });
+
+    it('Should return 200 on success', async () => {
+      await prisma.role.create({
+        data: {
+          name: 'admin',
+          permissions: { create: [{ name: 'any_permission_1' }, { name: 'any_permission_2' }] },
+        },
+      });
+
+      const password = await hash('ed_gir@0.123', env.salt);
+
+      await prisma.user.create({
+        data: {
+          name: 'Edmundo Girão',
+          email: 'ed_girao05@mail.com',
+          password,
+          role: 'admin',
+          contact: '(41) 99709-0876',
+        },
+      });
+
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'ed_girao05@mail.com',
+          password: 'ed_gir@0.123',
+        })
+        .expect(200);
     });
   });
 });
