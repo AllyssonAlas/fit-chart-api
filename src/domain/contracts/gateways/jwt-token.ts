@@ -20,7 +20,11 @@ export namespace JwtTokenValidator {
     token: string;
   };
 
-  export type Output = void;
+  export type Output = {
+    id: string;
+    role: string;
+    permissions: string[];
+  } | null;
 }
 
 export interface JwtTokenValidator {
