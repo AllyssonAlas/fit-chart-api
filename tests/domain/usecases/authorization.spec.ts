@@ -55,4 +55,10 @@ describe('Authorization', () => {
 
     await expect(promise).rejects.toThrow(new RequiredPermissionError());
   });
+
+  it('Should return correct output on success', async () => {
+    const result = await sut(input);
+
+    expect(result).toEqual({ userId: 'any_user_id' });
+  });
 });
