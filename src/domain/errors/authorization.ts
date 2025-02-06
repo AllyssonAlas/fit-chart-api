@@ -4,3 +4,10 @@ export class InvalidTokenError extends Error {
     this.name = 'InvalidTokenError';
   }
 }
+
+export class RequiredPermissionError extends Error {
+  constructor() {
+    super('Error: permission required not found');
+    this.name = 'RequiredPermissionError';
+  }
+}
