@@ -26,4 +26,13 @@ describe('Authorization', () => {
     expect(jwtValidator.validate).toHaveBeenCalledWith({ token: input.authToken });
     expect(jwtValidator.validate).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if JwtTokenValidator throws', async () => {
+    const error = new Error('token_validator_error');
+    jwtValidator.validate.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
