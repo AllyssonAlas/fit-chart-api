@@ -1,7 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { JwtTokenValidator } from '@/domain/contracts/gateways';
-import { InvalidTokenError } from '@/domain/errors';
+import { InvalidTokenError, RequiredPermissionError } from '@/domain/errors';
 import { type Authorization, setupAuthorization } from '@/domain/usecases';
 
 describe('Authorization', () => {
@@ -48,5 +48,11 @@ describe('Authorization', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(new InvalidTokenError());
+  });
+
+  it('Should throw RequiredPermissionError if token permissions do not include requiredPermission', async () => {
+    const promise = sut({ ...input, requiredPermission: 'invalid_required_permission' });
+
+    await expect(promise).rejects.toThrow(new RequiredPermissionError());
   });
 });
