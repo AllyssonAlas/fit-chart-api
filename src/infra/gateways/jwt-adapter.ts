@@ -1,4 +1,4 @@
-import { sign, verify } from 'jsonwebtoken';
+import { TokenExpiredError, sign, verify } from 'jsonwebtoken';
 
 import type { JwtTokenGenerator, JwtTokenValidator } from '@/domain/contracts/gateways';
 
@@ -10,7 +10,14 @@ export class JwtAdapter implements JwtTokenGenerator {
     return { token };
   }
 
-  async validate({ token }: JwtTokenValidator.Input): Promise<void> {
-    verify(token, this.secret);
+  async validate({ token }: JwtTokenValidator.Input): Promise<void | null> {
+    try {
+      await verify(token, this.secret);
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        return null;
+      }
+      throw error;
+    }
   }
 }
