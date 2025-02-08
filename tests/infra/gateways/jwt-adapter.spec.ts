@@ -1,6 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken';
 
-import type { JwtTokenGenerator } from '@/domain/contracts/gateways';
+import type { JwtTokenGenerator, JwtTokenValidator } from '@/domain/contracts/gateways';
 import { JwtAdapter } from '@/infra/gateways';
 
 jest.mock('jsonwebtoken');
@@ -8,50 +8,73 @@ jest.mock('jsonwebtoken');
 describe('JwtAdapter,', () => {
   let sut: JwtAdapter;
   let fakeJwt: jest.Mocked<typeof jsonwebtoken>;
-  let input: JwtTokenGenerator.Input;
-  let output: JwtTokenGenerator.Output;
   let secret: string;
+  let token: string;
 
   beforeAll(() => {
     fakeJwt = jsonwebtoken as jest.Mocked<typeof jsonwebtoken>;
     secret = 'any_secret';
-    input = {
-      id: 'any_user_id',
-      role: 'any_role',
-      permissions: ['any_permission'],
-      expirationInMs: 10000,
-    };
-    output = { token: 'any_token' };
-    fakeJwt.sign.mockImplementation(() => output.token);
+    token = 'any_token';
   });
 
   beforeEach(() => {
     sut = new JwtAdapter(secret);
   });
 
-  it('Should call jsonwebtoken sign with correct input', async () => {
-    const { expirationInMs, ...inputData } = input;
+  describe('generate', () => {
+    let input: JwtTokenGenerator.Input;
+    let output: JwtTokenGenerator.Output;
 
-    await sut.generate(input);
-
-    expect(fakeJwt.sign).toHaveBeenCalledWith(inputData, secret, { expiresIn: expirationInMs });
-    expect(fakeJwt.sign).toHaveBeenCalledTimes(1);
-  });
-
-  it('Should rethrow if sign throws', async () => {
-    const error = new Error('sign_error');
-    jest.spyOn(fakeJwt, 'sign').mockImplementationOnce(() => {
-      throw error;
+    beforeAll(() => {
+      input = {
+        id: 'any_user_id',
+        role: 'any_role',
+        permissions: ['any_permission'],
+        expirationInMs: 10000,
+      };
+      output = { token };
+      fakeJwt.sign.mockImplementation(() => output.token);
     });
 
-    const promise = sut.generate(input);
+    it('Should call jsonwebtoken sign with correct input', async () => {
+      const { expirationInMs, ...inputData } = input;
 
-    await expect(promise).rejects.toThrow(error);
+      await sut.generate(input);
+
+      expect(fakeJwt.sign).toHaveBeenCalledWith(inputData, secret, { expiresIn: expirationInMs });
+      expect(fakeJwt.sign).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should rethrow if sign throws', async () => {
+      const error = new Error('sign_error');
+      jest.spyOn(fakeJwt, 'sign').mockImplementationOnce(() => {
+        throw error;
+      });
+
+      const promise = sut.generate(input);
+
+      await expect(promise).rejects.toThrow(error);
+    });
+
+    it('Should return correct output on success', async () => {
+      const result = await sut.generate(input);
+
+      expect(result).toEqual(output);
+    });
   });
 
-  it('Should return correct output on success', async () => {
-    const result = await sut.generate(input);
+  describe('validate', () => {
+    let input: JwtTokenValidator.Input;
 
-    expect(result).toEqual(output);
+    beforeAll(() => {
+      input = { token };
+    });
+
+    it('Should call jsonwebtoken validate with correct input', async () => {
+      await sut.validate(input);
+
+      expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret);
+      expect(fakeJwt.verify).toHaveBeenCalledTimes(1);
+    });
   });
 });
