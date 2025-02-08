@@ -15,9 +15,10 @@ export class JwtAdapter implements JwtTokenGenerator, JwtTokenValidator {
       const tokenData = await verify(token, this.secret);
       return tokenData as JwtTokenValidator.Output;
     } catch (error) {
-      if (error instanceof TokenExpiredError || error instanceof NotBeforeError || error instanceof JsonWebTokenError) {
-        return null;
-      }
+      const findLibError = [TokenExpiredError, NotBeforeError, JsonWebTokenError].find(
+        (libError) => error instanceof libError,
+      );
+      if (findLibError) return null;
       throw error;
     }
   }
