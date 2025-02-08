@@ -2,7 +2,7 @@ import { JsonWebTokenError, NotBeforeError, TokenExpiredError, sign, verify } fr
 
 import type { JwtTokenGenerator, JwtTokenValidator } from '@/domain/contracts/gateways';
 
-export class JwtAdapter implements JwtTokenGenerator {
+export class JwtAdapter implements JwtTokenGenerator, JwtTokenValidator {
   constructor(private readonly secret: string) {}
 
   async generate({ expirationInMs, ...input }: JwtTokenGenerator.Input): Promise<JwtTokenGenerator.Output> {
@@ -10,9 +10,10 @@ export class JwtAdapter implements JwtTokenGenerator {
     return { token };
   }
 
-  async validate({ token }: JwtTokenValidator.Input): Promise<void | null> {
+  async validate({ token }: JwtTokenValidator.Input): Promise<JwtTokenValidator.Output> {
     try {
-      await verify(token, this.secret);
+      const tokenData = await verify(token, this.secret);
+      return tokenData as JwtTokenValidator.Output;
     } catch (error) {
       if (error instanceof TokenExpiredError || error instanceof NotBeforeError || error instanceof JsonWebTokenError) {
         return null;
