@@ -1,4 +1,4 @@
-import { NotBeforeError, TokenExpiredError, sign, verify } from 'jsonwebtoken';
+import { JsonWebTokenError, NotBeforeError, TokenExpiredError, sign, verify } from 'jsonwebtoken';
 
 import type { JwtTokenGenerator, JwtTokenValidator } from '@/domain/contracts/gateways';
 
@@ -14,7 +14,7 @@ export class JwtAdapter implements JwtTokenGenerator {
     try {
       await verify(token, this.secret);
     } catch (error) {
-      if (error instanceof TokenExpiredError || error instanceof NotBeforeError) {
+      if (error instanceof TokenExpiredError || error instanceof NotBeforeError || error instanceof JsonWebTokenError) {
         return null;
       }
       throw error;
