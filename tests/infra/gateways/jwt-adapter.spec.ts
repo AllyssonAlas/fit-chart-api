@@ -76,5 +76,16 @@ describe('JwtAdapter,', () => {
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret);
       expect(fakeJwt.verify).toHaveBeenCalledTimes(1);
     });
+
+    it('Should rethrow if verify throws', async () => {
+      const error = new Error('verify_error');
+      jest.spyOn(fakeJwt, 'verify').mockImplementationOnce(() => {
+        throw error;
+      });
+
+      const promise = sut.validate(input);
+
+      await expect(promise).rejects.toThrow(error);
+    });
   });
 });
