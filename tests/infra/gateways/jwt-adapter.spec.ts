@@ -1,4 +1,4 @@
-import jsonwebtoken from 'jsonwebtoken';
+import jsonwebtoken, { TokenExpiredError } from 'jsonwebtoken';
 
 import type { JwtTokenGenerator, JwtTokenValidator } from '@/domain/contracts/gateways';
 import { JwtAdapter } from '@/infra/gateways';
@@ -86,6 +86,17 @@ describe('JwtAdapter,', () => {
       const promise = sut.validate(input);
 
       await expect(promise).rejects.toThrow(error);
+    });
+
+    it('Should return null if verify throws TokenExpiredError', async () => {
+      const error = new TokenExpiredError('token is expired', new Date());
+      jest.spyOn(fakeJwt, 'verify').mockImplementationOnce(() => {
+        throw error;
+      });
+
+      const result = await sut.validate({ token: 'invalid_token' });
+
+      expect(result).toBeNull();
     });
   });
 });
