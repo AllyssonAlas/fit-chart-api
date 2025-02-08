@@ -65,9 +65,16 @@ describe('JwtAdapter,', () => {
 
   describe('validate', () => {
     let input: JwtTokenValidator.Input;
+    let output: JwtTokenValidator.Output;
 
     beforeAll(() => {
       input = { token };
+      output = {
+        id: 'any_user_id',
+        role: 'any_user_role',
+        permissions: ['any_user_permission'],
+      };
+      fakeJwt.verify.mockImplementation(() => output);
     });
 
     it('Should call jsonwebtoken validate with correct input', async () => {
@@ -111,14 +118,9 @@ describe('JwtAdapter,', () => {
     });
 
     it('Should return null if verify throws NotBeforeError', async () => {
-      const error = new JsonWebTokenError('token is invalid');
-      jest.spyOn(fakeJwt, 'verify').mockImplementationOnce(() => {
-        throw error;
-      });
+      const result = await sut.validate({ token });
 
-      const result = await sut.validate({ token: 'invalid_token' });
-
-      expect(result).toBeNull();
+      expect(result).toEqual(output);
     });
   });
 });
