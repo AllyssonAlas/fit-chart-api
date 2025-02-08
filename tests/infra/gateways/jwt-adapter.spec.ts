@@ -1,4 +1,4 @@
-import jsonwebtoken, { NotBeforeError, TokenExpiredError } from 'jsonwebtoken';
+import jsonwebtoken, { NotBeforeError, TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 
 import type { JwtTokenGenerator, JwtTokenValidator } from '@/domain/contracts/gateways';
 import { JwtAdapter } from '@/infra/gateways';
@@ -101,6 +101,17 @@ describe('JwtAdapter,', () => {
 
     it('Should return null if verify throws NotBeforeError', async () => {
       const error = new NotBeforeError('token is invalid', new Date());
+      jest.spyOn(fakeJwt, 'verify').mockImplementationOnce(() => {
+        throw error;
+      });
+
+      const result = await sut.validate({ token: 'invalid_token' });
+
+      expect(result).toBeNull();
+    });
+
+    it('Should return null if verify throws NotBeforeError', async () => {
+      const error = new JsonWebTokenError('token is invalid');
       jest.spyOn(fakeJwt, 'verify').mockImplementationOnce(() => {
         throw error;
       });
