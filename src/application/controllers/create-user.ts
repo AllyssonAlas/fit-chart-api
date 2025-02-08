@@ -38,9 +38,8 @@ export class CreateUserController extends Controller {
       const authedUser = await this.authentication({ email: request.email, password: request.password });
       return ok(authedUser);
     } catch (error) {
-      const errors: Error[] = [new EmailAlreadyExistsError(), new NonexistentRoleError()];
-      const findError = errors.find(({ name }) => error instanceof Error && error.name === name);
-      if (findError) return forbidden(findError);
+      const usecaseError = [EmailAlreadyExistsError, NonexistentRoleError].find((errType) => error instanceof errType);
+      if (usecaseError) return forbidden(new usecaseError());
       throw error;
     }
   }
