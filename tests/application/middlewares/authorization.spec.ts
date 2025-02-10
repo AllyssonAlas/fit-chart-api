@@ -3,9 +3,22 @@ import { AuthorizationMiddleware } from '@/application/middlewares';
 
 describe('AuthorizationMiddleware', () => {
   let sut: AuthorizationMiddleware;
+  let authorize: jest.Mock;
+  let request: {
+    authorization: string;
+  };
+
+  const requiredPermission = 'any_required_permission';
+
+  beforeAll(() => {
+    request = {
+      authorization: 'any_authorization_token',
+    };
+    authorize = jest.fn().mockResolvedValue({ userId: 'any_user_id' });
+  });
 
   beforeEach(() => {
-    sut = new AuthorizationMiddleware();
+    sut = new AuthorizationMiddleware(authorize, requiredPermission);
   });
 
   it('Should return 401 if authorization is not provided', async () => {
@@ -42,5 +55,12 @@ describe('AuthorizationMiddleware', () => {
       statusCode: 401,
       data: new UnauthorizedError(),
     });
+  });
+
+  it('Should call Authorization with correct input', async () => {
+    await sut.handle(request);
+
+    expect(authorize).toHaveBeenCalledWith({ authToken: request.authorization, requiredPermission });
+    expect(authorize).toHaveBeenCalledTimes(1);
   });
 });
