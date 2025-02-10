@@ -1,3 +1,4 @@
+import type { Middleware } from '@/application/contracts';
 import { ForbiddenError, UnauthorizedError } from '@/application/errors';
 import { type HttpResponse, forbidden, ok, unauthorized } from '@/application/helpers';
 import type { Authorization } from '@/domain/usecases';
@@ -8,7 +9,7 @@ type HttpRequest = {
 
 type Model = { userId: string } | Error;
 
-export class AuthorizationMiddleware {
+export class AuthorizationMiddleware implements Middleware {
   constructor(
     private readonly authorize: Authorization,
     private readonly requiredPermission: string,
