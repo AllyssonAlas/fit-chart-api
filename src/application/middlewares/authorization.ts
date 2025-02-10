@@ -1,6 +1,7 @@
 import type { Middleware } from '@/application/contracts';
 import { ForbiddenError, UnauthorizedError } from '@/application/errors';
 import { type HttpResponse, forbidden, ok, unauthorized } from '@/application/helpers';
+import { RequiredString } from '@/application/validation';
 import type { Authorization } from '@/domain/usecases';
 
 type HttpRequest = {
@@ -15,13 +16,18 @@ export class AuthorizationMiddleware implements Middleware {
     private readonly requiredPermission: string,
   ) {}
 
-  async handle({ authorization: authToken }: HttpRequest): Promise<HttpResponse<Model>> {
+  async handle({ authorization }: HttpRequest): Promise<HttpResponse<Model>> {
     try {
-      if (!authToken) return unauthorized(new UnauthorizedError());
-      const result = await this.authorize({ authToken, requiredPermission: this.requiredPermission });
+      if (this.validate({ authorization })) return unauthorized(new UnauthorizedError());
+      const result = await this.authorize({ authToken: authorization, requiredPermission: this.requiredPermission });
       return ok(result);
     } catch (error) {
       return forbidden(new ForbiddenError());
     }
+  }
+
+  private validate({ authorization }: HttpRequest): boolean {
+    const error = new RequiredString(authorization, 'authorization').validate();
+    return !!error;
   }
 }
