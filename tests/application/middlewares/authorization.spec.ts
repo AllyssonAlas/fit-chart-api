@@ -74,4 +74,13 @@ describe('AuthorizationMiddleware', () => {
       data: new ForbiddenError(),
     });
   });
+
+  it('Should return 200 with correct data on success', async () => {
+    const httpResponse = await sut.handle(request);
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { userId: 'any_user_id' },
+    });
+  });
 });
