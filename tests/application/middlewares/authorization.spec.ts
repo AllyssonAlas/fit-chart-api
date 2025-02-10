@@ -1,4 +1,4 @@
-import { UnauthorizedError } from '@/application/errors';
+import { ForbiddenError, UnauthorizedError } from '@/application/errors';
 import { AuthorizationMiddleware } from '@/application/middlewares';
 
 describe('AuthorizationMiddleware', () => {
@@ -62,5 +62,16 @@ describe('AuthorizationMiddleware', () => {
 
     expect(authorize).toHaveBeenCalledWith({ authToken: request.authorization, requiredPermission });
     expect(authorize).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return 403 if Authorization throws', async () => {
+    authorize.mockRejectedValueOnce(new Error('any_error'));
+
+    const httpResponse = await sut.handle(request);
+
+    expect(httpResponse).toEqual({
+      statusCode: 403,
+      data: new ForbiddenError(),
+    });
   });
 });
