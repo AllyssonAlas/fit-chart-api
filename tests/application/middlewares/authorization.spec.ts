@@ -34,4 +34,13 @@ describe('AuthorizationMiddleware', () => {
       data: new UnauthorizedError(),
     });
   });
+
+  it('Should return 401 if authorization is undefined', async () => {
+    const httpResponse = await sut.handle({ authorization: undefined as any });
+
+    expect(httpResponse).toEqual({
+      statusCode: 401,
+      data: new UnauthorizedError(),
+    });
+  });
 });
