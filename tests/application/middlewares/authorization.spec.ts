@@ -25,4 +25,13 @@ describe('AuthorizationMiddleware', () => {
       data: new UnauthorizedError(),
     });
   });
+
+  it('Should return 401 if authorization is null', async () => {
+    const httpResponse = await sut.handle({ authorization: null as any });
+
+    expect(httpResponse).toEqual({
+      statusCode: 401,
+      data: new UnauthorizedError(),
+    });
+  });
 });
