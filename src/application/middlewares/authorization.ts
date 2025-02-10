@@ -1,5 +1,5 @@
-import { UnauthorizedError } from '@/application/errors';
-import { type HttpResponse, unauthorized } from '@/application/helpers';
+import { ForbiddenError, UnauthorizedError } from '@/application/errors';
+import { type HttpResponse, forbidden, unauthorized } from '@/application/helpers';
 import type { Authorization } from '@/domain/usecases';
 
 type HttpRequest = {
@@ -13,7 +13,11 @@ export class AuthorizationMiddleware {
   ) {}
 
   async handle({ authorization: authToken }: HttpRequest): Promise<HttpResponse<Error> | void> {
-    if (!authToken) return unauthorized(new UnauthorizedError());
-    await this.authorize({ authToken, requiredPermission: this.requiredPermission });
+    try {
+      if (!authToken) return unauthorized(new UnauthorizedError());
+      await this.authorize({ authToken, requiredPermission: this.requiredPermission });
+    } catch (error) {
+      return forbidden(new ForbiddenError());
+    }
   }
 }

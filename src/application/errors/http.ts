@@ -1,7 +1,15 @@
 export class UnauthorizedError extends Error {
   constructor(error?: Error) {
-    super('Unauthorized..');
+    super('Unauthorized.');
     this.name = 'UnauthorizedError';
+    this.stack = error?.stack;
+  }
+}
+
+export class ForbiddenError extends Error {
+  constructor(error?: Error) {
+    super('Access denied');
+    this.name = 'ForbiddenError';
     this.stack = error?.stack;
   }
 }
