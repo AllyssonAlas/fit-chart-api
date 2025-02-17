@@ -2,7 +2,9 @@ import type { RequestHandler } from 'express';
 
 import type { Middleware } from '@/application/contracts';
 
-export const adaptExpressMiddleware = (middleware: Middleware): RequestHandler => {
+type Adapter = (middleware: Middleware) => RequestHandler;
+
+export const adaptExpressMiddleware: Adapter = (middleware) => {
   return async (req, res, next) => {
     const { data, statusCode } = await middleware.handle({ ...req.headers });
     if (statusCode === 200) {
