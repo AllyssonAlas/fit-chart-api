@@ -27,4 +27,13 @@ describe('ExpressMiddleware', () => {
     expect(middleware.handle).toHaveBeenCalledWith(requestHeaders);
     expect(middleware.handle).toHaveBeenCalledTimes(1);
   });
+
+  it('Should call handle with empty request', async () => {
+    req = getMockReq();
+
+    await sut(req);
+
+    expect(middleware.handle).toHaveBeenCalledWith({});
+    expect(middleware.handle).toHaveBeenCalledTimes(1);
+  });
 });
