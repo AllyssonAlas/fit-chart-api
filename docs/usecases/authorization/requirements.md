@@ -1,19 +1,17 @@
 # Authorization Usecase
 
 > ## Case of success
-1. System receives jwt token
-2. System validates and extracts permissions and roles from token received
-3. System checks if token has permission required
-4. System allows to access the requested route
+1. Validate jwt token received
+2. Extract permissions and roles from token
+3. Check if token has required permission
+4. Add _userId_ to request body
+5. Allow access to requested route
 
 > ## Exception - Missing data
-2. System invalidates data
-3. System returns a forbidden error
+1. Return forbidden error
 
 > ## Exception - Invalid data
-2. System invalidates data
-3. System returns a forbidden error
+1. Return forbidden error
 
-> ## Exception - Requester does not have required permission
-4. System does not find user email
-5. System returns a forbidden error
+> ## Exception - Token does not have required permission
+3. Return forbidden error

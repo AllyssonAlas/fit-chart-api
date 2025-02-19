@@ -1,23 +1,21 @@
 # Authentication Usecase
 
 > ## Case of success
-1. System receives **User** email and password
-2. System validates data received
-3. System checks if email exists
-4. System validates user password with hash stored in database
-5. System returns user data and jwt token with user role and permissions
+1. Validate received **User** email and password
+2. Check if email exists
+3. Validate password with hash stored in database
+4. Create jwt token with user role and permissions
+5. Return user data and jwt token
 
 > ## Exception - Missing data
-2. System invalidates data
-3. System returns a missing data error to the requester
+1. Return missing data error
 
 > ## Exception - Invalid data
-2. System invalidates data
-3. System returns an invalid data error to the requester
+1. Return invalid data error
 
 > ## Exception - Email does not exist
-4. System does not find user email
-5. System returns an unauthorized error to the requester
+2. Return unauthorized error
+
 > ## Exception - Incorrect password
-4. System invalidate user password with hash stored in database
-5. System returns an unauthorized error to the requester
+3. Invalidate user password with hash stored in database
+4. Return unauthorized error
