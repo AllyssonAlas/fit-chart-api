@@ -134,4 +134,13 @@ describe('CreateGym', () => {
     expect(gymRepository.save).toHaveBeenCalledWith(input);
     expect(gymRepository.save).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if SaveGymRepository throws', async () => {
+    const error = new Error('save_gym_repository_error');
+    gymRepository.save.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
