@@ -31,4 +31,12 @@ describe('Gym', () => {
 
     expect(sut).toEqual({ ...data, administrators: null });
   });
+
+  it('Should return a Gym without email', () => {
+    const { email, ...data } = gymData;
+
+    const sut = new Gym(data);
+
+    expect(sut).toEqual({ ...data, email: null });
+  });
 });
