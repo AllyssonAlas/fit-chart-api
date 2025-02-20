@@ -1,6 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { LoadUserRepository } from '@/domain/contracts/repositories';
+import { EmailDoesNotExistError } from '@/domain/errors';
 import { type CreateGym, setupCreateGym } from '@/domain/usecases';
 
 describe('CreateGym', () => {
@@ -26,6 +27,14 @@ describe('CreateGym', () => {
 
   beforeAll(() => {
     userRepository = mock();
+    userRepository.load.mockResolvedValue({
+      id: 'any_user_id',
+      name: 'any_user_name',
+      email: 'any_owner_email@mail.com',
+      password: 'any_hashed_password',
+      contact: 'any_contact',
+      role: 'any_role',
+    });
   });
 
   beforeEach(() => {
@@ -46,5 +55,13 @@ describe('CreateGym', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
+  });
+
+  it('Should throw EmailDoesNotExistError if LoadUserRepository returns null', async () => {
+    userRepository.load.mockResolvedValueOnce(null);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new EmailDoesNotExistError(input.ownerEmail));
   });
 });
