@@ -116,4 +116,13 @@ describe('CreateGym', () => {
 
     await expect(promise).rejects.toThrow(new EmailDoesNotExistError(input.administrators[1]));
   });
+
+  it('Should not call LoadManyUsersRepository if administrators are not received', async () => {
+    const { administrators, ...inputData } = input;
+
+    await sut(inputData);
+
+    expect(userRepository.loadMany).not.toHaveBeenCalled();
+    expect(userRepository.loadMany).toHaveBeenCalledTimes(0);
+  });
 });
