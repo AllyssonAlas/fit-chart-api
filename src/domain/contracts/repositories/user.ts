@@ -17,7 +17,7 @@ export namespace LoadUserRepository {
       city: string;
       state: string;
       postalCode: string;
-      complement: string | null;
+      complement?: string;
     };
   } | null;
 }
@@ -40,7 +40,7 @@ export namespace SaveUserRepository {
       city: string;
       state: string;
       postalCode: string;
-      complement: string | null;
+      complement?: string;
     };
   };
 
@@ -70,7 +70,7 @@ export namespace LoadManyUsersRepository {
       city: string;
       state: string;
       postalCode: string;
-      complement: string | null;
+      complement?: string;
     };
   }[];
 }

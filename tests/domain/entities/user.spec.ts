@@ -14,7 +14,6 @@ describe('User', () => {
       postalCode: 'any_postal_code',
       state: 'any_state',
       street: 'any_street',
-      complement: null,
     },
   };
 

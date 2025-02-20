@@ -18,7 +18,7 @@ type Request = {
     city: string;
     state: string;
     postalCode: string;
-    complement: string | null;
+    complement?: string;
   };
 };
 

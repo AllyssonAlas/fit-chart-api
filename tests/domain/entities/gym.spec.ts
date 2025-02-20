@@ -29,7 +29,7 @@ describe('Gym', () => {
 
     const sut = new Gym(data);
 
-    expect(sut).toEqual({ ...data, administrators: null });
+    expect(sut).toEqual(data);
   });
 
   it('Should return a Gym without email', () => {
@@ -37,6 +37,6 @@ describe('Gym', () => {
 
     const sut = new Gym(data);
 
-    expect(sut).toEqual({ ...data, email: null });
+    expect(sut).toEqual(data);
   });
 });

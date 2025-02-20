@@ -1,9 +1,9 @@
 export class Gym {
   name: string;
-  email?: string | null;
+  email?: string;
   contact: string;
   ownerEmail: string;
-  administrators?: string[] | null;
+  administrators?: string[];
   address: {
     number: string;
     street: string;
@@ -11,14 +11,14 @@ export class Gym {
     city: string;
     state: string;
     postalCode: string;
-    complement: string | null;
+    complement?: string;
   };
 
   constructor(data: Gym) {
     this.name = data.name;
-    this.email = data.email || null;
+    this.email = data.email;
     this.ownerEmail = data.ownerEmail;
-    this.administrators = data.administrators || null;
+    this.administrators = data.administrators;
     this.contact = data.contact;
     this.address = data.address;
   }

@@ -11,7 +11,7 @@ type Data = {
     city: string;
     state: string;
     postalCode: string;
-    complement: string | null;
+    complement?: string;
   };
 };
 
@@ -28,7 +28,7 @@ export class User {
     city: string;
     state: string;
     postalCode: string;
-    complement: string | null;
+    complement?: string;
   };
 
   constructor(data: Data) {
