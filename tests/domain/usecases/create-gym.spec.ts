@@ -1,8 +1,11 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { LoadManyUsersRepository, LoadUserRepository, SaveGymRepository } from '@/domain/contracts/repositories';
+import { Gym } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 import { type CreateGym, setupCreateGym } from '@/domain/usecases';
+
+jest.mock('@/domain/entities/gym');
 
 describe('CreateGym', () => {
   const input = {
@@ -131,7 +134,7 @@ describe('CreateGym', () => {
   it('Should call SaveGymRepository with correct input', async () => {
     await sut(input);
 
-    expect(gymRepository.save).toHaveBeenCalledWith(input);
+    expect(gymRepository.save).toHaveBeenCalledWith(jest.mocked(Gym).mock.instances[0]);
     expect(gymRepository.save).toHaveBeenCalledTimes(1);
   });
 
