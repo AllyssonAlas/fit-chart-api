@@ -35,6 +35,25 @@ describe('CreateGym', () => {
       contact: 'any_contact',
       role: 'any_role',
     });
+    userRepository.loadMany.mockResolvedValue([
+      {
+        id: 'any_user_id',
+        name: 'any_user_name',
+        email: 'any_admin_email_1@mail.com',
+        password: 'any_hashed_password',
+        contact: 'any_contact',
+        role: 'any_role',
+      },
+
+      {
+        id: 'any_user_id',
+        name: 'any_user_name',
+        email: 'any_admin_email_2@mail.com',
+        password: 'any_hashed_password',
+        contact: 'any_contact',
+        role: 'any_role',
+      },
+    ]);
   });
 
   beforeEach(() => {
@@ -79,5 +98,22 @@ describe('CreateGym', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
+  });
+
+  it('Should throw EmailDoesNotExistError if LoadManyUsersRepository does not return all administrators', async () => {
+    userRepository.loadMany.mockResolvedValueOnce([
+      {
+        id: 'any_user_id',
+        name: 'any_user_name',
+        email: 'any_admin_email_1@mail.com',
+        password: 'any_hashed_password',
+        contact: 'any_contact',
+        role: 'any_role',
+      },
+    ]);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new EmailDoesNotExistError(input.administrators[1]));
   });
 });
