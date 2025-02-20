@@ -5,6 +5,13 @@ export class EmailAlreadyExistsError extends Error {
   }
 }
 
+export class EmailDoesNotExistError extends Error {
+  constructor(email: string) {
+    super(`Error: email ${email} does not exist.`);
+    this.name = 'EmailDoesNotExistError';
+  }
+}
+
 export class InvalidCredentialsError extends Error {
   constructor() {
     super('Error: invalid credentials error.');

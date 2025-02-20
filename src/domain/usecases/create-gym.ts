@@ -1,4 +1,5 @@
 import type { LoadUserRepository } from '@/domain/contracts/repositories';
+import { EmailDoesNotExistError } from '@/domain/errors';
 
 type Input = {
   name: string;
@@ -22,6 +23,7 @@ type Setup = (userRepository: LoadUserRepository) => CreateGym;
 
 export const setupCreateGym: Setup = (userRepository) => {
   return async ({ ownerEmail }) => {
-    await userRepository.load({ email: ownerEmail });
+    const owner = await userRepository.load({ email: ownerEmail });
+    if (!owner) throw new EmailDoesNotExistError(ownerEmail);
   };
 };
