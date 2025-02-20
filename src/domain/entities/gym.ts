@@ -1,6 +1,6 @@
 export class Gym {
   name: string;
-  email?: string;
+  email?: string | null;
   contact: string;
   ownerEmail: string;
   administrators?: string[] | null;
@@ -16,7 +16,7 @@ export class Gym {
 
   constructor(data: Gym) {
     this.name = data.name;
-    this.email = data.email;
+    this.email = data.email || null;
     this.ownerEmail = data.ownerEmail;
     this.administrators = data.administrators || null;
     this.contact = data.contact;
