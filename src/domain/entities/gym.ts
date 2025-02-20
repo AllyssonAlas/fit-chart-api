@@ -3,7 +3,7 @@ export class Gym {
   email?: string;
   contact: string;
   ownerEmail: string;
-  administrators?: string[];
+  administrators?: string[] | null;
   address: {
     number: string;
     street: string;
@@ -18,7 +18,7 @@ export class Gym {
     this.name = data.name;
     this.email = data.email;
     this.ownerEmail = data.ownerEmail;
-    this.administrators = data.administrators;
+    this.administrators = data.administrators || null;
     this.contact = data.contact;
     this.address = data.address;
   }
