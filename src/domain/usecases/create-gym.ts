@@ -25,6 +25,12 @@ export const setupCreateGym: Setup = (userRepository) => {
   return async ({ ownerEmail, administrators }) => {
     const owner = await userRepository.load({ email: ownerEmail });
     if (!owner) throw new EmailDoesNotExistError(ownerEmail);
-    if (administrators) await userRepository.loadMany({ emails: administrators });
+    if (administrators) {
+      const administratorsData = await userRepository.loadMany({ emails: administrators });
+      const findNonExistentAdministrator = administrators.find(
+        (admEmail) => !administratorsData.find(({ email }) => email === admEmail),
+      );
+      if (findNonExistentAdministrator) throw new EmailDoesNotExistError(findNonExistentAdministrator);
+    }
   };
 };

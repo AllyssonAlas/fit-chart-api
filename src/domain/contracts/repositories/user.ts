@@ -56,7 +56,23 @@ export namespace LoadManyUsersRepository {
     emails: string[];
   };
 
-  export type Output = void;
+  export type Output = {
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    contact: string;
+    address?: {
+      number: string;
+      street: string;
+      neighborhood: string;
+      city: string;
+      state: string;
+      postalCode: string;
+      complement: string | null;
+    };
+  }[];
 }
 
 export interface LoadManyUsersRepository {
