@@ -1,4 +1,5 @@
 import type { LoadManyUsersRepository, LoadUserRepository, SaveGymRepository } from '@/domain/contracts/repositories';
+import { Gym } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 
 type Input = {
@@ -35,6 +36,7 @@ export const setupCreateGym: Setup = (userRepository, gymRepository) => {
       );
       if (findNonExistentAdministrator) throw new EmailDoesNotExistError(findNonExistentAdministrator);
     }
-    await gymRepository.save({ ownerEmail, administrators, ...input });
+    const gymData = new Gym({ ownerEmail, administrators, ...input });
+    await gymRepository.save(gymData);
   };
 };
