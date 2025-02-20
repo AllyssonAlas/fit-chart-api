@@ -38,4 +38,13 @@ describe('CreateGym', () => {
     expect(userRepository.load).toHaveBeenCalledWith({ email: input.ownerEmail });
     expect(userRepository.load).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if LoadUserRepository throws', async () => {
+    const error = new Error('load_user_repository_error');
+    userRepository.load.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
