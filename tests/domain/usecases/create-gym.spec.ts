@@ -1,6 +1,6 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
-import type { LoadUserRepository } from '@/domain/contracts/repositories';
+import type { LoadManyUsersRepository, LoadUserRepository } from '@/domain/contracts/repositories';
 import { EmailDoesNotExistError } from '@/domain/errors';
 import { type CreateGym, setupCreateGym } from '@/domain/usecases';
 
@@ -23,7 +23,7 @@ describe('CreateGym', () => {
   };
 
   let sut: CreateGym;
-  let userRepository: MockProxy<LoadUserRepository>;
+  let userRepository: MockProxy<LoadUserRepository & LoadManyUsersRepository>;
 
   beforeAll(() => {
     userRepository = mock();
@@ -63,5 +63,12 @@ describe('CreateGym', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(new EmailDoesNotExistError(input.ownerEmail));
+  });
+
+  it('Should call LoadManyUsersRepository with correct input', async () => {
+    await sut(input);
+
+    expect(userRepository.loadMany).toHaveBeenCalledWith({ emails: input.administrators });
+    expect(userRepository.loadMany).toHaveBeenCalledTimes(1);
   });
 });
