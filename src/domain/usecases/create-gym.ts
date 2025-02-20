@@ -1,4 +1,4 @@
-import type { LoadManyUsersRepository, LoadUserRepository } from '@/domain/contracts/repositories';
+import type { LoadManyUsersRepository, LoadUserRepository, SaveGymRepository } from '@/domain/contracts/repositories';
 import { EmailDoesNotExistError } from '@/domain/errors';
 
 type Input = {
@@ -19,10 +19,13 @@ type Input = {
 };
 type Output = void;
 export type CreateGym = (input: Input) => Promise<Output>;
-type Setup = (userRepository: LoadUserRepository & LoadManyUsersRepository) => CreateGym;
+type Setup = (
+  userRepository: LoadUserRepository & LoadManyUsersRepository,
+  gymRepository: SaveGymRepository,
+) => CreateGym;
 
-export const setupCreateGym: Setup = (userRepository) => {
-  return async ({ ownerEmail, administrators }) => {
+export const setupCreateGym: Setup = (userRepository, gymRepository) => {
+  return async ({ ownerEmail, administrators, ...input }) => {
     const owner = await userRepository.load({ email: ownerEmail });
     if (!owner) throw new EmailDoesNotExistError(ownerEmail);
     if (administrators) {
@@ -32,5 +35,6 @@ export const setupCreateGym: Setup = (userRepository) => {
       );
       if (findNonExistentAdministrator) throw new EmailDoesNotExistError(findNonExistentAdministrator);
     }
+    await gymRepository.save({ ownerEmail, administrators, ...input });
   };
 };
