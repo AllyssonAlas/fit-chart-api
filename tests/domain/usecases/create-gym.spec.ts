@@ -1,6 +1,6 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
-import type { LoadManyUsersRepository, LoadUserRepository } from '@/domain/contracts/repositories';
+import type { LoadManyUsersRepository, LoadUserRepository, SaveGymRepository } from '@/domain/contracts/repositories';
 import { EmailDoesNotExistError } from '@/domain/errors';
 import { type CreateGym, setupCreateGym } from '@/domain/usecases';
 
@@ -24,6 +24,7 @@ describe('CreateGym', () => {
 
   let sut: CreateGym;
   let userRepository: MockProxy<LoadUserRepository & LoadManyUsersRepository>;
+  let gymRepository: MockProxy<SaveGymRepository>;
 
   beforeAll(() => {
     userRepository = mock();
@@ -54,10 +55,11 @@ describe('CreateGym', () => {
         role: 'any_role',
       },
     ]);
+    gymRepository = mock();
   });
 
   beforeEach(() => {
-    sut = setupCreateGym(userRepository);
+    sut = setupCreateGym(userRepository, gymRepository);
   });
 
   it('Should call LoadUserRepository with correct input', async () => {
@@ -124,5 +126,12 @@ describe('CreateGym', () => {
 
     expect(userRepository.loadMany).not.toHaveBeenCalled();
     expect(userRepository.loadMany).toHaveBeenCalledTimes(0);
+  });
+
+  it('Should call SaveGymRepository with correct input', async () => {
+    await sut(input);
+
+    expect(gymRepository.save).toHaveBeenCalledWith(input);
+    expect(gymRepository.save).toHaveBeenCalledTimes(1);
   });
 });
