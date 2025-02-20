@@ -71,4 +71,13 @@ describe('CreateGym', () => {
     expect(userRepository.loadMany).toHaveBeenCalledWith({ emails: input.administrators });
     expect(userRepository.loadMany).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if LoadManyUsersRepository throws', async () => {
+    const error = new Error('load_many_users_repository_error');
+    userRepository.loadMany.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
