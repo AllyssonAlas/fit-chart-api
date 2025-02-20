@@ -50,3 +50,15 @@ export namespace SaveUserRepository {
 export interface SaveUserRepository {
   save(input: SaveUserRepository.Input): Promise<SaveUserRepository.Output>;
 }
+
+export namespace LoadManyUsersRepository {
+  export type Input = {
+    emails: string[];
+  };
+
+  export type Output = void;
+}
+
+export interface LoadManyUsersRepository {
+  loadMany(input: LoadManyUsersRepository.Input): Promise<LoadManyUsersRepository.Output>;
+}
