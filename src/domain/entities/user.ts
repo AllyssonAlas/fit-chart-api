@@ -1,3 +1,5 @@
+import type { Address } from '@/domain/entities/generic-types';
+
 export class User {
   id?: string;
   name: string;
@@ -5,15 +7,7 @@ export class User {
   password: string;
   role: string;
   contact: string;
-  address?: {
-    number: string;
-    street: string;
-    neighborhood: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    complement?: string;
-  };
+  address?: Address;
 
   constructor(data: User) {
     this.id = data.id;
