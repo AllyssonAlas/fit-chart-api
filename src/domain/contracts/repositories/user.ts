@@ -5,7 +5,7 @@ export namespace LoadUserRepository {
     email: string;
   };
 
-  export type Output = (User & { id: string }) | null;
+  export type Output = User | null;
 }
 
 export interface LoadUserRepository {
@@ -27,7 +27,7 @@ export namespace LoadManyUsersRepository {
     emails: string[];
   };
 
-  export type Output = Array<User & { id: string }>;
+  export type Output = User[];
 }
 
 export interface LoadManyUsersRepository {

@@ -1,6 +1,6 @@
 import type { AuthedUser, User } from '@/domain/entities';
 
-export const userMock = (input: Partial<User & { id: string }> = {}): User & { id: string } => ({
+export const userMock = (input: Partial<User> = {}): User => ({
   id: 'any_user_id',
   name: 'any_user_name',
   email: 'any_email@mail.com',

@@ -16,7 +16,7 @@ type Setup = (
 export const setupAuthentication: Setup = (userRepository, hasher, roleRepository, authToken) => {
   return async ({ email, password }) => {
     const user = await userRepository.load({ email });
-    if (!user) throw new InvalidCredentialsError();
+    if (!user?.id) throw new InvalidCredentialsError();
     const { isValid } = await hasher.compare({ plainText: password, digest: user.password });
     if (!isValid) throw new InvalidCredentialsError();
     const role = await roleRepository.load({ name: user.role });
