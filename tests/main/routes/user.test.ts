@@ -5,7 +5,7 @@ import request from 'supertest';
 import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 
-import { clearAllTables, createRole } from '@/tests/mocks/infra';
+import { clearAllTables, createRole } from '@/tests/helpers';
 
 describe('User Routes', () => {
   let prisma: PrismaClient;

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { RoleRepository } from '@/infra/database/postgres/repositories';
 
-import { clearRoleTable, createRole } from '@/tests/mocks/infra';
+import { clearRoleTable, createRole } from '@/tests/helpers';
 
 describe('RoleRepository', () => {
   let prisma: PrismaClient;
