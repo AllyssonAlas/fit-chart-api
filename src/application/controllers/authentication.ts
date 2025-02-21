@@ -1,9 +1,8 @@
 import { Controller } from '@/application/controllers';
 import { type HttpResponse, ok, unauthorized } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
-import type { User } from '@/domain/entities';
+import type { AuthedUser, User } from '@/domain/entities';
 import { InvalidCredentialsError } from '@/domain/errors';
-import type { AuthedUser } from '@/domain/models';
 import type { Authentication } from '@/domain/usecases';
 
 type Request = Pick<User, 'email' | 'password'>;

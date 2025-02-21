@@ -1,4 +1,4 @@
-import type { AuthedUser } from '@/domain/models';
+import type { AuthedUser } from '@/domain/entities';
 
 export const authedUser = (): AuthedUser => ({
   authToken: 'any_token',

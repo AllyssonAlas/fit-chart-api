@@ -1,8 +1,7 @@
 import type { HashComparer, JwtTokenGenerator } from '@/domain/contracts/gateways';
 import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
-import { AuthToken, type User } from '@/domain/entities';
+import { AuthToken, type AuthedUser, type User } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
-import type { AuthedUser } from '@/domain/models';
 
 type Input = Pick<User, 'email' | 'password'>;
 type Output = AuthedUser;
