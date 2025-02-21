@@ -1,25 +1,11 @@
+import type { User } from '@/domain/entities';
+
 export namespace LoadUserRepository {
   export type Input = {
     email: string;
   };
 
-  export type Output = {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    contact: string;
-    address?: {
-      number: string;
-      street: string;
-      neighborhood: string;
-      city: string;
-      state: string;
-      postalCode: string;
-      complement?: string;
-    };
-  } | null;
+  export type Output = (User & { id: string }) | null;
 }
 
 export interface LoadUserRepository {
@@ -27,22 +13,7 @@ export interface LoadUserRepository {
 }
 
 export namespace SaveUserRepository {
-  export type Input = {
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    contact: string;
-    address: {
-      number: string;
-      street: string;
-      neighborhood: string;
-      city: string;
-      state: string;
-      postalCode: string;
-      complement?: string;
-    };
-  };
+  export type Input = User;
 
   export type Output = void;
 }
@@ -56,23 +27,7 @@ export namespace LoadManyUsersRepository {
     emails: string[];
   };
 
-  export type Output = {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    contact: string;
-    address?: {
-      number: string;
-      street: string;
-      neighborhood: string;
-      city: string;
-      state: string;
-      postalCode: string;
-      complement?: string;
-    };
-  }[];
+  export type Output = Array<User & { id: string }>;
 }
 
 export interface LoadManyUsersRepository {

@@ -1,27 +1,10 @@
-type Data = {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-  contact: string;
-  address: {
-    number: string;
-    street: string;
-    neighborhood: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    complement?: string;
-  };
-};
-
 export class User {
   name: string;
   email: string;
   password: string;
   role: string;
   contact: string;
-  address: {
+  address?: {
     number: string;
     street: string;
     neighborhood: string;
@@ -31,7 +14,7 @@ export class User {
     complement?: string;
   };
 
-  constructor(data: Data) {
+  constructor(data: User) {
     this.name = data.name;
     this.email = data.email;
     this.password = data.password;

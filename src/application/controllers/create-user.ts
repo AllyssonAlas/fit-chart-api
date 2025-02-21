@@ -1,26 +1,12 @@
 import { Controller } from '@/application/controllers';
 import { type HttpResponse, forbidden, ok } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
+import type { User } from '@/domain/entities';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 import type { AuthedUser } from '@/domain/models';
 import type { Authentication, CreateUser } from '@/domain/usecases';
 
-type Request = {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-  contact: string;
-  address: {
-    number: string;
-    street: string;
-    neighborhood: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    complement?: string;
-  };
-};
+type Request = User;
 
 type Model = AuthedUser | Error;
 

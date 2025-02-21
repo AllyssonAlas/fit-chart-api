@@ -2,22 +2,7 @@ import type { LoadManyUsersRepository, LoadUserRepository, SaveGymRepository } f
 import { Gym } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 
-type Input = {
-  name: string;
-  email?: string;
-  contact: string;
-  ownerEmail: string;
-  administrators?: string[];
-  address: {
-    number: string;
-    street: string;
-    neighborhood: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    complement?: string;
-  };
-};
+type Input = Gym;
 type Output = void;
 export type CreateGym = (input: Input) => Promise<Output>;
 type Setup = (
