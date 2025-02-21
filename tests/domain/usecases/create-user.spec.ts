@@ -6,24 +6,15 @@ import { User } from '@/domain/entities';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 import { type CreateUser, setupCreateUser } from '@/domain/usecases';
 
+import { addressMock, userMock } from '@/tests/mocks/domain';
+
 jest.mock('@/domain/entities/user');
 
 describe('CreateUser', () => {
   const user = {
-    name: 'any_name',
-    email: 'any_email@mail.com',
+    ...userMock(),
     password: 'any_password',
-    role: 'any_role_name',
-    contact: 'any_contact',
-    address: {
-      city: 'any_city',
-      neighborhood: 'any_neighborhood',
-      number: 'any_number',
-      postalCode: 'any_postal_code',
-      state: 'any_state',
-      street: 'any_street',
-      complement: 'any_complement',
-    },
+    address: { ...addressMock() },
   };
 
   let sut: MockProxy<CreateUser>;
@@ -38,7 +29,7 @@ describe('CreateUser', () => {
     userRepository.load.mockResolvedValue(null);
     roleRepository.load.mockResolvedValue({
       id: 'any_role_id',
-      name: 'any_role_name',
+      name: 'any_role',
       permissions: ['permission_1', 'permission_2'],
     });
     hashGenerator.generate.mockResolvedValue({ cipherText: 'hashed_text' });
@@ -74,7 +65,7 @@ describe('CreateUser', () => {
   it('Should call LoadRoleRepository with correct input', async () => {
     await sut(user);
 
-    expect(roleRepository.load).toHaveBeenCalledWith({ name: 'any_role_name' });
+    expect(roleRepository.load).toHaveBeenCalledWith({ name: user.role });
     expect(roleRepository.load).toHaveBeenCalledTimes(1);
   });
 
