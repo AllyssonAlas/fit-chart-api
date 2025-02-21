@@ -79,15 +79,13 @@ describe('UserRepository', () => {
       expect(user?.password).toBe('any_password');
       expect(user?.role).toBe('any_role_name');
       expect(user?.contact).toBe('any_contact');
-      // expect(user?.address).toEqual({
-      //   city: 'any_city',
-      //   complement: 'any_complement',
-      //   neighborhood: 'any_neighborhood',
-      //   number: 'any_number',
-      //   postalCode: 'any_postalCode',
-      //   state: 'st',
-      //   street: 'any_street',
-      // });
+      expect(user?.address?.city).toBe('any_city');
+      expect(user?.address?.complement).toBe('any_complement');
+      expect(user?.address?.neighborhood).toBe('any_neighborhood');
+      expect(user?.address?.number).toBe('any_number');
+      expect(user?.address?.postalCode).toBe('any_postalCode');
+      expect(user?.address?.state).toBe('st');
+      expect(user?.address?.street).toBe('any_street');
     });
   });
 });
