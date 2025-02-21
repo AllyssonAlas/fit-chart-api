@@ -5,6 +5,8 @@ import { Gym } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 import { type CreateGym, setupCreateGym } from '@/domain/usecases';
 
+import { userMock } from '@/tests/mocks/domain';
+
 jest.mock('@/domain/entities/gym');
 
 describe('CreateGym', () => {
@@ -32,31 +34,12 @@ describe('CreateGym', () => {
   beforeAll(() => {
     userRepository = mock();
     userRepository.load.mockResolvedValue({
-      id: 'any_user_id',
-      name: 'any_user_name',
+      ...userMock(),
       email: 'any_owner_email@mail.com',
-      password: 'any_hashed_password',
-      contact: 'any_contact',
-      role: 'any_role',
     });
     userRepository.loadMany.mockResolvedValue([
-      {
-        id: 'any_user_id',
-        name: 'any_user_name',
-        email: 'any_admin_email_1@mail.com',
-        password: 'any_hashed_password',
-        contact: 'any_contact',
-        role: 'any_role',
-      },
-
-      {
-        id: 'any_user_id',
-        name: 'any_user_name',
-        email: 'any_admin_email_2@mail.com',
-        password: 'any_hashed_password',
-        contact: 'any_contact',
-        role: 'any_role',
-      },
+      { ...userMock(), email: 'any_admin_email_1@mail.com' },
+      { ...userMock(), email: 'any_admin_email_2@mail.com' },
     ]);
     gymRepository = mock();
   });
@@ -106,16 +89,7 @@ describe('CreateGym', () => {
   });
 
   it('Should throw EmailDoesNotExistError if LoadManyUsersRepository does not return all administrators', async () => {
-    userRepository.loadMany.mockResolvedValueOnce([
-      {
-        id: 'any_user_id',
-        name: 'any_user_name',
-        email: 'any_admin_email_1@mail.com',
-        password: 'any_hashed_password',
-        contact: 'any_contact',
-        role: 'any_role',
-      },
-    ]);
+    userRepository.loadMany.mockResolvedValueOnce([{ ...userMock(), email: 'any_admin_email_1@mail.com' }]);
 
     const promise = sut(input);
 

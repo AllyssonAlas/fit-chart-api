@@ -6,7 +6,7 @@ import { AuthToken } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
 
-import { authedUserMock } from '@/tests/mocks/domain';
+import { authedUserMock, userMock } from '@/tests/mocks/domain';
 
 jest.mock('@/domain/entities/user');
 
@@ -24,14 +24,7 @@ describe('Authentication', () => {
 
   beforeAll(() => {
     userRepository = mock();
-    userRepository.load.mockResolvedValue({
-      id: 'any_user_id',
-      name: 'any_user_name',
-      email: 'any_email@mail.com',
-      password: 'any_hashed_password',
-      contact: 'any_contact',
-      role: 'any_role',
-    });
+    userRepository.load.mockResolvedValue(userMock());
     hasher = mock();
     hasher.compare.mockResolvedValue({ isValid: true });
     roleRepository = mock();
