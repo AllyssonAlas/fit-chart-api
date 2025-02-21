@@ -6,7 +6,7 @@ import { AuthToken } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
 
-import { authedUser } from '@/tests/mocks/domain';
+import { authedUserMock } from '@/tests/mocks/domain';
 
 jest.mock('@/domain/entities/user');
 
@@ -144,6 +144,6 @@ describe('Authentication', () => {
   it('Should return correct output on success', async () => {
     const result = await sut(input);
 
-    expect(result).toEqual(authedUser());
+    expect(result).toEqual(authedUserMock());
   });
 });
