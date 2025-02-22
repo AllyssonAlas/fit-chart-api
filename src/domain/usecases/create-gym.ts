@@ -1,8 +1,8 @@
 import type { LoadManyUsersRepository, LoadUserRepository, SaveGymRepository } from '@/domain/contracts/repositories';
-import { Gym } from '@/domain/entities';
+import { Gym, type GymData } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 
-type Input = Gym;
+type Input = GymData;
 type Output = void;
 export type CreateGym = (input: Input) => Promise<Output>;
 type Setup = (
