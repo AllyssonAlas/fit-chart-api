@@ -1,5 +1,7 @@
 import { Gym } from '@/domain/entities';
 
+import { userMock } from '@/tests/mocks/domain';
+
 describe('Gym', () => {
   const gymData = {
     name: 'any_name',
@@ -38,5 +40,15 @@ describe('Gym', () => {
     const sut = new Gym(data);
 
     expect(sut).toEqual(data);
+  });
+
+  describe('finNonExistentUser', () => {
+    it('Should return a non existent email', () => {
+      const usersFound = [{ ...userMock(), email: 'any_admin_email_1@mail.com' }];
+
+      const sut = new Gym(gymData).finNonExistentUser(usersFound);
+
+      expect(sut).toBe(gymData.administrators[1]);
+    });
   });
 });
