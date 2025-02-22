@@ -14,14 +14,12 @@ export const setupCreateGym: Setup = (userRepository, gymRepository) => {
   return async ({ ownerEmail, administrators, ...input }) => {
     const owner = await userRepository.load({ email: ownerEmail });
     if (!owner) throw new EmailDoesNotExistError(ownerEmail);
+    const gymData = new Gym({ ownerEmail, administrators, ...input });
     if (administrators) {
       const administratorsData = await userRepository.loadMany({ emails: administrators });
-      const findNonExistentAdministrator = administrators.find(
-        (admEmail) => !administratorsData.find(({ email }) => email === admEmail),
-      );
-      if (findNonExistentAdministrator) throw new EmailDoesNotExistError(findNonExistentAdministrator);
+      const nonExistentUser = gymData.finNonExistentUser(administratorsData);
+      if (nonExistentUser) throw new EmailDoesNotExistError(nonExistentUser);
     }
-    const gymData = new Gym({ ownerEmail, administrators, ...input });
     await gymRepository.save(gymData);
   };
 };
