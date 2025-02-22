@@ -1,7 +1,7 @@
-import type { Gym } from '@/domain/entities';
+import type { GymData } from '@/domain/entities';
 
 export namespace SaveGymRepository {
-  export type Input = Gym;
+  export type Input = GymData;
 
   export type Output = void;
 }
