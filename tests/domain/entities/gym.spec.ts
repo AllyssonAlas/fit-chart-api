@@ -50,5 +50,16 @@ describe('Gym', () => {
 
       expect(sut).toBe(gymData.administrators[1]);
     });
+
+    it('Should return a non existent email', () => {
+      const usersFound = [
+        { ...userMock(), email: 'any_admin_email_1@mail.com' },
+        { ...userMock(), email: 'any_admin_email_2@mail.com' },
+      ];
+
+      const sut = new Gym(gymData).finNonExistentUser(usersFound);
+
+      expect(sut).toBeUndefined();
+    });
   });
 });
