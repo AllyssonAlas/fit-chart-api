@@ -51,6 +51,14 @@ describe('UserRepository', () => {
     });
   });
 
+  describe('loadMany', () => {
+    it('Should return an empty list if all emails do not exist', async () => {
+      const users = await sut.loadMany({ emails: ['any_email_1@mail.com', 'any_email_2@mail.com'] });
+
+      expect(users).toEqual([]);
+    });
+  });
+
   describe('save', () => {
     it('Should return an User if email exists', async () => {
       await createRole(prisma);
