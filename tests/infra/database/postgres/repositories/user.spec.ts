@@ -57,6 +57,42 @@ describe('UserRepository', () => {
 
       expect(users).toEqual([]);
     });
+
+    it('Should return a list with all emails', async () => {
+      await createRole(prisma);
+      await prisma.user.createMany({
+        data: [
+          {
+            name: 'any_name_1',
+            email: 'any_email_1@mail.com',
+            password: 'any_password_1',
+            role: 'any_role_name',
+            contact: 'any_contact_1',
+          },
+          {
+            name: 'any_name_2',
+            email: 'any_email_2@mail.com',
+            password: 'any_password_2',
+            role: 'any_role_name',
+            contact: 'any_contact_2',
+          },
+        ],
+      });
+
+      const users = await sut.loadMany({ emails: ['any_email_1@mail.com', 'any_email_2@mail.com'] });
+
+      expect(users.length).toBe(2);
+      expect(users[0].name).toBe('any_name_1');
+      expect(users[0].email).toBe('any_email_1@mail.com');
+      expect(users[0].password).toBe('any_password_1');
+      expect(users[0].role).toBe('any_role_name');
+      expect(users[0].contact).toBe('any_contact_1');
+      expect(users[1].name).toBe('any_name_2');
+      expect(users[1].email).toBe('any_email_2@mail.com');
+      expect(users[1].password).toBe('any_password_2');
+      expect(users[1].role).toBe('any_role_name');
+      expect(users[1].contact).toBe('any_contact_2');
+    });
   });
 
   describe('save', () => {
