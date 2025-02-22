@@ -58,6 +58,28 @@ describe('UserRepository', () => {
       expect(users).toEqual([]);
     });
 
+    it('Should return a list with only emails found', async () => {
+      await createRole(prisma);
+      await prisma.user.create({
+        data: {
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          role: 'any_role_name',
+          contact: 'any_contact',
+        },
+      });
+
+      const users = await sut.loadMany({ emails: ['any_email_1@mail.com', 'any_email@mail.com'] });
+
+      expect(users.length).toBe(1);
+      expect(users[0].name).toBe('any_name');
+      expect(users[0].email).toBe('any_email@mail.com');
+      expect(users[0].password).toBe('any_password');
+      expect(users[0].role).toBe('any_role_name');
+      expect(users[0].contact).toBe('any_contact');
+    });
+
     it('Should return a list with all emails', async () => {
       await createRole(prisma);
       await prisma.user.createMany({
