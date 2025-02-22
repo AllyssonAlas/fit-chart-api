@@ -80,8 +80,9 @@ describe('CreateGym', () => {
     await expect(promise).rejects.toThrow(error);
   });
 
-  it('Should throw EmailDoesNotExistError if LoadManyUsersRepository does not return all administrators', async () => {
+  it('Should throw EmailDoesNotExistError if Gym.finNonExistentUser() does not return all administrators', async () => {
     userRepository.loadMany.mockResolvedValueOnce([{ ...userMock(), email: 'any_admin_email_1@mail.com' }]);
+    jest.spyOn(Gym.prototype, 'finNonExistentUser').mockReturnValueOnce(input.administrators[1]);
 
     const promise = sut(input);
 
