@@ -2,15 +2,19 @@ import { PrismaClient } from '@prisma/client';
 
 import type { LoadManyUsersRepository, LoadUserRepository, SaveUserRepository } from '@/domain/contracts/repositories';
 
-export class UserRepository implements LoadUserRepository {
+export class UserRepository implements LoadUserRepository, LoadManyUsersRepository {
   async load(input: LoadUserRepository.Input): Promise<LoadUserRepository.Output> {
     const prisma = new PrismaClient();
     const user = await prisma.user.findUnique({ where: input });
     return user;
   }
 
-  async loadMany(input: LoadManyUsersRepository.Input): Promise<LoadManyUsersRepository.Output> {
-    return [];
+  async loadMany({ emails }: LoadManyUsersRepository.Input): Promise<LoadManyUsersRepository.Output> {
+    const prisma = new PrismaClient();
+    const users = await prisma.user.findMany({
+      where: { email: { in: emails } },
+    });
+    return users;
   }
 
   async save(input: SaveUserRepository.Input): Promise<SaveUserRepository.Output> {
