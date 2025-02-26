@@ -22,7 +22,7 @@ model User {
   contact         String
   roleName        Role            @relation(fields: [role], references: [name], onDelete: Cascade)
   role            String
-  address         Address?
+  address         UserAddress?
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @default(now())
 }
@@ -44,7 +44,7 @@ model Permission {
   updatedAt       DateTime        @default(now())
 }
 
-model Address {
+model UserAddress {
   id              String          @id @default(uuid())
   user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String          @unique
