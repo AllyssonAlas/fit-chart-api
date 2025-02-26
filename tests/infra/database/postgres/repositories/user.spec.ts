@@ -21,7 +21,7 @@ describe('UserRepository', () => {
   });
 
   describe('save', () => {
-    it('Should return an User if email exists', async () => {
+    it('Should save an User', async () => {
       await createRole(prisma);
 
       await sut.save({
