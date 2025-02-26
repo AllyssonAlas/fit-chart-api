@@ -58,3 +58,30 @@ model UserAddress {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @default(now())
 }
+
+model Gym {
+  id              String          @id @default(uuid())
+  name            String
+  email           String
+  contact         String
+  ownerEmail      String
+  administrators  String[]
+  address         GymAddress?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @default(now())
+}
+
+model GymAddress {
+  id              String          @id @default(uuid())
+  gym             Gym             @relation(fields: [gymId], references: [id], onDelete: Cascade)
+  gymId           String          @unique
+  number          String
+  street          String
+  neighborhood    String
+  city            String
+  state           String          @db.VarChar(2)
+  postalCode      String
+  complement      String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @default(now())
+}
