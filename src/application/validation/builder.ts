@@ -1,5 +1,6 @@
 import {
   NullableParam,
+  RequiredArray,
   RequiredLength,
   RequiredParam,
   RequiredPattern,
@@ -56,6 +57,11 @@ export class ValidationBuilder {
 
   nullable(type: string): ValidationBuilder {
     this.validators.push(new NullableParam(this.value[this.fieldName], this.fieldName, type));
+    return this;
+  }
+
+  array(): ValidationBuilder {
+    this.validators.push(new RequiredArray(this.value[this.fieldName], this.fieldName));
     return this;
   }
 
