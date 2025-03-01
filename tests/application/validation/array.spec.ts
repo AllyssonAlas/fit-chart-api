@@ -33,4 +33,12 @@ describe('RequiredArray', () => {
 
     expect(error).toEqual(new InvalidParamError('field'));
   });
+
+  it('Should return undefined if validation succeeds', () => {
+    const sut = new RequiredArray([], 'field');
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
+  });
 });
