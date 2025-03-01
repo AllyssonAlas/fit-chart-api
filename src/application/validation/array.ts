@@ -7,7 +7,9 @@ export class RequiredArray implements Validator {
     readonly fieldName: string,
   ) {}
 
-  validate(): Error {
-    return new InvalidParamError(this.fieldName);
+  validate(): Error | undefined {
+    if (!Array.isArray(this.value)) {
+      return new InvalidParamError(this.fieldName);
+    }
   }
 }
