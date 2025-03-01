@@ -1,5 +1,6 @@
 import {
   NullableParam,
+  RequiredArray,
   RequiredLength,
   RequiredParam,
   RequiredPattern,
@@ -77,5 +78,12 @@ describe('ValidationBuilder', () => {
       new NullableParam(data.value, 'value', 'string'),
       new RequiredString(data.value, 'value'),
     ]);
+  });
+
+  it('Should return RequiredArray validator', () => {
+    const data = { value: [] };
+    const validators = ValidationBuilder.of(data).field('value').array().build();
+
+    expect(validators).toEqual([new RequiredArray(data.value, 'value')]);
   });
 });
