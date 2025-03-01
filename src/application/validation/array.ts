@@ -13,3 +13,15 @@ export class RequiredArray implements Validator {
     }
   }
 }
+export class RequiredStringArray extends RequiredArray {
+  constructor(
+    override readonly value: any[],
+    override readonly fieldName: string,
+  ) {
+    super(value, fieldName);
+  }
+
+  validate(): Error {
+    return new InvalidParamError(this.fieldName);
+  }
+}
