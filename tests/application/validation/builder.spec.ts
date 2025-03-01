@@ -5,6 +5,7 @@ import {
   RequiredParam,
   RequiredPattern,
   RequiredString,
+  RequiredStringArray,
   ValidationBuilder,
 } from '@/application/validation';
 
@@ -85,5 +86,12 @@ describe('ValidationBuilder', () => {
     const validators = ValidationBuilder.of(data).field('value').array().build();
 
     expect(validators).toEqual([new RequiredArray(data.value, 'value')]);
+  });
+
+  it('Should return RequiredStringArray validator', () => {
+    const data = { value: [] };
+    const validators = ValidationBuilder.of(data).field('value').array().stringArray().build();
+
+    expect(validators).toEqual([new RequiredArray(data.value, 'value'), new RequiredStringArray(data.value, 'value')]);
   });
 });
