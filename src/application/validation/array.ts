@@ -21,7 +21,10 @@ export class RequiredStringArray extends RequiredArray {
     super(value, fieldName);
   }
 
-  validate(): Error {
-    return new InvalidParamError(this.fieldName);
+  validate(): Error | undefined {
+    const findNoStringValue = this.value.find((v) => !(typeof v === 'string'));
+    if (findNoStringValue) {
+      return new InvalidParamError(this.fieldName);
+    }
   }
 }
