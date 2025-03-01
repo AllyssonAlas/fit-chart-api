@@ -51,4 +51,12 @@ describe('RequiredStringArray', () => {
 
     expect(error).toEqual(new InvalidParamError('field'));
   });
+
+  it('Should return InvalidParamError if value is a multi value array', () => {
+    const sut = new RequiredStringArray(['any_value_1', 'any_value_2', 'any_value_3'], 'field');
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
+  });
 });
