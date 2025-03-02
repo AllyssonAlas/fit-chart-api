@@ -1,6 +1,8 @@
 import { Controller } from '@/application/controllers';
+import { forbidden } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
 import type { GymData } from '@/domain/entities';
+import { EmailDoesNotExistError } from '@/domain/errors';
 import type { CreateGym } from '@/domain/usecases';
 
 type Request = GymData;
@@ -11,7 +13,14 @@ export class CreateGymController extends Controller {
   }
 
   async perform(request: Request): Promise<any> {
-    await this.createGym(request);
+    try {
+      await this.createGym(request);
+    } catch (error) {
+      if (error instanceof EmailDoesNotExistError) {
+        return forbidden(error);
+      }
+      throw error;
+    }
   }
 
   override buildValidators(request: Request): Validator[] {
