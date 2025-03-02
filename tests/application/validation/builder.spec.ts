@@ -43,6 +43,14 @@ describe('ValidationBuilder', () => {
     expect(validators).toEqual([]);
   });
 
+  it('Should return a validators array if value exists', () => {
+    const data = { value: 'any_value' };
+
+    const validators = ValidationBuilder.of(data).field('value').optional().string().build();
+
+    expect(validators).toEqual([new RequiredString(data.value, 'value')]);
+  });
+
   it('Should return RequiredString validator', () => {
     const data = { value: 'any_value' };
     const validators = ValidationBuilder.of(data).field('value').string().build();
