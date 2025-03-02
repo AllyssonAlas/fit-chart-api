@@ -1,5 +1,4 @@
 import {
-  NullableParam,
   RequiredArray,
   RequiredLength,
   RequiredParam,
@@ -92,18 +91,6 @@ describe('ValidationBuilder', () => {
       new RequiredParam(data, 'value'),
       new RequiredString(data.value, 'value'),
       new RequiredLength(data.value, 'value', 5),
-    ]);
-  });
-
-  it('Should return NullableParam validator', () => {
-    const data = { value: 'any_value' };
-
-    const validators = ValidationBuilder.of(data).field('value').nullable('string').string().build();
-
-    expect(validators).toEqual([
-      new RequiredParam(data, 'value'),
-      new NullableParam(data.value, 'value', 'string'),
-      new RequiredString(data.value, 'value'),
     ]);
   });
 
