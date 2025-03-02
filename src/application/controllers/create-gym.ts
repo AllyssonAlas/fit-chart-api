@@ -1,10 +1,20 @@
 import { Controller } from '@/application/controllers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
+import type { GymData } from '@/domain/entities';
+import type { CreateGym } from '@/domain/usecases';
+
+type Request = GymData;
 
 export class CreateGymController extends Controller {
-  async perform(): Promise<any> {}
+  constructor(private readonly createGym: CreateGym) {
+    super();
+  }
 
-  override buildValidators(request: any): Validator[] {
+  async perform(request: Request): Promise<any> {
+    await this.createGym(request);
+  }
+
+  override buildValidators(request: Request): Validator[] {
     // biome-ignore format: this array should not be formatted
     return [
         ...Builder.of(request)
