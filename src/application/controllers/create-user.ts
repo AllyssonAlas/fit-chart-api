@@ -33,20 +33,20 @@ export class CreateUserController extends Controller {
     // biome-ignore format: this array should not be formatted
     return [
       ...Builder.of(request)
-        .field('name').required().string()
-        .field('email').required().string().email()
-        .field('password').required().string()
-        .field('role').required().string()
-        .field('contact').required().string()
-        .field('address').required()
+        .field('name').string()
+        .field('email').string().email()
+        .field('password').string()
+        .field('role').string()
+        .field('contact').string()
+        .field('address')
         .build(),
       ...Builder.of(request.address)
-        .field('number').required('address').string()
-        .field('street').required('address').string()
-        .field('neighborhood').required('address').string()
-        .field('city').required('address').string()
-        .field('state').required('address').string().length(2)
-        .field('postalCode').required('address').string().postalCode()
+        .subField('number', 'address').string()
+        .subField('street', 'address').string()
+        .subField('neighborhood', 'address').string()
+        .subField('city', 'address').string()
+        .subField('state', 'address').string().length(2)
+        .subField('postalCode', 'address').string().postalCode()
         .build(),
     ];
   }

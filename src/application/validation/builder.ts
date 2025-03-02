@@ -23,20 +23,18 @@ export class ValidationBuilder {
 
   field(fieldName: string): ValidationBuilder {
     this.fieldName = fieldName;
+    this.validators.push(new RequiredParam(this.value, fieldName));
+    return this;
+  }
+
+  subField(fieldName: string, subFieldFrom: string): ValidationBuilder {
+    this.fieldName = fieldName;
+    this.validators.push(new RequiredParam(this.value, fieldName, subFieldFrom));
     return this;
   }
 
   optional(): ValidationBuilder {
     this.isOptional = true;
-    return this;
-  }
-
-  required(subFieldFrom?: string): ValidationBuilder {
-    if (subFieldFrom) {
-      this.validators.push(new RequiredParam(this.value, this.fieldName, subFieldFrom));
-    } else {
-      this.validators.push(new RequiredParam(this.value, this.fieldName));
-    }
     return this;
   }
 

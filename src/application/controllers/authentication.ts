@@ -29,10 +29,9 @@ export class AuthenticationController extends Controller {
   override buildValidators(request: any): Validator[] {
     // biome-ignore format: this array should not be formatted
     return [
-        ...Builder.of(request)
-          .field('email').required().string().email()
-          .field('password').required().string()
-          .build(),
-      ];
+      ...Builder.of(request).field('email').string().email()
+        .field('password').string()
+        .build(),
+    ];
   }
 }
