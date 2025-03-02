@@ -20,14 +20,18 @@ export class ValidationBuilder {
     return new ValidationBuilder(value || {});
   }
 
-  field(fieldName: string): ValidationBuilder {
+  private resetFieldName(fieldName: string): void {
     this.fieldName = fieldName;
+  }
+
+  field(fieldName: string): ValidationBuilder {
+    this.resetFieldName(fieldName);
     this.validators.push(new RequiredParam(this.value, fieldName));
     return this;
   }
 
   subField(fieldName: string, subFieldFrom: string): ValidationBuilder {
-    this.fieldName = fieldName;
+    this.resetFieldName(fieldName);
     this.validators.push(new RequiredParam(this.value, fieldName, subFieldFrom));
     return this;
   }
