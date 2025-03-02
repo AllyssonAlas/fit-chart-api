@@ -20,16 +20,21 @@ describe('CreateGymController', () => {
       neighborhood: 'any_neighborhood',
       number: 'any_number',
       postalCode: '00000-000',
-      state: 'any_state',
+      state: 'st',
       street: 'any_street',
       complement: 'any_complement',
     },
   };
 
   let sut: CreateGymController;
+  let createGym: jest.Mock;
+
+  beforeAll(() => {
+    createGym = jest.fn();
+  });
 
   beforeEach(() => {
-    sut = new CreateGymController();
+    sut = new CreateGymController(createGym);
   });
 
   it('Should extend controller', () => {
@@ -69,5 +74,12 @@ describe('CreateGymController', () => {
       new RequiredString(request.address.postalCode, 'postalCode'),
       new RequiredPattern(request.address.postalCode, 'postalCode', /^[0-9]{5}-[0-9]{3}$/),
     ]);
+  });
+
+  it('Should call CreateGym with correct input', async () => {
+    await sut.handle(request);
+
+    expect(createGym).toHaveBeenCalledWith(request);
+    expect(createGym).toHaveBeenCalledTimes(1);
   });
 });
