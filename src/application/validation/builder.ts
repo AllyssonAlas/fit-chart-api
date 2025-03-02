@@ -13,7 +13,7 @@ export class ValidationBuilder {
     private readonly value: any,
     private fieldName = '',
     private readonly validators: Validator[] = [],
-    private isOptional = false,
+    private optionalFields: string[] = [],
   ) {}
 
   static of(value: any): ValidationBuilder {
@@ -37,7 +37,7 @@ export class ValidationBuilder {
   }
 
   optional(): ValidationBuilder {
-    this.isOptional = true;
+    this.optionalFields.push(this.fieldName);
     return this;
   }
 
@@ -74,11 +74,15 @@ export class ValidationBuilder {
   }
 
   build(): Validator[] {
-    if (this.isOptional) {
-      const findField = Object.keys(this.value).find((key) => key === this.fieldName);
-      if (!findField) {
-        this.validators.splice(0, this.validators.length);
-      }
+    if (this.optionalFields.length) {
+      const filteredValidators = this.validators.filter(({ fieldName }) => {
+        if (!this.optionalFields.includes(fieldName)) {
+          return true;
+        }
+        const findField = Object.keys(this.value).find((key) => key === fieldName);
+        return findField && this.optionalFields.includes(fieldName);
+      });
+      return filteredValidators;
     }
     return this.validators;
   }
