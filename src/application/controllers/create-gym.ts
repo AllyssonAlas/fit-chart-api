@@ -1,5 +1,5 @@
 import { Controller } from '@/application/controllers';
-import { forbidden } from '@/application/helpers';
+import { type HttpResponse, forbidden, noContent } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
 import type { GymData } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
@@ -7,14 +7,17 @@ import type { CreateGym } from '@/domain/usecases';
 
 type Request = GymData;
 
+type Model = null | Error;
+
 export class CreateGymController extends Controller {
   constructor(private readonly createGym: CreateGym) {
     super();
   }
 
-  async perform(request: Request): Promise<any> {
+  async perform(request: Request): Promise<HttpResponse<Model>> {
     try {
       await this.createGym(request);
+      return noContent();
     } catch (error) {
       if (error instanceof EmailDoesNotExistError) {
         return forbidden(error);
