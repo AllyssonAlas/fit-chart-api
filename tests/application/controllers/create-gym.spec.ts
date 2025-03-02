@@ -8,6 +8,7 @@ import {
   RequiredString,
   RequiredStringArray,
 } from '@/application/validation';
+import { EmailDoesNotExistError } from '@/domain/errors';
 
 describe('CreateGymController', () => {
   const request = {
@@ -93,6 +94,18 @@ describe('CreateGymController', () => {
     expect(response).toEqual({
       data: new ServerError(error),
       statusCode: 500,
+    });
+  });
+
+  it('Should return 403 if CreateUser throws EmailDoesNotExistError', async () => {
+    const error = new EmailDoesNotExistError('any_email@mail.com');
+    createGym.mockRejectedValueOnce(error);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: error,
+      statusCode: 403,
     });
   });
 });
