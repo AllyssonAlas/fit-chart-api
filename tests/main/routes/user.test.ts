@@ -35,7 +35,6 @@ describe('User Routes', () => {
             postalCode: '04674-070',
             state: 'SP',
             street: 'Rua General Antônio Tavares da Motta',
-            complement: '',
           },
         })
         .expect(403);
@@ -59,7 +58,6 @@ describe('User Routes', () => {
             postalCode: '04674-070',
             state: 'SP',
             street: 'Rua General Antônio Tavares da Motta',
-            complement: '',
           },
         })
         .expect(200);

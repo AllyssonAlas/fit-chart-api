@@ -29,7 +29,7 @@ export class CreateUserController extends Controller {
     }
   }
 
-  override buildValidators(request: any): Validator[] {
+  override buildValidators(request: Request): Validator[] {
     // biome-ignore format: this array should not be formatted
     return [
       ...Builder.of(request)
@@ -47,6 +47,7 @@ export class CreateUserController extends Controller {
         .subField('city', 'address').string()
         .subField('state', 'address').string().length(2)
         .subField('postalCode', 'address').string().postalCode()
+        .subField('complement', 'address').optional().string()
         .build(),
     ];
   }

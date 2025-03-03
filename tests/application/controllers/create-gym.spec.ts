@@ -75,6 +75,8 @@ describe('CreateGymController', () => {
       new RequiredParam(request.address, 'postalCode', 'address'),
       new RequiredString(request.address.postalCode, 'postalCode'),
       new RequiredPattern(request.address.postalCode, 'postalCode', /^[0-9]{5}-[0-9]{3}$/),
+      new RequiredParam(request.address, 'complement', 'address'),
+      new RequiredString(request.address.complement, 'complement'),
     ]);
   });
 
