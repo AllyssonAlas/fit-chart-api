@@ -50,6 +50,18 @@ describe('ValidationBuilder', () => {
     expect(validators).toEqual([new RequiredParam(data, 'value'), new RequiredString(data.value, 'value')]);
   });
 
+  it('Should return a validators array if value is not optional and does not exist', () => {
+    const validators = ValidationBuilder.of({})
+      .field('valueOne')
+      .optional()
+      .string()
+      .field('valueTwo')
+      .string()
+      .build();
+
+    expect(validators).toEqual([new RequiredParam({}, 'valueTwo'), new RequiredString(undefined as any, 'valueTwo')]);
+  });
+
   it('Should return RequiredString validator', () => {
     const data = { value: 'any_value' };
 
