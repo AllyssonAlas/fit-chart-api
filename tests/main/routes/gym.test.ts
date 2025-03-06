@@ -7,7 +7,7 @@ import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 import { Permissions } from '@/main/enums';
 
-import { clearAllTables, createRole } from '@/tests/helpers';
+import { clearAllTables, createRole, createUsers } from '@/tests/helpers';
 
 describe('Gym Routes', () => {
   let prisma: PrismaClient;
@@ -98,31 +98,11 @@ describe('Gym Routes', () => {
     it('Should return 204 on success', async () => {
       await createRole(prisma, 'admin');
 
-      await prisma.user.createMany({
-        data: [
-          {
-            name: 'Crocodile',
-            email: 'crocodile_mr0@mail.com',
-            password: 'any_password',
-            role: 'admin',
-            contact: '(41) 99709-0876',
-          },
-          {
-            name: 'Daz Bonez',
-            email: 'mister_1@mail.com',
-            password: 'any_password',
-            role: 'admin',
-            contact: '(55) 9999-9999',
-          },
-          {
-            name: 'Bon Clay',
-            email: 'mister_2@mail.com',
-            password: 'any_password',
-            role: 'admin',
-            contact: '(55) 9999-9999',
-          },
-        ],
-      });
+      await createUsers(prisma, [
+        { name: 'Crocodile', email: 'crocodile_mr0@mail.com' },
+        { name: 'Daz Bonez', email: 'mister_1@mail.com' },
+        { name: 'Bon Clay', email: 'mister_2@mail.com' },
+      ]);
 
       const authorizationToken = sign(
         { id: 'any_user_id', role: 'any_role_name', permissions: [Permissions.CREATE_GYM] },

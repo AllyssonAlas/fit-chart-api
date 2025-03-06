@@ -5,7 +5,7 @@ import request from 'supertest';
 import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 
-import { clearAllTables, createRole } from '@/tests/helpers';
+import { clearAllTables, createRole, createUsers } from '@/tests/helpers';
 
 describe('User Routes', () => {
   let prisma: PrismaClient;
@@ -69,34 +69,20 @@ describe('User Routes', () => {
       await request(app)
         .post('/api/login')
         .send({
-          email: 'ed_girao05@mail.com',
-          password: 'ed_gir@0.123',
+          email: 'nami_the_cat_buglar@mail.com',
+          password: 'tr34$ur3s',
         })
         .expect(401);
     });
 
     it('Should return 200 on success', async () => {
       await createRole(prisma, 'admin');
+      const password = await hash('c4Pt4!n', env.salt);
+      const email = 'captain_usopp@mail.com';
 
-      const password = await hash('ed_gir@0.123', env.salt);
+      await createUsers(prisma, [{ email, password }]);
 
-      await prisma.user.create({
-        data: {
-          name: 'Edmundo Girão',
-          email: 'ed_girao05@mail.com',
-          password,
-          role: 'admin',
-          contact: '(41) 99709-0876',
-        },
-      });
-
-      await request(app)
-        .post('/api/login')
-        .send({
-          email: 'ed_girao05@mail.com',
-          password: 'ed_gir@0.123',
-        })
-        .expect(200);
+      await request(app).post('/api/login').send({ email, password: 'c4Pt4!n' }).expect(200);
     });
   });
 });
