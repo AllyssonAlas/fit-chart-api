@@ -19,48 +19,30 @@ describe('User Routes', () => {
   });
 
   describe('POST /user/create', () => {
+    const requestData = {
+      name: 'Roronoa Zoro',
+      email: 'roronoa_z@mail.com',
+      password: 'waDO_Ich!m0nj1',
+      role: 'admin',
+      contact: 'straw_pirates.com/zoro',
+      address: {
+        city: 'Shimotsuki Village',
+        neighborhood: 'None',
+        number: 'XXX',
+        postalCode: '04674-070',
+        state: 'EB',
+        street: 'Isshin Dojo street',
+      },
+    };
+
     it('Should return 403 if role does not exist', async () => {
-      await request(app)
-        .post('/api/user/create')
-        .send({
-          name: 'Edmundo Girão',
-          email: 'ed_girao05@mail.com',
-          password: 'ed_gir@0.123',
-          role: 'admin',
-          contact: '(41) 99709-0876',
-          address: {
-            city: 'São Paulo',
-            neighborhood: 'Jardim Itapeva',
-            number: '08',
-            postalCode: '04674-070',
-            state: 'SP',
-            street: 'Rua General Antônio Tavares da Motta',
-          },
-        })
-        .expect(403);
+      await request(app).post('/api/user/create').send(requestData).expect(403);
     });
 
     it('Should return 200 on success', async () => {
       await createRole(prisma, 'admin');
 
-      await request(app)
-        .post('/api/user/create')
-        .send({
-          name: 'Edmundo Girão',
-          email: 'ed_girao05@mail.com',
-          password: 'ed_gir@0.123',
-          role: 'admin',
-          contact: '(41) 99709-0876',
-          address: {
-            city: 'São Paulo',
-            neighborhood: 'Jardim Itapeva',
-            number: '08',
-            postalCode: '04674-070',
-            state: 'SP',
-            street: 'Rua General Antônio Tavares da Motta',
-          },
-        })
-        .expect(200);
+      await request(app).post('/api/user/create').send(requestData).expect(200);
     });
   });
 
@@ -68,10 +50,7 @@ describe('User Routes', () => {
     it('Should return 401 if credentials are invalid', async () => {
       await request(app)
         .post('/api/login')
-        .send({
-          email: 'nami_the_cat_buglar@mail.com',
-          password: 'tr34$ur3s',
-        })
+        .send({ email: 'nami_the_cat_buglar@mail.com', password: 'tr34$ur3s' })
         .expect(401);
     });
 

@@ -21,24 +21,23 @@ describe('Gym Routes', () => {
   });
 
   describe('POST /gym', () => {
+    const requestData = {
+      name: 'Baroque Workout',
+      email: 'baroque_workout@mail.com',
+      contact: 'baroque_workout@mail.com',
+      ownerEmail: 'crocodile_mr0@mail.com',
+      address: {
+        city: 'Alubarna',
+        neighborhood: 'Imperial Garden',
+        number: '253',
+        postalCode: '04674-070',
+        state: 'AB',
+        street: 'Palace Street',
+      },
+    };
+
     it('Should return 401 if request does not contain token', async () => {
-      await request(app)
-        .post('/api/gym')
-        .send({
-          name: 'Baroque Workout',
-          email: 'baroque_workout@mail.com',
-          contact: 'baroque_workout@mail.com',
-          ownerEmail: 'crocodile_mr0@mail.com',
-          address: {
-            city: 'São Paulo',
-            neighborhood: 'Jardim Itapeva',
-            number: '08',
-            postalCode: '04674-070',
-            state: 'SP',
-            street: 'Rua General Antônio Tavares da Motta',
-          },
-        })
-        .expect(401);
+      await request(app).post('/api/gym').send(requestData).expect(401);
     });
 
     it('Should return 403 if authorization token does not contain required permission', async () => {
@@ -48,24 +47,7 @@ describe('Gym Routes', () => {
         { expiresIn: AuthToken.expirationInMs / 1000 },
       );
 
-      await request(app)
-        .post('/api/gym')
-        .set('authorization', authorizationToken)
-        .send({
-          name: 'Baroque Workout',
-          email: 'baroque_workout@mail.com',
-          contact: 'baroque_workout@mail.com',
-          ownerEmail: 'crocodile_mr0@mail.com',
-          address: {
-            city: 'São Paulo',
-            neighborhood: 'Jardim Itapeva',
-            number: '08',
-            postalCode: '04674-070',
-            state: 'SP',
-            street: 'Rua General Antônio Tavares da Motta',
-          },
-        })
-        .expect(403);
+      await request(app).post('/api/gym').set('authorization', authorizationToken).send(requestData).expect(403);
     });
 
     it('Should return 403 if ownerEmail does not exist', async () => {
@@ -75,24 +57,7 @@ describe('Gym Routes', () => {
         { expiresIn: AuthToken.expirationInMs / 1000 },
       );
 
-      await request(app)
-        .post('/api/gym')
-        .set('authorization', authorizationToken)
-        .send({
-          name: 'Baroque Workout',
-          email: 'baroque_workout@mail.com',
-          contact: 'baroque_workout@mail.com',
-          ownerEmail: 'crocodile_mr0@mail.com',
-          address: {
-            city: 'São Paulo',
-            neighborhood: 'Jardim Itapeva',
-            number: '08',
-            postalCode: '04674-070',
-            state: 'SP',
-            street: 'Rua General Antônio Tavares da Motta',
-          },
-        })
-        .expect(403);
+      await request(app).post('/api/gym').set('authorization', authorizationToken).send(requestData).expect(403);
     });
 
     it('Should return 204 on success', async () => {
@@ -113,21 +78,7 @@ describe('Gym Routes', () => {
       await request(app)
         .post('/api/gym')
         .set('authorization', authorizationToken)
-        .send({
-          name: 'Baroque Workout',
-          email: 'baroque_workout@mail.com',
-          contact: 'baroque_workout@mail.com',
-          ownerEmail: 'crocodile_mr0@mail.com',
-          administrators: ['mister_1@mail.com', 'mister_2@mail.com'],
-          address: {
-            city: 'São Paulo',
-            neighborhood: 'Jardim Itapeva',
-            number: '08',
-            postalCode: '04674-070',
-            state: 'SP',
-            street: 'Rua General Antônio Tavares da Motta',
-          },
-        })
+        .send({ administrators: ['mister_1@mail.com', 'mister_2@mail.com'], ...requestData })
         .expect(204);
     });
   });
