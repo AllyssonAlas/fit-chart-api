@@ -18,7 +18,7 @@ describe('User Routes', () => {
     clearAllTables(prisma);
   });
 
-  describe('POST /user/create', () => {
+  describe('POST /user', () => {
     const requestData = {
       name: 'Roronoa Zoro',
       email: 'roronoa_z@mail.com',
@@ -36,13 +36,13 @@ describe('User Routes', () => {
     };
 
     it('Should return 403 if role does not exist', async () => {
-      await request(app).post('/api/user/create').send(requestData).expect(403);
+      await request(app).post('/api/user').send(requestData).expect(403);
     });
 
     it('Should return 200 on success', async () => {
       await createRole(prisma, 'admin');
 
-      await request(app).post('/api/user/create').send(requestData).expect(200);
+      await request(app).post('/api/user').send(requestData).expect(200);
     });
   });
 
