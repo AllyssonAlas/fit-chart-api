@@ -1,6 +1,6 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
-import type { Controller } from '@/application/controllers';
+import { Controller } from '@/application/controllers';
 import { ForbiddenError } from '@/application/errors';
 import { ok } from '@/application/helpers';
 import { ForbidRoleCreationDecorator } from '@/main/decorators';
@@ -21,6 +21,10 @@ describe('ForbidRoleCreationDecorator', () => {
 
   beforeEach(() => {
     sut = new ForbidRoleCreationDecorator(forbiddenRoles, controller);
+  });
+
+  it('Should extend controller', () => {
+    expect(sut).toBeInstanceOf(Controller);
   });
 
   it('Should return 403 if request role contains a role from forbiddenRoles', async () => {
