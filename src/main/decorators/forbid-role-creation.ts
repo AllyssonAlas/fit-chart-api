@@ -1,6 +1,6 @@
 import type { Controller } from '@/application/controllers';
 import { ForbiddenError } from '@/application/errors';
-import { forbidden } from '@/application/helpers';
+import { type HttpResponse, forbidden } from '@/application/helpers';
 
 export class ForbidRoleCreationDecorator {
   constructor(
@@ -8,10 +8,11 @@ export class ForbidRoleCreationDecorator {
     private readonly controller: Controller,
   ) {}
 
-  async handle(request: any): Promise<any> {
+  async handle(request: any): Promise<HttpResponse> {
     if (this.forbiddenRoles.includes(request.role)) {
       return forbidden(new ForbiddenError());
     }
-    this.controller.handle(request);
+    const response = await this.controller.handle(request);
+    return response;
   }
 }
