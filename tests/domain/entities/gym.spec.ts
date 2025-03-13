@@ -7,7 +7,6 @@ describe('Gym', () => {
     name: 'any_name',
     email: 'any_email@mail.com',
     contact: 'any_contact',
-    ownerEmail: 'any_owner_email@mail.com',
     administrators: ['any_admin_email_1@mail.com', 'any_admin_email_2@mail.com'],
     address: {
       city: 'any_city',

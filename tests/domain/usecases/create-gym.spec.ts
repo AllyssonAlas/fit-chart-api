@@ -1,6 +1,6 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
-import type { LoadManyUsersRepository, LoadUserRepository, SaveGymRepository } from '@/domain/contracts/repositories';
+import type { LoadManyUsersRepository, SaveGymRepository } from '@/domain/contracts/repositories';
 import { Gym } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 import { type CreateGym, setupCreateGym } from '@/domain/usecases';
@@ -14,21 +14,16 @@ describe('CreateGym', () => {
     name: 'any_name',
     email: 'any_email@mail.com',
     contact: 'any_contact',
-    ownerEmail: 'any_owner_email@mail.com',
     administrators: ['any_admin_email_1@mail.com', 'any_admin_email_2@mail.com'],
     address: { ...addressMock() },
   };
 
   let sut: CreateGym;
-  let userRepository: MockProxy<LoadUserRepository & LoadManyUsersRepository>;
+  let userRepository: MockProxy<LoadManyUsersRepository>;
   let gymRepository: MockProxy<SaveGymRepository>;
 
   beforeAll(() => {
     userRepository = mock();
-    userRepository.load.mockResolvedValue({
-      ...userMock(),
-      email: 'any_owner_email@mail.com',
-    });
     userRepository.loadMany.mockResolvedValue([
       { ...userMock(), email: 'any_admin_email_1@mail.com' },
       { ...userMock(), email: 'any_admin_email_2@mail.com' },
@@ -38,30 +33,6 @@ describe('CreateGym', () => {
 
   beforeEach(() => {
     sut = setupCreateGym(userRepository, gymRepository);
-  });
-
-  it('Should call LoadUserRepository with correct input', async () => {
-    await sut(input);
-
-    expect(userRepository.load).toHaveBeenCalledWith({ email: input.ownerEmail });
-    expect(userRepository.load).toHaveBeenCalledTimes(1);
-  });
-
-  it('Should rethrow if LoadUserRepository throws', async () => {
-    const error = new Error('load_user_repository_error');
-    userRepository.load.mockRejectedValueOnce(error);
-
-    const promise = sut(input);
-
-    await expect(promise).rejects.toThrow(error);
-  });
-
-  it('Should throw EmailDoesNotExistError if LoadUserRepository returns null', async () => {
-    userRepository.load.mockResolvedValueOnce(null);
-
-    const promise = sut(input);
-
-    await expect(promise).rejects.toThrow(new EmailDoesNotExistError(input.ownerEmail));
   });
 
   it('Should call LoadManyUsersRepository with correct input', async () => {

@@ -25,7 +25,6 @@ describe('GymRepository', () => {
       await sut.save({
         name: 'any_name',
         email: 'any_email@mail.com',
-        ownerEmail: 'any_owner_email@mail.com',
         administrators: [],
         contact: 'any_contact',
         address: {
@@ -40,14 +39,13 @@ describe('GymRepository', () => {
       });
 
       const gym = await prisma.gym.findFirst({
-        where: { ownerEmail: 'any_owner_email@mail.com' },
+        where: { email: 'any_email@mail.com' },
         include: { address: true },
       });
 
       expect(gym?.id).toBeTruthy();
       expect(gym?.name).toBe('any_name');
       expect(gym?.email).toBe('any_email@mail.com');
-      expect(gym?.ownerEmail).toBe('any_owner_email@mail.com');
       expect(gym?.administrators).toEqual([]);
       expect(gym?.contact).toBe('any_contact');
       expect(gym?.address?.city).toBe('any_city');

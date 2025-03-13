@@ -15,7 +15,6 @@ describe('CreateGymController', () => {
     name: 'any_gym_name',
     email: 'any_gym_email@mail.com',
     contact: 'any_gym_contact',
-    ownerEmail: 'any_owner_email@mail.com',
     administrators: ['any_administrator_email_1@mail.com', 'any_administrator_email_2@mail.com'],
     address: {
       city: 'any_city',
@@ -54,9 +53,6 @@ describe('CreateGymController', () => {
       new RequiredPattern(request.email, 'email', /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gim),
       new RequiredParam(request, 'contact'),
       new RequiredString(request.contact, 'contact'),
-      new RequiredParam(request, 'ownerEmail'),
-      new RequiredString(request.ownerEmail, 'ownerEmail'),
-      new RequiredPattern(request.ownerEmail, 'ownerEmail', /^[\w.]+@\w+.\w{2,}(?:.\w{2})?$/gim),
       new RequiredParam(request, 'administrators'),
       new RequiredArray(request.administrators, 'administrators'),
       new RequiredStringArray(request.administrators, 'administrators'),

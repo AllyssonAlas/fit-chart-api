@@ -64,7 +64,6 @@ model Gym {
   name            String
   email           String?
   contact         String
-  ownerEmail      String
   administrators  String[]
   address         GymAddress?
   createdAt       DateTime        @default(now())

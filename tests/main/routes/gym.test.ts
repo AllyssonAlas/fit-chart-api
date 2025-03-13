@@ -25,7 +25,6 @@ describe('Gym Routes', () => {
       name: 'Baroque Workout',
       email: 'baroque_workout@mail.com',
       contact: 'baroque_workout@mail.com',
-      ownerEmail: 'crocodile_mr0@mail.com',
       address: {
         city: 'Alubarna',
         neighborhood: 'Imperial Garden',
@@ -43,16 +42,6 @@ describe('Gym Routes', () => {
     it('Should return 403 if authorization token does not contain required permission', async () => {
       const authorizationToken = sign(
         { id: 'any_user_id', role: 'any_role_name', permissions: ['invalid_permission'] },
-        env.secret,
-        { expiresIn: AuthToken.expirationInMs / 1000 },
-      );
-
-      await request(app).post('/api/gym').set('authorization', authorizationToken).send(requestData).expect(403);
-    });
-
-    it('Should return 403 if ownerEmail does not exist', async () => {
-      const authorizationToken = sign(
-        { id: 'any_user_id', role: 'any_role_name', permissions: [Permissions.CREATE_GYM] },
         env.secret,
         { expiresIn: AuthToken.expirationInMs / 1000 },
       );

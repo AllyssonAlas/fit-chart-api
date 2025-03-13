@@ -33,7 +33,6 @@ export class CreateGymController extends Controller {
         .field('name').string()
         .field('email').string().email()
         .field('contact').string()
-        .field('ownerEmail').string().email()
         .field('administrators').optional().array().stringArray()
         .field('address')
         .build(),
