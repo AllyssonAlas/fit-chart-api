@@ -1,5 +1,4 @@
 import type { Address } from '@/domain/entities/generic-types';
-import type { User } from '@/domain/entities/user';
 
 export type GymData = {
   name: string;
@@ -24,7 +23,7 @@ export class Gym {
     this.address = data.address;
   }
 
-  finNonExistentUser(users: User[]): string | undefined {
-    return this.administrators?.find((admEmail) => !users.find(({ email }) => email === admEmail));
+  finNonExistentUser(usersEmail: string[]): string | undefined {
+    return this.administrators?.find((email) => !usersEmail?.includes(email));
   }
 }

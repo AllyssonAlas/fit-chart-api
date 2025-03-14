@@ -1,4 +1,4 @@
-import type { LoadManyUsersRepository, LoadUserRepository, SaveGymRepository } from '@/domain/contracts/repositories';
+import type { LoadManyUsersRepository, SaveGymRepository } from '@/domain/contracts/repositories';
 import { Gym, type GymData } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 
@@ -9,10 +9,11 @@ type Setup = (userRepository: LoadManyUsersRepository, gymRepository: SaveGymRep
 
 export const setupCreateGym: Setup = (userRepository, gymRepository) => {
   return async ({ administrators, ...input }) => {
-    const gymData = new Gym({ administrators, ...input });
-    if (administrators) {
+    const gymData = new Gym(input);
+    if (administrators?.length) {
       const administratorsData = await userRepository.loadMany({ emails: administrators });
-      const nonExistentUser = gymData.finNonExistentUser(administratorsData);
+      gymData.administrators = administratorsData.map(({ email }) => email);
+      const nonExistentUser = gymData.finNonExistentUser(administrators);
       if (nonExistentUser) throw new EmailDoesNotExistError(nonExistentUser);
     }
     await gymRepository.save(gymData);

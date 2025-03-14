@@ -40,7 +40,7 @@ describe('GymRepository', () => {
 
       const gym = await prisma.gym.findFirst({
         where: { email: 'any_email@mail.com' },
-        include: { address: true },
+        include: { address: true, administrators: true },
       });
 
       expect(gym?.id).toBeTruthy();

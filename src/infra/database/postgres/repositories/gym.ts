@@ -6,7 +6,13 @@ export class GymRepository implements SaveGymRepository {
   async save(input: SaveGymRepository.Input): Promise<SaveGymRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.gym.create({
-      data: { ...input, address: { create: input.address } },
+      data: {
+        ...input,
+        administrators: {
+          connect: input.administrators?.map((email) => ({ email })),
+        },
+        address: { create: input.address },
+      },
     });
   }
 }
