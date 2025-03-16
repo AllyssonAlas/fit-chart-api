@@ -1,9 +1,8 @@
-# User
+# Gym
 
 - id: uuid
 - name: string
 - email?: string
 - contact: string
-- ownerEmail:  USER email
-- administrators?: User email[]
+- administrators?: User[]
 - address: Address
