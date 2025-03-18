@@ -9,3 +9,13 @@ export namespace SaveGymRepository {
 export interface SaveGymRepository {
   save(input: SaveGymRepository.Input): Promise<SaveGymRepository.Output>;
 }
+
+export namespace LoadGymRepository {
+  export type Input = { id: string };
+
+  export type Output = GymData;
+}
+
+export interface LoadGymRepository {
+  load(input: LoadGymRepository.Input): Promise<LoadGymRepository.Output>;
+}
