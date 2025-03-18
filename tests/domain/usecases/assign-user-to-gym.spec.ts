@@ -1,7 +1,9 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { LoadGymRepository } from '@/domain/contracts/repositories';
+import { GymNotFoundError } from '@/domain/errors';
 import { type AssignUserToGym, setupAssignUserToGym } from '@/domain/usecases';
+import { addressMock } from '@/tests/mocks/domain';
 
 describe('AssignUserToGym', () => {
   const input = {
@@ -15,6 +17,13 @@ describe('AssignUserToGym', () => {
 
   beforeAll(() => {
     gymRepository = mock();
+    gymRepository.load.mockResolvedValue({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      contact: 'any_contact',
+      administrators: ['any_admin_email_1@mail.com', 'any_admin_email_2@mail.com'],
+      address: { ...addressMock() },
+    });
   });
 
   beforeEach(() => {
@@ -35,5 +44,13 @@ describe('AssignUserToGym', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
+  });
+
+  it('Should throw GymNotFoundError if LoadGymRepository returns null', async () => {
+    gymRepository.load.mockResolvedValueOnce(null);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new GymNotFoundError());
   });
 });
