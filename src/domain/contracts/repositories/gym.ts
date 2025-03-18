@@ -13,7 +13,7 @@ export interface SaveGymRepository {
 export namespace LoadGymRepository {
   export type Input = { id: string };
 
-  export type Output = GymData;
+  export type Output = GymData | null;
 }
 
 export interface LoadGymRepository {
