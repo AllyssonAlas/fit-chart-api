@@ -27,4 +27,13 @@ describe('AssignUserToGym', () => {
     expect(gymRepository.load).toHaveBeenCalledWith({ id: input.gymId });
     expect(gymRepository.load).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if LoadGymRepository throws', async () => {
+    const error = new Error('load_gym_repository_error');
+    gymRepository.load.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
