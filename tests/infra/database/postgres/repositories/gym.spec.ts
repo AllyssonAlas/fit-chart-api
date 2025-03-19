@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client';
 
 import { GymRepository } from '@/infra/database/postgres/repositories';
 
+import { clearAllTables, createRole } from '@/tests/helpers';
+
 describe('GymRepository', () => {
   let prisma: PrismaClient;
   let sut: GymRepository;
@@ -15,6 +17,7 @@ describe('GymRepository', () => {
   });
 
   afterEach(async () => {
+    clearAllTables(prisma);
     await prisma.gym.deleteMany({});
   });
 
@@ -61,6 +64,59 @@ describe('GymRepository', () => {
       const gym = await sut.load({ id: 'any_gym_id' });
 
       expect(gym).toBeNull();
+    });
+
+    it('Should load a Gym', async () => {
+      await createRole(prisma);
+
+      await prisma.user.create({
+        data: {
+          id: 'any_user_id',
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          role: 'any_role_name',
+          contact: 'any_contact',
+        },
+      });
+      await prisma.gym.create({
+        data: {
+          id: 'any_gym_id_1',
+          name: 'any_gym_name',
+          contact: 'any_gym_contact',
+        },
+      });
+      await prisma.gym.create({
+        data: {
+          id: 'any_gym_id_2',
+          name: 'any_gym_name',
+          contact: 'any_gym_contact',
+          email: 'any_gym_mail@mail.com',
+          administrators: {
+            connect: { id: 'any_user_id' },
+          },
+        },
+      });
+
+      const gymOne = await sut.load({ id: 'any_gym_id_1' });
+      const gymTwo = await sut.load({ id: 'any_gym_id_2' });
+
+      expect(gymOne?.name).toBe('any_gym_name');
+      expect(gymOne?.email).toBeUndefined();
+      expect(gymOne?.administrators).toEqual([]);
+      expect(gymOne?.contact).toBe('any_gym_contact');
+
+      expect(gymTwo?.name).toBe('any_gym_name');
+      expect(gymTwo?.email).toBe('any_gym_mail@mail.com');
+      expect(gymTwo?.administrators?.[0]).toMatchObject({
+        id: 'any_user_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        role: 'any_role_name',
+        contact: 'any_contact',
+      });
+      expect(gymTwo?.contact).toBe('any_gym_contact');
     });
   });
 });
