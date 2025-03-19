@@ -1,9 +1,9 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { LoadGymRepository, LoadManyUsersRepository } from '@/domain/contracts/repositories';
-import { GymNotFoundError } from '@/domain/errors';
+import { EmailDoesNotExistError, GymNotFoundError } from '@/domain/errors';
 import { type AssignUserToGym, setupAssignUserToGym } from '@/domain/usecases';
-import { addressMock } from '@/tests/mocks/domain';
+import { addressMock, userMock } from '@/tests/mocks/domain';
 
 describe('AssignUserToGym', () => {
   const input = {
@@ -26,6 +26,11 @@ describe('AssignUserToGym', () => {
       address: { ...addressMock() },
     });
     userRepository = mock();
+    userRepository.loadMany.mockResolvedValue([
+      { ...userMock(), email: 'any_email_1@mail.com' },
+      { ...userMock(), email: 'any_email_2@mail.com' },
+      { ...userMock(), email: 'any_email_3@mail.com' },
+    ]);
   });
 
   beforeEach(() => {
@@ -70,5 +75,16 @@ describe('AssignUserToGym', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
+  });
+
+  it('Should throw EmailDoesNotExistError if LoadManyUsersRepository does not return all usersEmails', async () => {
+    userRepository.loadMany.mockResolvedValueOnce([
+      { ...userMock(), email: 'any_email_1@mail.com' },
+      { ...userMock(), email: 'any_email_3@mail.com' },
+    ]);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new EmailDoesNotExistError(input.usersEmails[1]));
   });
 });
