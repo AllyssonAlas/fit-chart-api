@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
-import type { SaveGymRepository } from '@/domain/contracts/repositories';
+import type { LoadGymRepository, SaveGymRepository } from '@/domain/contracts/repositories';
 
-export class GymRepository implements SaveGymRepository {
+export class GymRepository implements SaveGymRepository, LoadGymRepository {
   async save(input: SaveGymRepository.Input): Promise<SaveGymRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.gym.create({
@@ -14,5 +14,13 @@ export class GymRepository implements SaveGymRepository {
         address: { create: input.address },
       },
     });
+  }
+
+  async load({ id }: LoadGymRepository.Input): Promise<LoadGymRepository.Output> {
+    const prisma = new PrismaClient();
+    await prisma.gym.findUnique({
+      where: { id },
+    });
+    return null;
   }
 }
