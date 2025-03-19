@@ -1,6 +1,6 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
-import type { LoadGymRepository } from '@/domain/contracts/repositories';
+import type { LoadGymRepository, LoadManyUsersRepository } from '@/domain/contracts/repositories';
 import { GymNotFoundError } from '@/domain/errors';
 import { type AssignUserToGym, setupAssignUserToGym } from '@/domain/usecases';
 import { addressMock } from '@/tests/mocks/domain';
@@ -14,6 +14,7 @@ describe('AssignUserToGym', () => {
 
   let sut: AssignUserToGym;
   let gymRepository: MockProxy<LoadGymRepository>;
+  let userRepository: MockProxy<LoadManyUsersRepository>;
 
   beforeAll(() => {
     gymRepository = mock();
@@ -24,10 +25,11 @@ describe('AssignUserToGym', () => {
       administrators: ['any_admin_email_1@mail.com', 'any_admin_email_2@mail.com'],
       address: { ...addressMock() },
     });
+    userRepository = mock();
   });
 
   beforeEach(() => {
-    sut = setupAssignUserToGym(gymRepository);
+    sut = setupAssignUserToGym(gymRepository, userRepository);
   });
 
   it('Should call LoadGymRepository with correct input', async () => {
@@ -52,5 +54,12 @@ describe('AssignUserToGym', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(new GymNotFoundError());
+  });
+
+  it('Should call LoadManyUsersRepository with correct input', async () => {
+    await sut(input);
+
+    expect(userRepository.loadMany).toHaveBeenCalledWith({ emails: input.usersEmails });
+    expect(userRepository.loadMany).toHaveBeenCalledTimes(1);
   });
 });
