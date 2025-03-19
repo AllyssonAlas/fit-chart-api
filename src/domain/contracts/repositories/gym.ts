@@ -19,3 +19,16 @@ export namespace LoadGymRepository {
 export interface LoadGymRepository {
   load(input: LoadGymRepository.Input): Promise<LoadGymRepository.Output>;
 }
+
+export namespace AssignUsersToGymRepository {
+  export type Input = {
+    emails: string[];
+    usersType: string;
+  };
+
+  export type Output = void;
+}
+
+export interface AssignUsersToGymRepository {
+  assignUsers(input: AssignUsersToGymRepository.Input): Promise<AssignUsersToGymRepository.Output>;
+}
