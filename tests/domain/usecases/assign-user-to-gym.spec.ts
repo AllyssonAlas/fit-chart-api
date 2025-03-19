@@ -98,4 +98,13 @@ describe('AssignUserToGym', () => {
     expect(gymRepository.assignUsers).toHaveBeenCalledWith({ emails: input.usersEmails, usersType: 'students' });
     expect(gymRepository.assignUsers).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if AssignUsersToGymRepository throws', async () => {
+    const error = new Error('assign_users_to_gym_repository_error');
+    gymRepository.assignUsers.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
