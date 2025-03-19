@@ -2,8 +2,6 @@ import { PrismaClient } from '@prisma/client';
 
 import { GymRepository } from '@/infra/database/postgres/repositories';
 
-import { clearAllTables, createRole } from '@/tests/helpers';
-
 describe('GymRepository', () => {
   let prisma: PrismaClient;
   let sut: GymRepository;
@@ -55,6 +53,14 @@ describe('GymRepository', () => {
       expect(gym?.address?.postalCode).toBe('any_postalCode');
       expect(gym?.address?.state).toBe('st');
       expect(gym?.address?.street).toBe('any_street');
+    });
+  });
+
+  describe('load', () => {
+    it('Should return undefined if id does not exist', async () => {
+      const gym = await sut.load({ id: 'any_gym_id' });
+
+      expect(gym).toBeNull();
     });
   });
 });
