@@ -15,73 +15,73 @@ datasource db {
 
 
 model User {
-  id              String          @id @default(uuid())
-  name            String
-  email           String          @unique
-  password        String
-  contact         String
-  roleName        Role            @relation(fields: [role], references: [name], onDelete: Cascade)
-  role            String
-  address         UserAddress?
-  administeredGyms Gym[]
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @default(now())
+  id                    String                @id @default(uuid())
+  name                  String
+  email                 String                @unique
+  password              String
+  contact               String
+  roleName              Role                  @relation(fields: [role], references: [name], onDelete: Cascade)
+  role                  String
+  address               UserAddress?
+  administeredGyms      Gym[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
 }
 
 model Role {
-  id              String          @id @default(uuid())
-  name            String          @unique
-  users           User[]
-  permissions     Permission[]
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @default(now())
+  id                    String                @id @default(uuid())
+  name                  String                @unique
+  users                 User[]
+  permissions           Permission[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
 }
 
 model Permission {
-  id              String          @id @default(uuid())
-  name            String          @unique
-  roles           Role[]
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @default(now())
+  id                    String                @id @default(uuid())
+  name                  String                @unique
+  roles                 Role[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
 }
 
-model UserAddress {
-  id              String          @id @default(uuid())
-  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId          String          @unique
-  number          String
-  street          String
-  neighborhood    String
-  city            String
-  state           String          @db.VarChar(2)
-  postalCode      String
-  complement      String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @default(now())
+model UserAddress       {
+  id                    String                @id @default(uuid())
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String                @unique
+  number                String
+  street                String
+  neighborhood          String
+  city                  String
+  state                 String                @db.VarChar(2)
+  postalCode            String
+  complement            String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
 }
 
 model Gym {
-  id              String          @id @default(uuid())
-  name            String
-  email           String?
-  contact         String
-  administrators  User[]
-  address         GymAddress?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @default(now())
+  id                    String                @id @default(uuid())
+  name                  String
+  email                 String?
+  contact               String
+  administrators        User[]
+  address               GymAddress?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
 }
 
 model GymAddress {
-  id              String          @id @default(uuid())
-  gym             Gym             @relation(fields: [gymId], references: [id], onDelete: Cascade)
-  gymId           String          @unique
-  number          String
-  street          String
-  neighborhood    String
-  city            String
-  state           String          @db.VarChar(2)
-  postalCode      String
-  complement      String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @default(now())
+  id                    String                @id @default(uuid())
+  gym                   Gym                   @relation(fields: [gymId], references: [id], onDelete: Cascade)
+  gymId                 String                @unique
+  number                String
+  street                String
+  neighborhood          String
+  city                  String
+  state                 String                @db.VarChar(2)
+  postalCode            String
+  complement            String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
 }
