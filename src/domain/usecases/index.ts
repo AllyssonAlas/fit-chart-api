@@ -1,4 +1,4 @@
-export * from './assign-user-to-gym';
+export * from './assign-users-to-gym';
 export * from './authentication';
 export * from './authorization';
 export * from './create-gym';

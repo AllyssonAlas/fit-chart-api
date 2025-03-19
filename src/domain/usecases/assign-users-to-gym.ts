@@ -7,11 +7,11 @@ import { EmailDoesNotExistError, GymNotFoundError } from '@/domain/errors';
 
 type Input = { gymId: string; usersType: string; usersEmails: string[] };
 type Output = void;
-export type AssignUserToGym = (input: Input) => Promise<Output>;
+export type AssignUsersToGym = (input: Input) => Promise<Output>;
 type Setup = (
   gymRepository: LoadGymRepository & AssignUsersToGymRepository,
   userRepository: LoadManyUsersRepository,
-) => AssignUserToGym;
+) => AssignUsersToGym;
 
 export const setupAssignUserToGym: Setup = (gymRepository, userRepository) => {
   return async ({ gymId, usersEmails, usersType }) => {

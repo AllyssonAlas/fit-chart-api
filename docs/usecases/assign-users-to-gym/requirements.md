@@ -1,4 +1,4 @@
-# Assign User to Gym Usecase
+# Assign Users to Gym Usecase
 
 > ## Case of success 1
 1. Check if **USER** does have permission

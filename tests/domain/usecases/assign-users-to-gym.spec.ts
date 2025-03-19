@@ -6,17 +6,17 @@ import type {
   LoadManyUsersRepository,
 } from '@/domain/contracts/repositories';
 import { EmailDoesNotExistError, GymNotFoundError } from '@/domain/errors';
-import { type AssignUserToGym, setupAssignUserToGym } from '@/domain/usecases';
+import { type AssignUsersToGym, setupAssignUserToGym } from '@/domain/usecases';
 import { addressMock, userMock } from '@/tests/mocks/domain';
 
-describe('AssignUserToGym', () => {
+describe('AssignUsersToGym', () => {
   const input = {
     gymId: 'any_gym_id',
     usersEmails: ['any_email_1@mail.com', 'any_email_2@mail.com', 'any_email_3@mail.com'],
     usersType: 'students',
   };
 
-  let sut: AssignUserToGym;
+  let sut: AssignUsersToGym;
   let gymRepository: MockProxy<LoadGymRepository & AssignUsersToGymRepository>;
   let userRepository: MockProxy<LoadManyUsersRepository>;
 

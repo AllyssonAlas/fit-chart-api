@@ -1,6 +1,6 @@
-# Feature: assign user to gym
+# Feature: assign users to gym
 > As an **USER** with *admin* permission
-> I want to assign an __User__ to my __Gym__
+> I want to assign a list of __User__ to my __Gym__
 > So my clients can access my gym's features
 
 ### 1. Scenario: Valid data provided
