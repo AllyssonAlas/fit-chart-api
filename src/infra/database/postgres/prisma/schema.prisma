@@ -23,7 +23,9 @@ model User {
   roleName              Role                  @relation(fields: [role], references: [name], onDelete: Cascade)
   role                  String
   address               UserAddress?
-  administeredGyms      Gym[]
+  clientIn              Gym[]                 @relation(name: "ClientsToGym")
+  InstructorIn          Gym[]                 @relation(name: "InstructorsToGym")
+  administratorsIn      Gym[]                 @relation(name: "AdministratorsToGym")
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @default(now())
 }
@@ -65,7 +67,9 @@ model Gym {
   name                  String
   email                 String?
   contact               String
-  administrators        User[]
+  clients               User[]                @relation(name: "ClientsToGym")
+  instructors           User[]                @relation(name: "InstructorsToGym")
+  administrators        User[]                @relation(name: "AdministratorsToGym")
   address               GymAddress?
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @default(now())
