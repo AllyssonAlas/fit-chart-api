@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { GymRepository } from '@/infra/database/postgres/repositories';
 
-import { clearAllTables, createRole } from '@/tests/helpers';
+import { clearAllTables, createRole, createUsers } from '@/tests/helpers';
 
 describe('GymRepository', () => {
   let prisma: PrismaClient;
@@ -117,6 +117,51 @@ describe('GymRepository', () => {
         contact: 'any_contact',
       });
       expect(gymTwo?.contact).toBe('any_gym_contact');
+    });
+  });
+
+  describe('assignUsers', () => {
+    it('Should load a Gym', async () => {
+      await createRole(prisma, 'admin');
+      await createUsers(prisma, [
+        { email: 'any_user_email_1@mail.com' },
+        { email: 'any_user_email_2@mail.com' },
+        { email: 'any_user_email_3@mail.com' },
+        { email: 'any_user_email_4@mail.com' },
+        { email: 'any_user_email_5@mail.com' },
+      ]);
+      await prisma.gym.create({
+        data: { id: 'any_gym_id', name: 'any_gym_name', contact: 'any_gym_contact' },
+      });
+
+      await sut.assignUsers({
+        gymId: 'any_gym_id',
+        emails: ['any_user_email_2@mail.com'],
+        usersType: 'administrators',
+      });
+      await sut.assignUsers({
+        gymId: 'any_gym_id',
+        emails: ['any_user_email_3@mail.com'],
+        usersType: 'instructors',
+      });
+      await sut.assignUsers({
+        gymId: 'any_gym_id',
+        emails: ['any_user_email_1@mail.com', 'any_user_email_4@mail.com', 'any_user_email_5@mail.com'],
+        usersType: 'clients',
+      });
+      const gym = await prisma.gym.findUnique({
+        where: { id: 'any_gym_id' },
+        include: { address: true, administrators: true, clients: true, instructors: true },
+      });
+
+      expect(gym?.administrators).toHaveLength(1);
+      expect(gym?.administrators[0].email).toBe('any_user_email_2@mail.com');
+      expect(gym?.instructors).toHaveLength(1);
+      expect(gym?.instructors[0].email).toBe('any_user_email_3@mail.com');
+      expect(gym?.clients).toHaveLength(3);
+      expect(gym?.clients[0].email).toBe('any_user_email_1@mail.com');
+      expect(gym?.clients[1].email).toBe('any_user_email_4@mail.com');
+      expect(gym?.clients[2].email).toBe('any_user_email_5@mail.com');
     });
   });
 });
