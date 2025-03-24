@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
-import type { LoadGymRepository, SaveGymRepository } from '@/domain/contracts/repositories';
+import type { AssignUsersToGymRepository, LoadGymRepository, SaveGymRepository } from '@/domain/contracts/repositories';
 
-export class GymRepository implements SaveGymRepository, LoadGymRepository {
+export class GymRepository implements SaveGymRepository, LoadGymRepository, AssignUsersToGymRepository {
   async save(input: SaveGymRepository.Input): Promise<SaveGymRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.gym.create({
@@ -29,5 +29,21 @@ export class GymRepository implements SaveGymRepository, LoadGymRepository {
       return Object.fromEntries(gymFormatted);
     }
     return null;
+  }
+
+  async assignUsers({
+    gymId,
+    emails,
+    usersType,
+  }: AssignUsersToGymRepository.Input): Promise<AssignUsersToGymRepository.Output> {
+    const prisma = new PrismaClient();
+    await prisma.gym.update({
+      where: { id: gymId },
+      data: {
+        [usersType]: {
+          connect: emails.map((email) => ({ email })),
+        },
+      },
+    });
   }
 }
