@@ -22,6 +22,7 @@ export interface LoadGymRepository {
 
 export namespace AssignUsersToGymRepository {
   export type Input = {
+    gymId: string;
     emails: string[];
     usersType: string;
   };

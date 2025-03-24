@@ -20,6 +20,6 @@ export const setupAssignUserToGym: Setup = (gymRepository, userRepository) => {
     const usersData = await userRepository.loadMany({ emails: usersEmails });
     const nonExistentUser = usersEmails?.find((userEmail) => !usersData.find(({ email }) => userEmail === email));
     if (nonExistentUser) throw new EmailDoesNotExistError(nonExistentUser);
-    await gymRepository.assignUsers({ emails: usersEmails, usersType });
+    await gymRepository.assignUsers({ gymId, emails: usersEmails, usersType });
   };
 };

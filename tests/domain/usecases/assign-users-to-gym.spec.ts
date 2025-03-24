@@ -95,7 +95,11 @@ describe('AssignUsersToGym', () => {
   it('Should call AssignUsersToGymRepository with correct input', async () => {
     await sut(input);
 
-    expect(gymRepository.assignUsers).toHaveBeenCalledWith({ emails: input.usersEmails, usersType: 'students' });
+    expect(gymRepository.assignUsers).toHaveBeenCalledWith({
+      gymId: input.gymId,
+      emails: input.usersEmails,
+      usersType: input.usersType,
+    });
     expect(gymRepository.assignUsers).toHaveBeenCalledTimes(1);
   });
 
