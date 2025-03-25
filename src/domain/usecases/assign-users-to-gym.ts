@@ -13,7 +13,7 @@ type Setup = (
   userRepository: LoadManyUsersRepository,
 ) => AssignUsersToGym;
 
-export const setupAssignUserToGym: Setup = (gymRepository, userRepository) => {
+export const setupAssignUsersToGym: Setup = (gymRepository, userRepository) => {
   return async ({ gymId, usersEmails, usersType }) => {
     const gymData = await gymRepository.load({ id: gymId });
     if (!gymData) throw new GymNotFoundError();

@@ -8,7 +8,7 @@ type Request = { gymId: string; usersType: string; usersEmails: string[] };
 
 type Model = null | Error;
 
-export class AssignUserToGymController extends Controller {
+export class AssignUsersToGymController extends Controller {
   constructor(private readonly assignUsersToGym: AssignUsersToGym) {
     super();
   }

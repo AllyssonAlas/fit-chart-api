@@ -6,7 +6,7 @@ import type {
   LoadManyUsersRepository,
 } from '@/domain/contracts/repositories';
 import { EmailDoesNotExistError, GymNotFoundError } from '@/domain/errors';
-import { type AssignUsersToGym, setupAssignUserToGym } from '@/domain/usecases';
+import { type AssignUsersToGym, setupAssignUsersToGym } from '@/domain/usecases';
 import { addressMock, userMock } from '@/tests/mocks/domain';
 
 describe('AssignUsersToGym', () => {
@@ -38,7 +38,7 @@ describe('AssignUsersToGym', () => {
   });
 
   beforeEach(() => {
-    sut = setupAssignUserToGym(gymRepository, userRepository);
+    sut = setupAssignUsersToGym(gymRepository, userRepository);
   });
 
   it('Should call LoadGymRepository with correct input', async () => {

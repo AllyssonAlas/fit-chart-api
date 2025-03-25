@@ -1,18 +1,18 @@
-import { AssignUserToGymController, Controller } from '@/application/controllers';
+import { AssignUsersToGymController, Controller } from '@/application/controllers';
 import { ServerError } from '@/application/errors';
 import { RequiredArray, RequiredParam, RequiredString, RequiredStringArray } from '@/application/validation';
 import { EmailDoesNotExistError, GymNotFoundError } from '@/domain/errors';
 
 jest.mock('@/application/validation/composite');
 
-describe('AssignUserToGymController', () => {
+describe('AssignUsersToGymController', () => {
   const request = {
     gymId: 'any_gym_id',
     usersEmails: ['any_email_1@mail.com', 'any_email_2@mail.com', 'any_email_3@mail.com'],
     usersType: 'students',
   };
 
-  let sut: AssignUserToGymController;
+  let sut: AssignUsersToGymController;
   let assignUserToGym: jest.Mock;
 
   beforeAll(() => {
@@ -20,7 +20,7 @@ describe('AssignUserToGymController', () => {
   });
 
   beforeEach(() => {
-    sut = new AssignUserToGymController(assignUserToGym);
+    sut = new AssignUsersToGymController(assignUserToGym);
   });
 
   it('Should extend controller', () => {
