@@ -33,6 +33,18 @@ describe('ExpressRouter', () => {
     expect(controller.handle).toHaveBeenCalledTimes(1);
   });
 
+  it('Should call handle with correct data and with params', async () => {
+    const modifiedReq = getMockReq({
+      body: { any: 'any' },
+      params: { paramOne: 'param_1', paramTow: 'param_2' },
+    });
+
+    await sut(modifiedReq, res);
+
+    expect(controller.handle).toHaveBeenCalledWith({ any: 'any', paramOne: 'param_1', paramTow: 'param_2' });
+    expect(controller.handle).toHaveBeenCalledTimes(1);
+  });
+
   it('Should respond with 200 and correct data', async () => {
     await sut(req, res);
 
