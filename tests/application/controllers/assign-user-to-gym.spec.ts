@@ -11,9 +11,14 @@ describe('AssignUserToGymController', () => {
   };
 
   let sut: AssignUserToGymController;
+  let assignUserToGym: jest.Mock;
+
+  beforeAll(() => {
+    assignUserToGym = jest.fn();
+  });
 
   beforeEach(() => {
-    sut = new AssignUserToGymController();
+    sut = new AssignUserToGymController(assignUserToGym);
   });
 
   it('Should extend controller', () => {
@@ -32,5 +37,12 @@ describe('AssignUserToGymController', () => {
       new RequiredParam(request, 'usersType'),
       new RequiredString(request.usersType, 'usersType'),
     ]);
+  });
+
+  it('Should call AssignUserToGym with correct input', async () => {
+    await sut.handle(request);
+
+    expect(assignUserToGym).toHaveBeenCalledWith(request);
+    expect(assignUserToGym).toHaveBeenCalledTimes(1);
   });
 });
