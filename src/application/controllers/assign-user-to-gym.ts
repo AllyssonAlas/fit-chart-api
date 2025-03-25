@@ -1,7 +1,7 @@
 import { Controller } from '@/application/controllers';
-import { notFound } from '@/application/helpers';
+import { forbidden, notFound } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
-import { GymNotFoundError } from '@/domain/errors';
+import { EmailDoesNotExistError, GymNotFoundError } from '@/domain/errors';
 import type { AssignUsersToGym } from '@/domain/usecases';
 
 type Request = { gymId: string; usersType: string; usersEmails: string[] };
@@ -17,6 +17,9 @@ export class AssignUserToGymController extends Controller {
     } catch (error) {
       if (error instanceof GymNotFoundError) {
         return notFound(error);
+      }
+      if (error instanceof EmailDoesNotExistError) {
+        return forbidden(error);
       }
       throw error;
     }
