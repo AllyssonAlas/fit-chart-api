@@ -1,7 +1,7 @@
 import { AssignUserToGymController, Controller } from '@/application/controllers';
 import { ServerError } from '@/application/errors';
 import { RequiredArray, RequiredParam, RequiredString, RequiredStringArray } from '@/application/validation';
-import { GymNotFoundError } from '@/domain/errors';
+import { EmailDoesNotExistError, GymNotFoundError } from '@/domain/errors';
 
 jest.mock('@/application/validation/composite');
 
@@ -46,6 +46,18 @@ describe('AssignUserToGymController', () => {
 
     expect(assignUserToGym).toHaveBeenCalledWith(request);
     expect(assignUserToGym).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return 403 if CreateUser throws EmailDoesNotExistError', async () => {
+    const error = new EmailDoesNotExistError('any_email@mail.com');
+    assignUserToGym.mockRejectedValueOnce(error);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: error,
+      statusCode: 403,
+    });
   });
 
   it('Should return 404 if AssignUserToGym throws GymNotFoundError', async () => {
