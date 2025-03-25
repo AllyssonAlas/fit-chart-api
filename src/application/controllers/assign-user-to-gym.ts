@@ -18,12 +18,8 @@ export class AssignUserToGymController extends Controller {
       await this.assignUsersToGym(request);
       return noContent();
     } catch (error) {
-      if (error instanceof GymNotFoundError) {
-        return notFound(error);
-      }
-      if (error instanceof EmailDoesNotExistError) {
-        return forbidden(error);
-      }
+      if (error instanceof GymNotFoundError) return notFound(error);
+      if (error instanceof EmailDoesNotExistError) return forbidden(error);
       throw error;
     }
   }
