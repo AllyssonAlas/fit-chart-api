@@ -1,4 +1,5 @@
 import { AssignUserToGymController, Controller } from '@/application/controllers';
+import { ServerError } from '@/application/errors';
 import { RequiredArray, RequiredParam, RequiredString, RequiredStringArray } from '@/application/validation';
 
 jest.mock('@/application/validation/composite');
@@ -44,5 +45,17 @@ describe('AssignUserToGymController', () => {
 
     expect(assignUserToGym).toHaveBeenCalledWith(request);
     expect(assignUserToGym).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return 500 if AssignUserToGym throws infra error', async () => {
+    const error = new Error('infra_error');
+    assignUserToGym.mockRejectedValueOnce(error);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: new ServerError(error),
+      statusCode: 500,
+    });
   });
 });
