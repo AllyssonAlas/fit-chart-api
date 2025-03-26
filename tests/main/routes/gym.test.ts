@@ -8,6 +8,7 @@ import { env } from '@/main/config/env';
 import { Permissions } from '@/main/enums';
 
 import { clearAllTables, createRole, createUsers } from '@/tests/helpers';
+import { authorizationTokenMock } from '@/tests/mocks/infra';
 
 describe('Gym Routes', () => {
   let prisma: PrismaClient;
@@ -40,11 +41,7 @@ describe('Gym Routes', () => {
     });
 
     it('Should return 403 if authorization token does not contain required permission', async () => {
-      const authorizationToken = sign(
-        { id: 'any_user_id', role: 'any_role_name', permissions: ['invalid_permission'] },
-        env.secret,
-        { expiresIn: AuthToken.expirationInMs / 1000 },
-      );
+      const authorizationToken = authorizationTokenMock('invalid_permission');
 
       await request(app).post('/api/gym').set('authorization', authorizationToken).send(requestData).expect(403);
     });
@@ -58,11 +55,7 @@ describe('Gym Routes', () => {
         { name: 'Bon Clay', email: 'mister_2@mail.com' },
       ]);
 
-      const authorizationToken = sign(
-        { id: 'any_user_id', role: 'any_role_name', permissions: [Permissions.CREATE_GYM] },
-        env.secret,
-        { expiresIn: AuthToken.expirationInMs / 1000 },
-      );
+      const authorizationToken = authorizationTokenMock(Permissions.CREATE_GYM);
 
       await request(app)
         .post('/api/gym')
@@ -83,11 +76,7 @@ describe('Gym Routes', () => {
       await createRole(prisma);
       await createUsers(prisma, [{ email: 'nami_cat_buglar@mail.com' }, { email: 'tony_chopper_tony@mail.com' }]);
 
-      const authorizationToken = sign(
-        { id: 'any_user_id', role: 'any_role_name', permissions: [Permissions.ASSiGN_USER_TO_GYM] },
-        env.secret,
-        { expiresIn: AuthToken.expirationInMs / 1000 },
-      );
+      const authorizationToken = authorizationTokenMock(Permissions.ASSiGN_USER_TO_GYM);
 
       await request(app)
         .put('/api/gym/invalid_id/assign')
@@ -108,11 +97,7 @@ describe('Gym Routes', () => {
         },
       });
 
-      const authorizationToken = sign(
-        { id: 'any_user_id', role: 'any_role_name', permissions: [Permissions.ASSiGN_USER_TO_GYM] },
-        env.secret,
-        { expiresIn: AuthToken.expirationInMs / 1000 },
-      );
+      const authorizationToken = authorizationTokenMock(Permissions.ASSiGN_USER_TO_GYM);
 
       await request(app)
         .put('/api/gym/any_id/assign')
