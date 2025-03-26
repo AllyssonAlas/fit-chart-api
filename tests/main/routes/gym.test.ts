@@ -77,7 +77,7 @@ describe('Gym Routes', () => {
     const requestData = {
       gymId: 'valid_gym_id',
       usersEmails: ['nami_cat_buglar@mail.com', 'tony_chopper_tony@mail.com'],
-      usersType: 'students',
+      usersType: 'clients',
     };
 
     it('Should return 404 if gymID does not exist', async () => {
@@ -95,6 +95,31 @@ describe('Gym Routes', () => {
         .set('authorization', authorizationToken)
         .send(requestData)
         .expect(404);
+    });
+
+    it('Should return 204 on success', async () => {
+      await createRole(prisma, 'admin');
+      await createUsers(prisma, [{ email: 'nami_cat_buglar@mail.com' }, { email: 'tony_chopper_tony@mail.com' }]);
+
+      await prisma.gym.create({
+        data: {
+          id: 'any_id',
+          name: 'Iron Blue',
+          contact: 'iron_blue@mail.com',
+        },
+      });
+
+      const authorizationToken = sign(
+        { id: 'any_user_id', role: 'any_role_name', permissions: [Permissions.ASSiGN_USER_TO_GYM] },
+        env.secret,
+        { expiresIn: AuthToken.expirationInMs / 1000 },
+      );
+
+      await request(app)
+        .put('/api/gym/any_id/assign')
+        .set('authorization', authorizationToken)
+        .send(requestData)
+        .expect(204);
     });
   });
 });
