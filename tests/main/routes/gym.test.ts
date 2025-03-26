@@ -18,6 +18,7 @@ describe('Gym Routes', () => {
 
   afterEach(async () => {
     clearAllTables(prisma);
+    await prisma.gym.deleteMany({});
   });
 
   describe('POST /gym', () => {
@@ -69,6 +70,31 @@ describe('Gym Routes', () => {
         .set('authorization', authorizationToken)
         .send({ administrators: ['mister_1@mail.com', 'mister_2@mail.com'], ...requestData })
         .expect(204);
+    });
+  });
+
+  describe('PUT /gym/:gymId/assign', () => {
+    const requestData = {
+      gymId: 'valid_gym_id',
+      usersEmails: ['nami_cat_buglar@mail.com', 'tony_chopper_tony@mail.com'],
+      usersType: 'students',
+    };
+
+    it('Should return 404 if gymID does not exist', async () => {
+      await createRole(prisma, 'admin');
+      await createUsers(prisma, [{ email: 'nami_cat_buglar@mail.com' }, { email: 'tony_chopper_tony@mail.com' }]);
+
+      const authorizationToken = sign(
+        { id: 'any_user_id', role: 'any_role_name', permissions: [Permissions.ASSiGN_USER_TO_GYM] },
+        env.secret,
+        { expiresIn: AuthToken.expirationInMs / 1000 },
+      );
+
+      await request(app)
+        .put('/api/gym/invalid_id/assign')
+        .set('authorization', authorizationToken)
+        .send(requestData)
+        .expect(404);
     });
   });
 });
