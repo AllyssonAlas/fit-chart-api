@@ -23,7 +23,7 @@ describe('User Routes', () => {
       name: 'Roronoa Zoro',
       email: 'roronoa_z@mail.com',
       password: 'waDO_Ich!m0nj1',
-      role: 'student',
+      role: 'client',
       contact: 'straw_pirates.com/zoro',
       address: {
         city: 'Shimotsuki Village',
@@ -40,7 +40,7 @@ describe('User Routes', () => {
     });
 
     it('Should return 200 on success', async () => {
-      await createRole(prisma, 'student');
+      await createRole(prisma, 'client');
 
       await request(app).post('/api/user').send(requestData).expect(200);
     });
@@ -55,11 +55,11 @@ describe('User Routes', () => {
     });
 
     it('Should return 200 on success', async () => {
-      await createRole(prisma, 'student');
+      await createRole(prisma, 'client');
       const password = await hash('c4Pt4!n', env.salt);
       const email = 'captain_usopp@mail.com';
 
-      await createUsers(prisma, [{ email, password, role: 'student' }]);
+      await createUsers(prisma, [{ email, password, role: 'client' }]);
 
       await request(app).post('/api/login').send({ email, password: 'c4Pt4!n' }).expect(200);
     });

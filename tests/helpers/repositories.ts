@@ -13,7 +13,7 @@ export const createUsers = async (prisma: PrismaClient, users: Partial<User>[]):
   });
 };
 
-export const createRole = async (prisma: PrismaClient, name = 'any_role_name'): Promise<void> => {
+export const createRole = async (prisma: PrismaClient, name = 'admin'): Promise<void> => {
   await prisma.role.create({
     data: {
       name,

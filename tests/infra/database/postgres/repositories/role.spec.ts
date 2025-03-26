@@ -28,7 +28,7 @@ describe('RoleRepository', () => {
     });
 
     it('Should return a Role if name exists', async () => {
-      await createRole(prisma);
+      await createRole(prisma, 'any_role_name');
 
       const role = await sut.load({ name: 'any_role_name' });
 

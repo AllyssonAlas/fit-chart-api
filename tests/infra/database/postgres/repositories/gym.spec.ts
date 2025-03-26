@@ -66,7 +66,7 @@ describe('GymRepository', () => {
     });
 
     it('Should load a Gym', async () => {
-      await createRole(prisma);
+      await createRole(prisma, 'any_role_name');
 
       await prisma.user.create({
         data: {
@@ -121,7 +121,7 @@ describe('GymRepository', () => {
 
   describe('assignUsers', () => {
     it('Should load a Gym', async () => {
-      await createRole(prisma, 'admin');
+      await createRole(prisma);
       await createUsers(prisma, [
         { email: 'any_user_email_1@mail.com' },
         { email: 'any_user_email_2@mail.com' },

@@ -22,7 +22,7 @@ describe('UserRepository', () => {
 
   describe('save', () => {
     it('Should save an User', async () => {
-      await createRole(prisma);
+      await createRole(prisma, 'any_role_name');
 
       await sut.save({
         name: 'any_name',
@@ -66,7 +66,7 @@ describe('UserRepository', () => {
     });
 
     it('Should return an User if email exists', async () => {
-      await createRole(prisma);
+      await createRole(prisma, 'any_role_name');
       await prisma.user.create({
         data: {
           name: 'any_name',
@@ -97,7 +97,7 @@ describe('UserRepository', () => {
     });
 
     it('Should return a list with only emails found', async () => {
-      await createRole(prisma);
+      await createRole(prisma, 'any_role_name');
       await prisma.user.create({
         data: {
           name: 'any_name',
@@ -119,7 +119,7 @@ describe('UserRepository', () => {
     });
 
     it('Should return a list with all emails', async () => {
-      await createRole(prisma);
+      await createRole(prisma, 'any_role_name');
       await prisma.user.createMany({
         data: [
           {

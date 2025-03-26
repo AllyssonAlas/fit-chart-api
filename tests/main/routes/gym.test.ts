@@ -50,7 +50,7 @@ describe('Gym Routes', () => {
     });
 
     it('Should return 204 on success', async () => {
-      await createRole(prisma, 'admin');
+      await createRole(prisma);
 
       await createUsers(prisma, [
         { name: 'Crocodile', email: 'crocodile_mr0@mail.com' },
@@ -80,7 +80,7 @@ describe('Gym Routes', () => {
     };
 
     it('Should return 404 if gymID does not exist', async () => {
-      await createRole(prisma, 'admin');
+      await createRole(prisma);
       await createUsers(prisma, [{ email: 'nami_cat_buglar@mail.com' }, { email: 'tony_chopper_tony@mail.com' }]);
 
       const authorizationToken = sign(
@@ -97,7 +97,7 @@ describe('Gym Routes', () => {
     });
 
     it('Should return 204 on success', async () => {
-      await createRole(prisma, 'admin');
+      await createRole(prisma);
       await createUsers(prisma, [{ email: 'nami_cat_buglar@mail.com' }, { email: 'tony_chopper_tony@mail.com' }]);
 
       await prisma.gym.create({
