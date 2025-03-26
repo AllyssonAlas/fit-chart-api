@@ -17,8 +17,7 @@ describe('Gym Routes', () => {
   });
 
   afterEach(async () => {
-    clearAllTables(prisma);
-    await prisma.gym.deleteMany({});
+    await clearAllTables(prisma);
   });
 
   describe('POST /gym', () => {

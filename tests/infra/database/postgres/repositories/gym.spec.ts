@@ -17,8 +17,7 @@ describe('GymRepository', () => {
   });
 
   afterEach(async () => {
-    clearAllTables(prisma);
-    await prisma.gym.deleteMany({});
+    await clearAllTables(prisma);
   });
 
   describe('save', () => {

@@ -5,7 +5,7 @@ import request from 'supertest';
 import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 
-import { clearAllTables, createRole, createUsers } from '@/tests/helpers';
+import { clearUserTable, createRole, createUsers } from '@/tests/helpers';
 
 describe('User Routes', () => {
   let prisma: PrismaClient;
@@ -15,7 +15,7 @@ describe('User Routes', () => {
   });
 
   afterEach(async () => {
-    clearAllTables(prisma);
+    await clearUserTable(prisma);
   });
 
   describe('POST /user', () => {

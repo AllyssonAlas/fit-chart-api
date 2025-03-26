@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { UserRepository } from '@/infra/database/postgres/repositories';
 
-import { clearAllTables, createRole } from '@/tests/helpers';
+import { clearUserTable, createRole } from '@/tests/helpers';
 
 describe('UserRepository', () => {
   let prisma: PrismaClient;
@@ -17,7 +17,7 @@ describe('UserRepository', () => {
   });
 
   afterEach(async () => {
-    await clearAllTables(prisma);
+    await clearUserTable(prisma);
   });
 
   describe('save', () => {

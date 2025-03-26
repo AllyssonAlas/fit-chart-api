@@ -28,10 +28,15 @@ export const clearRoleTable = async (prisma: PrismaClient): Promise<void> => {
 };
 
 export const clearUserTable = async (prisma: PrismaClient): Promise<void> => {
+  await clearRoleTable(prisma);
   await prisma.user.deleteMany({});
 };
 
+export const clearGymTable = async (prisma: PrismaClient): Promise<void> => {
+  await prisma.gym.deleteMany({});
+};
+
 export const clearAllTables = async (prisma: PrismaClient): Promise<void> => {
-  await clearRoleTable(prisma);
   await clearUserTable(prisma);
+  await clearGymTable(prisma);
 };
