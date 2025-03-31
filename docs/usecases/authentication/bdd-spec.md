@@ -12,9 +12,9 @@
 ### 2. Scenario: Data missing
 - Given some required data isn't received
 - When authentication is requested
-- Then the system shall send a missing data error to the requester
+- Then the system shall return missing data error
 
 ### 3. Scenario: Invalid data provided
 - Given some provided data is invalid
 - When authentication is requested
-- Then the system shall send a invalid data error to the requester
+- Then the system shall return invalid data error
