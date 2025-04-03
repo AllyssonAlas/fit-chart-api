@@ -33,3 +33,20 @@ export namespace AssignUsersToGymRepository {
 export interface AssignUsersToGymRepository {
   assignUsers(input: AssignUsersToGymRepository.Input): Promise<AssignUsersToGymRepository.Output>;
 }
+
+export namespace LoadGymExercisesRepository {
+  export type Input = {
+    gymId: string;
+  };
+
+  export type Output = {
+    id: string;
+    name: string;
+    equipment?: string;
+    category: string;
+  }[];
+}
+
+export interface LoadGymExercisesRepository {
+  loadExercises(input: LoadGymExercisesRepository.Input): Promise<LoadGymExercisesRepository.Output>;
+}
