@@ -71,6 +71,7 @@ model Gym {
   instructors           User[]                @relation(name: "InstructorsToGym")
   administrators        User[]                @relation(name: "AdministratorsToGym")
   address               GymAddress?
+  exercisesAvailable    Exercise[]
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @default(now())
 }
@@ -86,6 +87,26 @@ model GymAddress {
   state                 String                @db.VarChar(2)
   postalCode            String
   complement            String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
+}
+
+model ExerciseCategory {
+  id                    String                @id @default(uuid())
+  name                  String                @unique
+  exercises             Exercise[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
+}
+
+model Exercise {
+  id                    String                @id @default(uuid())
+  name                  String
+  equipment             String?
+  categoryName          ExerciseCategory      @relation(fields: [category], references: [name])
+  category              String
+  reference             String?
+  availableAt           Gym[]
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @default(now())
 }
