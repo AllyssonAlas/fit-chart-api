@@ -120,7 +120,7 @@ describe('GymRepository', () => {
   });
 
   describe('assignUsers', () => {
-    it('Should load a Gym', async () => {
+    it('Should assign Users to Gym', async () => {
       await createRole(prisma);
       await createUsers(prisma, [
         { email: 'any_user_email_1@mail.com' },
