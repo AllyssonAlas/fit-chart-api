@@ -170,5 +170,11 @@ describe('GymRepository', () => {
 
       expect(exercises).toHaveLength(0);
     });
+
+    it('Should return an empty array if gym does not have exercises', async () => {
+      const exercises = await sut.loadExercises({ gymId: 'any_gym_id' });
+
+      expect(exercises).toHaveLength(0);
+    });
   });
 });
