@@ -163,4 +163,12 @@ describe('GymRepository', () => {
       expect(gym?.clients[2].email).toBe('any_user_email_5@mail.com');
     });
   });
+
+  describe('loadExercises', () => {
+    it('Should return an empty array if gymId does not exist', async () => {
+      const exercises = await sut.loadExercises({ gymId: 'any_gym_id' });
+
+      expect(exercises).toHaveLength(0);
+    });
+  });
 });
