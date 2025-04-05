@@ -1,8 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 
-import type { AssignUsersToGymRepository, LoadGymRepository, SaveGymRepository } from '@/domain/contracts/repositories';
+import type {
+  AssignUsersToGymRepository,
+  LoadGymExercisesRepository,
+  LoadGymRepository,
+  SaveGymRepository,
+} from '@/domain/contracts/repositories';
 
-export class GymRepository implements SaveGymRepository, LoadGymRepository, AssignUsersToGymRepository {
+type RepositoryType = SaveGymRepository & LoadGymRepository & AssignUsersToGymRepository & LoadGymExercisesRepository;
+
+export class GymRepository implements RepositoryType {
   async save(input: SaveGymRepository.Input): Promise<SaveGymRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.gym.create({
@@ -45,5 +52,9 @@ export class GymRepository implements SaveGymRepository, LoadGymRepository, Assi
         },
       },
     });
+  }
+
+  async loadExercises(input: LoadGymExercisesRepository.Input): Promise<LoadGymExercisesRepository.Output> {
+    return [];
   }
 }
