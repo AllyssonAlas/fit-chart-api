@@ -14,6 +14,10 @@ describe('ListGymExercisesController', () => {
 
   beforeAll(() => {
     gymRepository = mock();
+    gymRepository.loadExercises.mockResolvedValue([
+      { id: 'any_exercise_id_1', name: 'any_exercise_name_1', category: 'any_exercise_category_1' },
+      { id: 'any_exercise_id_2', name: 'any_exercise_name_2', category: 'any_exercise_category_2' },
+    ]);
   });
 
   beforeEach(() => {
@@ -51,6 +55,18 @@ describe('ListGymExercisesController', () => {
     expect(response).toEqual({
       data: null,
       statusCode: 204,
+    });
+  });
+
+  it('Should return 200 on success', async () => {
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: [
+        { id: 'any_exercise_id_1', name: 'any_exercise_name_1', category: 'any_exercise_category_1' },
+        { id: 'any_exercise_id_2', name: 'any_exercise_name_2', category: 'any_exercise_category_2' },
+      ],
+      statusCode: 200,
     });
   });
 });
