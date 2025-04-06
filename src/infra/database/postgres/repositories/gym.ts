@@ -54,7 +54,19 @@ export class GymRepository implements RepositoryType {
     });
   }
 
-  async loadExercises(input: LoadGymExercisesRepository.Input): Promise<LoadGymExercisesRepository.Output> {
-    return [];
+  async loadExercises({ gymId }: LoadGymExercisesRepository.Input): Promise<LoadGymExercisesRepository.Output> {
+    const prisma = new PrismaClient();
+
+    const exercises = await prisma.exercise.findMany({
+      where: {
+        availableAt: { some: { id: gymId } },
+      },
+    });
+    return exercises.map((exercise) => {
+      const exerciseFormatted = Object.entries(exercise).map(([key, value]) => {
+        return [key, value === null ? undefined : value];
+      });
+      return Object.fromEntries(exerciseFormatted);
+    });
   }
 }
