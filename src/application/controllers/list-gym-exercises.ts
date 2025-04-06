@@ -1,4 +1,5 @@
 import { Controller } from '@/application/controllers';
+import { noContent } from '@/application/helpers';
 import type { LoadGymExercisesRepository } from '@/domain/contracts/repositories';
 
 type Request = {
@@ -12,5 +13,6 @@ export class ListGymExercisesController extends Controller {
 
   async perform(request: Request): Promise<any> {
     await this.gymRepository.loadExercises(request);
+    return noContent();
   }
 }
