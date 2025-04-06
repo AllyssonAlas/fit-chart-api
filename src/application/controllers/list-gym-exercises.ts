@@ -1,18 +1,20 @@
 import { Controller } from '@/application/controllers';
-import { noContent } from '@/application/helpers';
+import { type HttpResponse, noContent, ok } from '@/application/helpers';
 import type { LoadGymExercisesRepository } from '@/domain/contracts/repositories';
 
 type Request = {
   gymId: string;
 };
 
+type Model = LoadGymExercisesRepository.Output | null;
+
 export class ListGymExercisesController extends Controller {
   constructor(private readonly gymRepository: LoadGymExercisesRepository) {
     super();
   }
 
-  async perform(request: Request): Promise<any> {
-    await this.gymRepository.loadExercises(request);
-    return noContent();
+  async perform(request: Request): Promise<HttpResponse<Model>> {
+    const result = await this.gymRepository.loadExercises(request);
+    return result.length ? ok(result) : noContent();
   }
 }
