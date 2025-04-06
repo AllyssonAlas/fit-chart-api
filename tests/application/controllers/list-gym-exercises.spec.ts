@@ -42,4 +42,15 @@ describe('ListGymExercisesController', () => {
       statusCode: 500,
     });
   });
+
+  it('Should return 204 if LoadGymExercisesRepository returns an empty list', async () => {
+    gymRepository.loadExercises.mockResolvedValueOnce([]);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: null,
+      statusCode: 204,
+    });
+  });
 });
