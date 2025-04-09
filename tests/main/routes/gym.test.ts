@@ -7,7 +7,7 @@ import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 import { Permissions } from '@/main/enums';
 
-import { clearAllTables, createRole, createUsers } from '@/tests/helpers';
+import { clearAllTables, createGym, createRole, createUsers } from '@/tests/helpers';
 import { authorizationTokenMock } from '@/tests/mocks/infra';
 
 describe('Gym Routes', () => {
@@ -88,19 +88,12 @@ describe('Gym Routes', () => {
     it('Should return 204 on success', async () => {
       await createRole(prisma);
       await createUsers(prisma, [{ email: 'nami_cat_buglar@mail.com' }, { email: 'tony_chopper_tony@mail.com' }]);
-
-      await prisma.gym.create({
-        data: {
-          id: 'any_id',
-          name: 'Iron Blue',
-          contact: 'iron_blue@mail.com',
-        },
-      });
+      const { id } = await createGym(prisma, { name: 'Iron Blue', contact: 'iron_blue@mail.com' });
 
       const authorizationToken = authorizationTokenMock(Permissions.ASSiGN_USER_TO_GYM);
 
       await request(app)
-        .put('/api/gym/any_id/assign')
+        .put(`/api/gym/${id}/assign`)
         .set('authorization', authorizationToken)
         .send(requestData)
         .expect(204);
@@ -113,26 +106,20 @@ describe('Gym Routes', () => {
     });
 
     it('Should return 200 on success', async () => {
-      await prisma.gym.create({
-        data: {
-          id: 'any_gym_id',
-          name: 'White Iron Beard',
-          contact: 'white_iron_beard@mail.com',
-        },
-      });
+      const { id } = await createGym(prisma, { name: 'White Iron Beard', contact: 'white_iron_beard@mail.com' });
 
       await prisma.exerciseCategory.createMany({ data: [{ name: 'peito' }, { name: 'costa' }] });
       await prisma.exercise.create({
-        data: { name: 'Supino reto', category: 'peito', availableAt: { connect: [{ id: 'any_gym_id' }] } },
+        data: { name: 'Supino reto', category: 'peito', availableAt: { connect: [{ id }] } },
       });
       await prisma.exercise.create({
-        data: { name: 'Crucifixo reto', category: 'peito', availableAt: { connect: [{ id: 'any_gym_id' }] } },
+        data: { name: 'Crucifixo reto', category: 'peito', availableAt: { connect: [{ id }] } },
       });
       await prisma.exercise.create({
-        data: { name: 'Remada curvada', category: 'costa', availableAt: { connect: [{ id: 'any_gym_id' }] } },
+        data: { name: 'Remada curvada', category: 'costa', availableAt: { connect: [{ id }] } },
       });
 
-      await request(app).get('/api/gym/any_gym_id/exercises').expect(200);
+      await request(app).get(`/api/gym/${id}/exercises`).expect(200);
     });
   });
 });

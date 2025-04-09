@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { GymRepository } from '@/infra/database/postgres/repositories';
 
-import { clearAllTables, createRole, createUsers } from '@/tests/helpers';
+import { clearAllTables, createGym, createRole, createUsers } from '@/tests/helpers';
 
 describe('GymRepository', () => {
   let prisma: PrismaClient;
@@ -67,7 +67,6 @@ describe('GymRepository', () => {
 
     it('Should load a Gym', async () => {
       await createRole(prisma, 'any_role_name');
-
       await prisma.user.create({
         data: {
           id: 'any_user_id',
@@ -78,12 +77,11 @@ describe('GymRepository', () => {
           contact: 'any_contact',
         },
       });
-      await prisma.gym.create({
-        data: {
-          id: 'any_gym_id_1',
-          name: 'any_gym_name',
-          contact: 'any_gym_contact',
-        },
+      await createGym(prisma, {
+        id: 'any_gym_id_1',
+        name: 'any_gym_name',
+        contact: 'any_gym_contact',
+        email: undefined,
       });
       await prisma.gym.create({
         data: {
@@ -129,27 +127,21 @@ describe('GymRepository', () => {
         { email: 'any_user_email_4@mail.com' },
         { email: 'any_user_email_5@mail.com' },
       ]);
-      await prisma.gym.create({
-        data: { id: 'any_gym_id', name: 'any_gym_name', contact: 'any_gym_contact' },
+      const { id: gymId } = await createGym(prisma, {
+        id: 'any_gym_id_1',
+        name: 'any_gym_name',
+        contact: 'any_gym_contact',
       });
 
+      await sut.assignUsers({ gymId, emails: ['any_user_email_2@mail.com'], usersType: 'administrators' });
+      await sut.assignUsers({ gymId, emails: ['any_user_email_3@mail.com'], usersType: 'instructors' });
       await sut.assignUsers({
-        gymId: 'any_gym_id',
-        emails: ['any_user_email_2@mail.com'],
-        usersType: 'administrators',
-      });
-      await sut.assignUsers({
-        gymId: 'any_gym_id',
-        emails: ['any_user_email_3@mail.com'],
-        usersType: 'instructors',
-      });
-      await sut.assignUsers({
-        gymId: 'any_gym_id',
+        gymId,
         emails: ['any_user_email_1@mail.com', 'any_user_email_4@mail.com', 'any_user_email_5@mail.com'],
         usersType: 'clients',
       });
       const gym = await prisma.gym.findUnique({
-        where: { id: 'any_gym_id' },
+        where: { id: gymId },
         include: { address: true, administrators: true, clients: true, instructors: true },
       });
 
@@ -178,15 +170,9 @@ describe('GymRepository', () => {
     });
 
     it('Should return an exercises list', async () => {
-      const { id: gymOneId } = await prisma.gym.create({
-        data: { name: 'any_gym_name', contact: 'any_gym_contact' },
-      });
-      const { id: gymTwoId } = await prisma.gym.create({
-        data: { name: 'any_gym_name', contact: 'any_gym_contact' },
-      });
-      const { id: gymThreeId } = await prisma.gym.create({
-        data: { name: 'any_gym_name', contact: 'any_gym_contact' },
-      });
+      const { id: gymOneId } = await createGym(prisma, { name: 'any_gym_name', contact: 'any_gym_contact' });
+      const { id: gymTwoId } = await createGym(prisma, { name: 'any_gym_name', contact: 'any_gym_contact' });
+      const { id: gymThreeId } = await createGym(prisma, { name: 'any_gym_name', contact: 'any_gym_contact' });
 
       await prisma.exerciseCategory.createMany({
         data: [{ name: 'any_exercise_category_1' }, { name: 'any_exercise_category_2' }],
