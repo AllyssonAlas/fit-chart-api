@@ -19,6 +19,8 @@ describe('Gym Routes', () => {
 
   afterEach(async () => {
     await clearAllTables(prisma);
+    await prisma.exercise.deleteMany({});
+    await prisma.exerciseCategory.deleteMany({});
   });
 
   describe('POST /gym', () => {
@@ -110,6 +112,29 @@ describe('Gym Routes', () => {
   describe('GET /gym/:gymId/exercises', () => {
     it('Should return 204 on invalid gym id', async () => {
       await request(app).get('/api/gym/invalid_gym_id/exercises').expect(204);
+    });
+
+    it('Should return 200 on success', async () => {
+      await prisma.gym.create({
+        data: {
+          id: 'any_gym_id',
+          name: 'White Iron Beard',
+          contact: 'white_iron_beard@mail.com',
+        },
+      });
+
+      await prisma.exerciseCategory.createMany({ data: [{ name: 'peito' }, { name: 'costa' }] });
+      await prisma.exercise.create({
+        data: { name: 'Supino reto', category: 'peito', availableAt: { connect: [{ id: 'any_gym_id' }] } },
+      });
+      await prisma.exercise.create({
+        data: { name: 'Crucifixo reto', category: 'peito', availableAt: { connect: [{ id: 'any_gym_id' }] } },
+      });
+      await prisma.exercise.create({
+        data: { name: 'Remada curvada', category: 'costa', availableAt: { connect: [{ id: 'any_gym_id' }] } },
+      });
+
+      await request(app).get('/api/gym/any_gym_id/exercises').expect(200);
     });
   });
 });
