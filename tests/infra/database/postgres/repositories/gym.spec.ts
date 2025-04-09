@@ -18,8 +18,6 @@ describe('GymRepository', () => {
 
   afterEach(async () => {
     await clearAllTables(prisma);
-    await prisma.exercise.deleteMany({});
-    await prisma.exerciseCategory.deleteMany({});
   });
 
   describe('save', () => {
