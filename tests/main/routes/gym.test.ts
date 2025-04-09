@@ -106,4 +106,10 @@ describe('Gym Routes', () => {
         .expect(204);
     });
   });
+
+  describe('GET /gym/:gymId/exercises', () => {
+    it('Should return 204 on invalid gym id', async () => {
+      await request(app).get('/api/gym/invalid_gym_id/exercises').expect(204);
+    });
+  });
 });
