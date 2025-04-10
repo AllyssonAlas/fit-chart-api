@@ -1,10 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { sign } from 'jsonwebtoken';
 import request from 'supertest';
 
-import { AuthToken } from '@/domain/entities';
 import { app } from '@/main/config/app';
-import { env } from '@/main/config/env';
 import { Permissions } from '@/main/enums';
 
 import { clearAllTables, createExercises, createGym, createRole, createUsers } from '@/tests/helpers';
