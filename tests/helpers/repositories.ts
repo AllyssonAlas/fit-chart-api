@@ -1,4 +1,4 @@
-import type { Gym, PrismaClient, User } from '@prisma/client';
+import type { Exercise, Gym, PrismaClient, User } from '@prisma/client';
 
 export const createUsers = async (prisma: PrismaClient, users: Partial<User>[]): Promise<void> => {
   await prisma.user.createMany({
@@ -22,6 +22,27 @@ export const createGym = async (prisma: PrismaClient, gym: Partial<Gym>): Promis
       ...gym,
     },
   });
+};
+
+export const createExercises = async (
+  prisma: PrismaClient,
+  categoryName: string,
+  exercises: Array<Partial<Exercise> & { availableAt: string[] }>,
+): Promise<void> => {
+  await prisma.exerciseCategory.create({
+    data: { name: categoryName },
+  });
+
+  for (const exercise of exercises) {
+    await prisma.exercise.create({
+      data: {
+        name: 'any_exercise',
+        category: categoryName,
+        ...exercise,
+        availableAt: { connect: exercise.availableAt.map((id) => ({ id })) },
+      },
+    });
+  }
 };
 
 export const createRole = async (prisma: PrismaClient, name = 'admin'): Promise<void> => {

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { GymRepository } from '@/infra/database/postgres/repositories';
 
-import { clearAllTables, createGym, createRole, createUsers } from '@/tests/helpers';
+import { clearAllTables, createExercises, createGym, createRole, createUsers } from '@/tests/helpers';
 
 describe('GymRepository', () => {
   let prisma: PrismaClient;
@@ -173,41 +173,16 @@ describe('GymRepository', () => {
       const { id: gymOneId } = await createGym(prisma, { name: 'any_gym_name', contact: 'any_gym_contact' });
       const { id: gymTwoId } = await createGym(prisma, { name: 'any_gym_name', contact: 'any_gym_contact' });
       const { id: gymThreeId } = await createGym(prisma, { name: 'any_gym_name', contact: 'any_gym_contact' });
-
-      await prisma.exerciseCategory.createMany({
-        data: [{ name: 'any_exercise_category_1' }, { name: 'any_exercise_category_2' }],
-      });
-      await prisma.exercise.create({
-        data: { name: 'exercise_1', category: 'any_exercise_category_1', availableAt: { connect: [{ id: gymOneId }] } },
-      });
-      await prisma.exercise.create({
-        data: {
-          name: 'exercise_2',
-          category: 'any_exercise_category_1',
-          equipment: 'any_equipment',
-          availableAt: { connect: [{ id: gymOneId }] },
-        },
-      });
-      await prisma.exercise.create({
-        data: { name: 'exercise_3', category: 'any_exercise_category_2', availableAt: { connect: [{ id: gymOneId }] } },
-      });
-      await prisma.exercise.create({
-        data: { name: 'exercise_4', category: 'any_exercise_category_1', availableAt: { connect: [{ id: gymTwoId }] } },
-      });
-      await prisma.exercise.create({
-        data: {
-          name: 'exercise_5',
-          category: 'any_exercise_category_1',
-          availableAt: { connect: [{ id: gymOneId }, { id: gymTwoId }] },
-        },
-      });
-      await prisma.exercise.create({
-        data: {
-          name: 'exercise_6',
-          category: 'any_exercise_category_2',
-          availableAt: { connect: [{ id: gymTwoId }] },
-        },
-      });
+      await createExercises(prisma, 'any_exercise_category_1', [
+        { name: 'exercise_1', availableAt: [gymOneId] },
+        { name: 'exercise_2', equipment: 'any_equipment', availableAt: [gymOneId] },
+        { name: 'exercise_4', availableAt: [gymTwoId] },
+        { name: 'exercise_5', availableAt: [gymOneId, gymTwoId] },
+      ]);
+      await createExercises(prisma, 'any_exercise_category_2', [
+        { name: 'exercise_3', availableAt: [gymOneId] },
+        { name: 'exercise_6', availableAt: [gymTwoId] },
+      ]);
 
       const gymOneExercises = await sut.loadExercises({ gymId: gymOneId });
       const gymTwoExercises = await sut.loadExercises({ gymId: gymTwoId });
@@ -221,10 +196,10 @@ describe('GymRepository', () => {
       expect(gymOneExercises[1].name).toBe('exercise_2');
       expect(gymOneExercises[1].category).toBe('any_exercise_category_1');
       expect(gymOneExercises[1].equipment).toBe('any_equipment');
-      expect(gymOneExercises[2].name).toBe('exercise_3');
-      expect(gymOneExercises[2].category).toBe('any_exercise_category_2');
-      expect(gymOneExercises[3].name).toBe('exercise_5');
-      expect(gymOneExercises[3].category).toBe('any_exercise_category_1');
+      expect(gymOneExercises[2].name).toBe('exercise_5');
+      expect(gymOneExercises[2].category).toBe('any_exercise_category_1');
+      expect(gymOneExercises[3].name).toBe('exercise_3');
+      expect(gymOneExercises[3].category).toBe('any_exercise_category_2');
       expect(gymTwoExercises).toHaveLength(3);
       expect(gymTwoExercises[0].name).toBe('exercise_4');
       expect(gymTwoExercises[0].category).toBe('any_exercise_category_1');

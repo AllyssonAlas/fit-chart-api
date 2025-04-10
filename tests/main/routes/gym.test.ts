@@ -7,7 +7,7 @@ import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 import { Permissions } from '@/main/enums';
 
-import { clearAllTables, createGym, createRole, createUsers } from '@/tests/helpers';
+import { clearAllTables, createExercises, createGym, createRole, createUsers } from '@/tests/helpers';
 import { authorizationTokenMock } from '@/tests/mocks/infra';
 
 describe('Gym Routes', () => {
@@ -107,17 +107,11 @@ describe('Gym Routes', () => {
 
     it('Should return 200 on success', async () => {
       const { id } = await createGym(prisma, { name: 'White Iron Beard', contact: 'white_iron_beard@mail.com' });
-
-      await prisma.exerciseCategory.createMany({ data: [{ name: 'peito' }, { name: 'costa' }] });
-      await prisma.exercise.create({
-        data: { name: 'Supino reto', category: 'peito', availableAt: { connect: [{ id }] } },
-      });
-      await prisma.exercise.create({
-        data: { name: 'Crucifixo reto', category: 'peito', availableAt: { connect: [{ id }] } },
-      });
-      await prisma.exercise.create({
-        data: { name: 'Remada curvada', category: 'costa', availableAt: { connect: [{ id }] } },
-      });
+      await createExercises(prisma, 'peito', [
+        { name: 'Supino reto', equipment: 'barra', availableAt: [id] },
+        { name: 'Crucifixo reto', availableAt: [id] },
+      ]);
+      await createExercises(prisma, 'costa', [{ name: 'Remada curvada', equipment: 'barra', availableAt: [id] }]);
 
       await request(app).get(`/api/gym/${id}/exercises`).expect(200);
     });
