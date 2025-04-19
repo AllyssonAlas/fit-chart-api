@@ -5,6 +5,8 @@ export type GymData = {
   email?: string;
   contact: string;
   administrators?: string[];
+  clients?: string[];
+  instructors?: string[];
   address: Address;
 };
 
@@ -13,12 +15,16 @@ export class Gym {
   email?: string;
   contact: string;
   administrators?: string[];
+  clients?: string[];
+  instructors?: string[];
   address: Address;
 
   constructor(data: GymData) {
     this.name = data.name;
     this.email = data.email;
     this.administrators = data.administrators;
+    this.clients = data.clients;
+    this.instructors = data.instructors;
     this.contact = data.contact;
     this.address = data.address;
   }

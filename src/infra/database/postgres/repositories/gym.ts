@@ -18,6 +18,12 @@ export class GymRepository implements RepositoryType {
         administrators: {
           connect: input.administrators?.map((email) => ({ email })),
         },
+        clients: {
+          connect: input.clients?.map((email) => ({ email })),
+        },
+        instructors: {
+          connect: input.instructors?.map((email) => ({ email })),
+        },
         address: { create: input.address },
       },
     });
