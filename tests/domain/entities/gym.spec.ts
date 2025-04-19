@@ -1,13 +1,13 @@
 import { Gym } from '@/domain/entities';
 
-import { userMock } from '@/tests/mocks/domain';
-
 describe('Gym', () => {
   const gymData = {
     name: 'any_name',
     email: 'any_email@mail.com',
     contact: 'any_contact',
     administrators: ['any_admin_email_1@mail.com', 'any_admin_email_2@mail.com'],
+    clients: ['any_client_email_1@mail.com', 'any_client_email_2@mail.com'],
+    instructors: ['any_instructor_email_1@mail.com', 'any_instructor_email_2@mail.com'],
     address: {
       city: 'any_city',
       neighborhood: 'any_neighborhood',
