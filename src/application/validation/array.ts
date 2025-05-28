@@ -28,3 +28,16 @@ export class RequiredStringArray extends RequiredArray {
     }
   }
 }
+
+export class RequiredNumberArray extends RequiredArray {
+  constructor(
+    override readonly value: any[],
+    override readonly fieldName: string,
+  ) {
+    super(value, fieldName);
+  }
+
+  validate(): Error {
+    return new InvalidParamError(this.fieldName);
+  }
+}
