@@ -1,5 +1,5 @@
 import { InvalidParamError } from '@/application/errors';
-import { RequiredArray, RequiredStringArray } from '@/application/validation';
+import { RequiredArray, RequiredNumberArray, RequiredStringArray } from '@/application/validation';
 
 describe('RequiredArray', () => {
   it('Should return InvalidParamError if value is null', () => {
@@ -58,5 +58,15 @@ describe('RequiredStringArray', () => {
     const error = sut.validate();
 
     expect(error).toBeUndefined();
+  });
+});
+
+describe('RequiredNumberArray', () => {
+  it('Should return InvalidParamError if value is a multi value array', () => {
+    const sut = new RequiredNumberArray(['any_value', 5, null, undefined], 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new InvalidParamError('field'));
   });
 });
