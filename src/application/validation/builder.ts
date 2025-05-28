@@ -1,6 +1,7 @@
 import {
   RequiredArray,
   RequiredLength,
+  RequiredNumberArray,
   RequiredParam,
   RequiredPattern,
   RequiredString,
@@ -70,6 +71,11 @@ export class ValidationBuilder {
 
   stringArray(): ValidationBuilder {
     this.validators.push(new RequiredStringArray(this.value[this.fieldName], this.fieldName));
+    return this;
+  }
+
+  numberArray(): ValidationBuilder {
+    this.validators.push(new RequiredNumberArray(this.value[this.fieldName], this.fieldName));
     return this;
   }
 
