@@ -1,6 +1,7 @@
 import {
   RequiredArray,
   RequiredLength,
+  RequiredNumberArray,
   RequiredParam,
   RequiredPattern,
   RequiredString,
@@ -144,6 +145,18 @@ describe('ValidationBuilder', () => {
       new RequiredParam(data, 'value'),
       new RequiredArray(data.value, 'value'),
       new RequiredStringArray(data.value, 'value'),
+    ]);
+  });
+
+  it('Should return RequiredNumberArray validator', () => {
+    const data = { value: [] };
+
+    const validators = ValidationBuilder.of(data).field('value').array().numberArray().build();
+
+    expect(validators).toEqual([
+      new RequiredParam(data, 'value'),
+      new RequiredArray(data.value, 'value'),
+      new RequiredNumberArray(data.value, 'value'),
     ]);
   });
 });
