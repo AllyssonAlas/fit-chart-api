@@ -24,8 +24,9 @@ model User {
   role                  String
   address               UserAddress?
   clientIn              Gym[]                 @relation(name: "ClientsToGym")
-  InstructorIn          Gym[]                 @relation(name: "InstructorsToGym")
+  instructorIn          Gym[]                 @relation(name: "InstructorsToGym")
   administratorsIn      Gym[]                 @relation(name: "AdministratorsToGym")
+  exercisesChart        ExercisesChart[]
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @default(now())
 }
@@ -107,6 +108,41 @@ model Exercise {
   category              String
   reference             String?
   availableAt           Gym[]
+  includedIn            ExercisesOnChart[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
+}
+
+model ExercisesOnChart{
+  id                    String                @id @default(uuid())
+  chart                 ExercisesChart        @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  chartId               String
+  exercise              Exercise              @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  exerciseId            String
+  series                Int
+  repts                 Int
+  weight                Int
+  division              String
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now())
+}
+
+model ExercisesDivisions {
+  id                    String                @id @default(uuid())
+  chart                 ExercisesChart        @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  chartId               String
+  name                  String
+  weekDays              Int[]
+}
+
+model ExercisesChart {
+  id                    String                @id @default(uuid())
+  goals                 String
+  observation           String?
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String                @unique
+  exercises             ExercisesOnChart[]
+  divisions             ExercisesDivisions[]
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @default(now())
 }
