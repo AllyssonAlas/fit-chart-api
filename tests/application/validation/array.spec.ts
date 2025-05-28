@@ -52,7 +52,7 @@ describe('RequiredStringArray', () => {
     expect(error).toEqual(new InvalidParamError('field'));
   });
 
-  it('Should return InvalidParamError if value is a multi value array', () => {
+  it('Should return undefined if validation succeeds', () => {
     const sut = new RequiredStringArray(['any_value_1', 'any_value_2', 'any_value_3'], 'field');
 
     const error = sut.validate();
@@ -68,5 +68,13 @@ describe('RequiredNumberArray', () => {
     const error = sut.validate();
 
     expect(error).toEqual(new InvalidParamError('field'));
+  });
+
+  it('Should return undefined if validation succeeds', () => {
+    const sut = new RequiredNumberArray([1, 2, 3, 4], 'field');
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
   });
 });
