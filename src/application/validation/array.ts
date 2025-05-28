@@ -37,7 +37,10 @@ export class RequiredNumberArray extends RequiredArray {
     super(value, fieldName);
   }
 
-  validate(): Error {
-    return new InvalidParamError(this.fieldName);
+  validate(): Error | undefined {
+    const findNoNumberValue = this.value.find((v) => !(typeof v === 'number'));
+    if (findNoNumberValue) {
+      return new InvalidParamError(this.fieldName);
+    }
   }
 }
