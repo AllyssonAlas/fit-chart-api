@@ -1,6 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import { Controller, CreateExercisesChartController } from '@/application/controllers';
+import { ServerError } from '@/application/errors';
 import {
   RequiredArray,
   RequiredNumber,
@@ -92,5 +93,17 @@ describe('CreateExercisesChartController', () => {
 
     expect(exercisesRepository.saveExercisesChart).toHaveBeenCalledWith(request);
     expect(exercisesRepository.saveExercisesChart).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return 500 if LoadGymExercisesRepository throws', async () => {
+    const error = new Error('save_exercises_chart_repository_error');
+    exercisesRepository.saveExercisesChart.mockRejectedValueOnce(error);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: new ServerError(error),
+      statusCode: 500,
+    });
   });
 });
