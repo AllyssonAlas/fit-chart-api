@@ -1,5 +1,12 @@
 import { InvalidParamError, LengthParamError, RequiredParamError, RequiredSubParamError } from '@/application/errors';
-import { Required, RequiredLength, RequiredParam, RequiredPattern, RequiredString } from '@/application/validation';
+import {
+  Required,
+  RequiredLength,
+  RequiredNumber,
+  RequiredParam,
+  RequiredPattern,
+  RequiredString,
+} from '@/application/validation';
 
 describe('Required', () => {
   it('Should return RequiredParamError if value is null', () => {
@@ -104,6 +111,14 @@ describe('RequiredString', () => {
     const error = sut.validate();
 
     expect(error).toBeUndefined();
+  });
+});
+
+describe('RequiredNumber', () => {
+  it('Should be instance of Required', () => {
+    const sut = new RequiredNumber(123, 'field');
+
+    expect(sut).toBeInstanceOf(Required);
   });
 });
 
