@@ -1,3 +1,5 @@
+import { type MockProxy, mock } from 'jest-mock-extended';
+
 import { Controller, CreateExercisesChartController } from '@/application/controllers';
 import {
   RequiredArray,
@@ -6,6 +8,7 @@ import {
   RequiredParam,
   RequiredString,
 } from '@/application/validation';
+import type { SaveExercisesChartRepository } from '@/domain/contracts/repositories';
 
 describe('CreateExercisesChartController', () => {
   const request = {
@@ -23,9 +26,14 @@ describe('CreateExercisesChartController', () => {
   };
 
   let sut: CreateExercisesChartController;
+  let exercisesRepository: MockProxy<SaveExercisesChartRepository>;
+
+  beforeAll(() => {
+    exercisesRepository = mock();
+  });
 
   beforeEach(() => {
-    sut = new CreateExercisesChartController();
+    sut = new CreateExercisesChartController(exercisesRepository);
   });
 
   it('Should extend controller', () => {
@@ -77,5 +85,12 @@ describe('CreateExercisesChartController', () => {
       new RequiredParam(request.exercises[1], 'division', 'exercises'),
       new RequiredString(request.exercises[1].division, 'division'),
     ]);
+  });
+
+  it('Should call SaveExercisesChartRepository with correct input', async () => {
+    await sut.handle(request);
+
+    expect(exercisesRepository.saveExercisesChart).toHaveBeenCalledWith(request);
+    expect(exercisesRepository.saveExercisesChart).toHaveBeenCalledTimes(1);
   });
 });
