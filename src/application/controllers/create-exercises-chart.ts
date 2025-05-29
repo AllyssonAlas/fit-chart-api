@@ -5,7 +5,13 @@ import type { SaveExercisesChartRepository } from '@/domain/contracts/repositori
 type Request = SaveExercisesChartRepository.Input;
 
 export class CreateExercisesChartController extends Controller {
-  async perform(request: Request): Promise<any> {}
+  constructor(private readonly exercisesRepository: SaveExercisesChartRepository) {
+    super();
+  }
+
+  async perform(request: Request): Promise<any> {
+    await this.exercisesRepository.saveExercisesChart(request);
+  }
 
   override buildValidators(request: Request): Validator[] {
     // biome-ignore format: this array should not be formatted
