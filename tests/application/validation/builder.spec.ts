@@ -1,6 +1,7 @@
 import {
   RequiredArray,
   RequiredLength,
+  RequiredNumber,
   RequiredNumberArray,
   RequiredParam,
   RequiredPattern,
@@ -90,6 +91,14 @@ describe('ValidationBuilder', () => {
     const validators = ValidationBuilder.of(data).field('value').string().build();
 
     expect(validators).toEqual([new RequiredParam(data, 'value'), new RequiredString(data.value, 'value')]);
+  });
+
+  it('Should return RequiredNumber validator', () => {
+    const data = { value: 123 };
+
+    const validators = ValidationBuilder.of(data).field('value').number().build();
+
+    expect(validators).toEqual([new RequiredParam(data, 'value'), new RequiredNumber(data.value, 'value')]);
   });
 
   it('Should return RequiredPattern validator with email regex', () => {
