@@ -54,6 +54,10 @@ export class RequiredNumber extends Required {
   ) {
     super(value, fieldName);
   }
+
+  validate(): Error {
+    return new InvalidParamError(this.fieldName);
+  }
 }
 
 export class RequiredPattern extends RequiredString {
