@@ -120,6 +120,14 @@ describe('RequiredNumber', () => {
 
     expect(sut).toBeInstanceOf(Required);
   });
+
+  it('Should return InvalidParamError if value is not a string', () => {
+    const sut = new RequiredNumber('any_value' as any, 'field');
+
+    const error = sut.validate();
+
+    expect(error).toEqual(new InvalidParamError('field'));
+  });
 });
 
 describe('RequiredPattern', () => {
