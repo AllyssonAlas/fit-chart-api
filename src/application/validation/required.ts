@@ -47,6 +47,15 @@ export class RequiredString extends Required {
   }
 }
 
+export class RequiredNumber extends Required {
+  constructor(
+    override readonly value: number,
+    override readonly fieldName: string,
+  ) {
+    super(value, fieldName);
+  }
+}
+
 export class RequiredPattern extends RequiredString {
   constructor(
     override readonly value: string,
