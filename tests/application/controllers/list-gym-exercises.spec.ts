@@ -35,7 +35,7 @@ describe('ListGymExercisesController', () => {
     expect(gymRepository.loadExercises).toHaveBeenCalledTimes(1);
   });
 
-  it('Should rethrow if LoadGymExercisesRepository throws', async () => {
+  it('Should return 500 if LoadGymExercisesRepository throws', async () => {
     const error = new Error('load_gym_exercises_repository_error');
     gymRepository.loadExercises.mockRejectedValueOnce(error);
 
