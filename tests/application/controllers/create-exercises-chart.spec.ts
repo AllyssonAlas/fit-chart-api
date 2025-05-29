@@ -106,4 +106,13 @@ describe('CreateExercisesChartController', () => {
       statusCode: 500,
     });
   });
+
+  it('Should return 204 on success', async () => {
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: null,
+      statusCode: 204,
+    });
+  });
 });
