@@ -1,16 +1,20 @@
 import { Controller } from '@/application/controllers';
+import { type HttpResponse, noContent } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
 import type { SaveExercisesChartRepository } from '@/domain/contracts/repositories';
 
 type Request = SaveExercisesChartRepository.Input;
+
+type Model = null | Error;
 
 export class CreateExercisesChartController extends Controller {
   constructor(private readonly exercisesRepository: SaveExercisesChartRepository) {
     super();
   }
 
-  async perform(request: Request): Promise<any> {
+  async perform(request: Request): Promise<HttpResponse<Model>> {
     await this.exercisesRepository.saveExercisesChart(request);
+    return noContent();
   }
 
   override buildValidators(request: Request): Validator[] {
