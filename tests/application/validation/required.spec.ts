@@ -128,6 +128,14 @@ describe('RequiredNumber', () => {
 
     expect(error).toEqual(new InvalidParamError('field'));
   });
+
+  it('Should return undefined if validation succeeds', () => {
+    const sut = new RequiredNumber(100, 'field');
+
+    const error = sut.validate();
+
+    expect(error).toBeUndefined();
+  });
 });
 
 describe('RequiredPattern', () => {
