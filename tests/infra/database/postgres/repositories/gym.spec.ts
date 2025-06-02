@@ -22,10 +22,18 @@ describe('GymRepository', () => {
 
   describe('save', () => {
     it('Should save a Gym', async () => {
+      await createRole(prisma);
+      await createUsers(prisma, [
+        { email: 'any_user_email_1@mail.com' },
+        { email: 'any_user_email_2@mail.com' },
+        { email: 'any_user_email_3@mail.com' },
+      ]);
       await sut.save({
         name: 'any_name',
         email: 'any_email@mail.com',
-        administrators: [],
+        administrators: ['any_user_email_1@mail.com'],
+        clients: ['any_user_email_2@mail.com'],
+        instructors: ['any_user_email_3@mail.com'],
         contact: 'any_contact',
         address: {
           city: 'any_city',
@@ -40,13 +48,15 @@ describe('GymRepository', () => {
 
       const gym = await prisma.gym.findFirst({
         where: { email: 'any_email@mail.com' },
-        include: { address: true, administrators: true },
+        include: { address: true, administrators: true, clients: true, instructors: true },
       });
 
       expect(gym?.id).toBeTruthy();
       expect(gym?.name).toBe('any_name');
       expect(gym?.email).toBe('any_email@mail.com');
-      expect(gym?.administrators).toEqual([]);
+      expect(gym?.administrators[0].email).toBe('any_user_email_1@mail.com');
+      expect(gym?.clients[0].email).toBe('any_user_email_2@mail.com');
+      expect(gym?.instructors[0].email).toBe('any_user_email_3@mail.com');
       expect(gym?.contact).toBe('any_contact');
       expect(gym?.address?.city).toBe('any_city');
       expect(gym?.address?.complement).toBe('any_complement');
