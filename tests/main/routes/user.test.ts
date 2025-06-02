@@ -6,7 +6,7 @@ import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 import { Permissions } from '@/main/enums';
 
-import { clearUserTable, createExercises, createRole, createUsers } from '@/tests/helpers';
+import { clearAllTables, createExercises, createRole, createUsers } from '@/tests/helpers';
 import { authorizationTokenMock } from '@/tests/mocks/infra';
 
 describe('User Routes', () => {
@@ -17,10 +17,7 @@ describe('User Routes', () => {
   });
 
   afterEach(async () => {
-    await clearUserTable(prisma);
-    await prisma.exercisesChart.deleteMany({});
-    await prisma.exercise.deleteMany({});
-    await prisma.exerciseCategory.deleteMany({});
+    await clearAllTables(prisma);
   });
 
   describe('POST /user', () => {

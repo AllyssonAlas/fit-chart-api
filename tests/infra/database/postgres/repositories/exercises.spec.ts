@@ -18,9 +18,6 @@ describe('ExerciseRepository', () => {
 
   afterEach(async () => {
     clearAllTables(prisma);
-    await prisma.exercisesChart.deleteMany({});
-    await prisma.exercise.deleteMany({});
-    await prisma.exerciseCategory.deleteMany({});
   });
 
   describe('saveExercisesChart', () => {

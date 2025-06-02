@@ -71,10 +71,12 @@ export const clearGymTable = async (prisma: PrismaClient): Promise<void> => {
 export const clearExerciseTable = async (prisma: PrismaClient): Promise<void> => {
   await prisma.exercise.deleteMany({});
   await prisma.exerciseCategory.deleteMany({});
+  await prisma.exercisesChart.deleteMany({});
 };
 
 export const clearAllTables = async (prisma: PrismaClient): Promise<void> => {
   await clearUserTable(prisma);
   await clearGymTable(prisma);
+  await clearExerciseTable(prisma);
   await clearExerciseTable(prisma);
 };
