@@ -4,8 +4,10 @@ import request from 'supertest';
 
 import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
+import { Permissions } from '@/main/enums';
 
-import { clearUserTable, createRole, createUsers } from '@/tests/helpers';
+import { clearUserTable, createExercises, createRole, createUsers } from '@/tests/helpers';
+import { authorizationTokenMock } from '@/tests/mocks/infra';
 
 describe('User Routes', () => {
   let prisma: PrismaClient;
@@ -16,6 +18,9 @@ describe('User Routes', () => {
 
   afterEach(async () => {
     await clearUserTable(prisma);
+    await prisma.exercisesChart.deleteMany({});
+    await prisma.exercise.deleteMany({});
+    await prisma.exerciseCategory.deleteMany({});
   });
 
   describe('POST /user', () => {
@@ -62,6 +67,35 @@ describe('User Routes', () => {
       await createUsers(prisma, [{ email, password, role: 'client' }]);
 
       await request(app).post('/api/login').send({ email, password: 'c4Pt4!n' }).expect(200);
+    });
+  });
+
+  describe('POST /user/:userId/exercisesChart', () => {
+    it('Should return 204 on success', async () => {
+      await createRole(prisma, 'client');
+      await createUsers(prisma, [{ id: 'some_valid_id', role: 'client' }]);
+      await createExercises(prisma, 'costa', [
+        { id: 'exercise_id_1', name: 'Supino Reto', equipment: 'barra', availableAt: [] },
+        { id: 'exercise_id_2', name: 'Supino Inclinado', equipment: '', availableAt: [] },
+      ]);
+
+      const authorizationToken = authorizationTokenMock(Permissions.CREATE_EXERCISES_CHART, 'some_valid_id');
+
+      await request(app)
+        .post('/api/user/some_valid_id/exercisesChart')
+        .set('authorization', authorizationToken)
+        .send({
+          goals: 'Hipertrofia Muscular',
+          divisions: [
+            { name: 'A', weekDays: [0, 2] },
+            { name: 'B', weekDays: [1, 3] },
+          ],
+          exercises: [
+            { exerciseId: 'exercise_id_1', series: 4, repts: 12, weight: 20, division: 'A' },
+            { exerciseId: 'exercise_id_2', series: 3, repts: 10, weight: 30, division: 'B' },
+          ],
+        })
+        .expect(204);
     });
   });
 });
