@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
-import type { SaveExercisesChartRepository } from '@/domain/contracts/repositories';
+import type { LoadUserExercisesChartsRepository, SaveExercisesChartRepository } from '@/domain/contracts/repositories';
 
-export class ExercisesChartRepository implements SaveExercisesChartRepository {
+export class ExercisesChartRepository implements SaveExercisesChartRepository, LoadUserExercisesChartsRepository {
   async saveExercisesChart(input: SaveExercisesChartRepository.Input): Promise<SaveExercisesChartRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.exercisesChart.create({
@@ -22,5 +22,11 @@ export class ExercisesChartRepository implements SaveExercisesChartRepository {
         },
       },
     });
+  }
+
+  async loadExercisesCharts({
+    userId,
+  }: LoadUserExercisesChartsRepository.Input): Promise<LoadUserExercisesChartsRepository.Output> {
+    return [];
   }
 }
