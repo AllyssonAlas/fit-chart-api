@@ -27,6 +27,19 @@ export class ExercisesChartRepository implements SaveExercisesChartRepository, L
   async loadExercisesCharts({
     userId,
   }: LoadUserExercisesChartsRepository.Input): Promise<LoadUserExercisesChartsRepository.Output> {
-    return [];
+    const prisma = new PrismaClient();
+
+    const exercisesCharts = await prisma.exercisesChart.findMany({
+      where: {
+        userId,
+      },
+      include: { exercises: true, divisions: true },
+    });
+    return exercisesCharts.map((chart) => {
+      const chartFormatted = Object.entries(chart).map(([key, value]) => {
+        return [key, value === null ? undefined : value];
+      });
+      return Object.fromEntries(chartFormatted);
+    });
   }
 }
