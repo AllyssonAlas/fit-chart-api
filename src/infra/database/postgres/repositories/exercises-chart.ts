@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import type { SaveExercisesChartRepository } from '@/domain/contracts/repositories';
 
-export class ExerciseRepository implements SaveExercisesChartRepository {
+export class ExercisesChartRepository implements SaveExercisesChartRepository {
   async saveExercisesChart(input: SaveExercisesChartRepository.Input): Promise<SaveExercisesChartRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.exercisesChart.create({

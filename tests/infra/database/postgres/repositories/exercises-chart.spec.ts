@@ -1,19 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 
-import { ExerciseRepository } from '@/infra/database/postgres/repositories';
+import { ExercisesChartRepository } from '@/infra/database/postgres/repositories';
 
 import { clearAllTables, createExercises, createRole, createUsers } from '@/tests/helpers';
 
-describe('ExerciseRepository', () => {
+describe('ExercisesChartRepository', () => {
   let prisma: PrismaClient;
-  let sut: ExerciseRepository;
+  let sut: ExercisesChartRepository;
 
   beforeAll(() => {
     prisma = new PrismaClient();
   });
 
   beforeEach(() => {
-    sut = new ExerciseRepository();
+    sut = new ExercisesChartRepository();
   });
 
   afterEach(async () => {
