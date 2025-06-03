@@ -68,4 +68,12 @@ describe('ExercisesChartRepository', () => {
       expect(exercisesChart?.exercises[1].division).toBe('any_division_1');
     });
   });
+
+  describe('loadExercisesCharts', () => {
+    it('Should return an empty array if user does not have exercises chart', async () => {
+      const exercisesCharts = await sut.loadExercisesCharts({ userId: 'any_user_id' });
+
+      expect(exercisesCharts).toEqual([]);
+    });
+  });
 });
