@@ -1,4 +1,5 @@
 import { Controller } from '@/application/controllers';
+import { type HttpResponse, noContent } from '@/application/helpers';
 import type { LoadUserExercisesChartsRepository } from '@/domain/contracts/repositories';
 
 type Request = {
@@ -10,7 +11,8 @@ export class ListUserExercisesChartsController extends Controller {
     super();
   }
 
-  async perform(request: Request): Promise<any> {
+  async perform(request: Request): Promise<HttpResponse<null>> {
     await this.exercisesChartsRepository.loadExercisesCharts(request);
+    return noContent();
   }
 }
