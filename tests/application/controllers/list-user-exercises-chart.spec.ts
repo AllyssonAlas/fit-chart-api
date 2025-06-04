@@ -1,6 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import { Controller, ListUserExercisesChartsController } from '@/application/controllers';
+import { ServerError } from '@/application/errors';
 import type { LoadUserExercisesChartsRepository } from '@/domain/contracts/repositories';
 
 describe('ListUserExercisesChartsController', () => {
@@ -28,5 +29,17 @@ describe('ListUserExercisesChartsController', () => {
 
     expect(exercisesChartsRepository.loadExercisesCharts).toHaveBeenCalledWith(request);
     expect(exercisesChartsRepository.loadExercisesCharts).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return 500 if LoadGymExercisesRepository throws', async () => {
+    const error = new Error('load_user_exercises_chart_repository_error');
+    exercisesChartsRepository.loadExercisesCharts.mockRejectedValueOnce(error);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: new ServerError(error),
+      statusCode: 500,
+    });
   });
 });
