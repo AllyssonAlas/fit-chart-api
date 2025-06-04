@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { ExercisesChartRepository } from '@/infra/database/postgres/repositories';
 
-import { clearAllTables, createExercises, createRole, createUsers } from '@/tests/helpers';
+import { clearAllTables, createExercises, createExercisesChart, createRole, createUsers } from '@/tests/helpers';
 
 describe('ExercisesChartRepository', () => {
   let prisma: PrismaClient;
@@ -88,71 +88,43 @@ describe('ExercisesChartRepository', () => {
         { id: 'any_exercise_id_3', name: 'any_exercise_name_3', availableAt: [] },
       ]);
 
-      await prisma.exercisesChart.create({
-        data: {
+      await createExercisesChart(prisma, [
+        {
           userId: 'any_user_id_1',
           goals: 'any_goal_1',
           observation: 'any_observation',
-          divisions: {
-            createMany: {
-              data: [
-                { name: 'any_division_1', weekDays: [0, 1] },
-                { name: 'any_division_2', weekDays: [2, 3] },
-              ],
-            },
-          },
-          exercises: {
-            createMany: {
-              data: [
-                { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
-                { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
-              ],
-            },
-          },
+          divisions: [
+            { name: 'any_division_1', weekDays: [0, 1] },
+            { name: 'any_division_2', weekDays: [2, 3] },
+          ],
+          exercises: [
+            { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+            { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+          ],
         },
-      });
-      await prisma.exercisesChart.create({
-        data: {
+        {
           userId: 'any_user_id_1',
           goals: 'any_goal_2',
-          divisions: {
-            createMany: {
-              data: [
-                { name: 'any_division_1', weekDays: [0, 1] },
-                { name: 'any_division_2', weekDays: [2, 3] },
-              ],
-            },
-          },
-          exercises: {
-            createMany: {
-              data: [
-                { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
-                { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
-              ],
-            },
-          },
+          divisions: [
+            { name: 'any_division_1', weekDays: [0, 1] },
+            { name: 'any_division_2', weekDays: [2, 3] },
+          ],
+          exercises: [
+            { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+            { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+          ],
         },
-      });
-      await prisma.exercisesChart.create({
-        data: {
+        {
           userId: 'any_user_id_2',
           goals: 'any_goal_3',
-          divisions: {
-            createMany: {
-              data: [
-                { name: 'any_division_1', weekDays: [0, 1] },
-                { name: 'any_division_2', weekDays: [2, 3] },
-                { name: 'any_division_3', weekDays: [4, 5, 6] },
-              ],
-            },
-          },
-          exercises: {
-            createMany: {
-              data: [{ exerciseId: 'any_exercise_id_3', series: 5, repts: 8, weight: 15, division: 'any_division_1' }],
-            },
-          },
+          divisions: [
+            { name: 'any_division_1', weekDays: [0, 1] },
+            { name: 'any_division_2', weekDays: [2, 3] },
+            { name: 'any_division_3', weekDays: [4, 5, 6] },
+          ],
+          exercises: [{ exerciseId: 'any_exercise_id_3', series: 5, repts: 8, weight: 15, division: 'any_division_1' }],
         },
-      });
+      ]);
 
       const exercisesChartsOne = await sut.loadExercisesCharts({ userId: 'any_user_id_1' });
       const exercisesChartsTwo = await sut.loadExercisesCharts({ userId: 'any_user_id_2' });

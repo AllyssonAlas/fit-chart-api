@@ -1,3 +1,4 @@
+import type { ExercisesChart } from '@/domain/entities/generic-types';
 import type { Exercise, Gym, PrismaClient, User } from '@prisma/client';
 
 export const createUsers = async (prisma: PrismaClient, users: Partial<User>[]): Promise<void> => {
@@ -52,6 +53,28 @@ export const createRole = async (prisma: PrismaClient, name = 'admin'): Promise<
       permissions: { create: [{ name: 'permission_1' }, { name: 'permission_2' }] },
     },
   });
+};
+
+export const createExercisesChart = async (prisma: PrismaClient, charts: Partial<ExercisesChart>[]): Promise<void> => {
+  for (const { divisions, exercises, ...chart } of charts) {
+    await prisma.exercisesChart.create({
+      data: {
+        userId: 'any_user_id',
+        goals: 'any_goal',
+        divisions: {
+          createMany: {
+            data: divisions?.map((division) => division) || [],
+          },
+        },
+        exercises: {
+          createMany: {
+            data: exercises?.map((exercise) => exercise) || [],
+          },
+        },
+        ...chart,
+      },
+    });
+  }
 };
 
 export const clearRoleTable = async (prisma: PrismaClient): Promise<void> => {
