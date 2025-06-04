@@ -14,6 +14,35 @@ describe('ListUserExercisesChartsController', () => {
 
   beforeAll(() => {
     exercisesChartsRepository = mock();
+    exercisesChartsRepository.loadExercisesCharts.mockResolvedValue([
+      {
+        id: 'any_exercises_chart_id_1',
+        userId: 'any_user_id_1',
+        goals: 'any_goal_1',
+        observation: 'any_observation',
+        divisions: [
+          { name: 'any_division_1', weekDays: [0, 1] },
+          { name: 'any_division_2', weekDays: [2, 3] },
+        ],
+        exercises: [
+          { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+          { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+        ],
+      },
+      {
+        id: 'any_exercises_chart_id_2',
+        userId: 'any_user_id_1',
+        goals: 'any_goal_2',
+        divisions: [
+          { name: 'any_division_1', weekDays: [0, 1] },
+          { name: 'any_division_2', weekDays: [2, 3] },
+        ],
+        exercises: [
+          { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+          { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+        ],
+      },
+    ]);
   });
 
   beforeEach(() => {
@@ -51,6 +80,43 @@ describe('ListUserExercisesChartsController', () => {
     expect(response).toEqual({
       data: null,
       statusCode: 204,
+    });
+  });
+
+  it('Should return 200 on success', async () => {
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: [
+        {
+          id: 'any_exercises_chart_id_1',
+          userId: 'any_user_id_1',
+          goals: 'any_goal_1',
+          observation: 'any_observation',
+          divisions: [
+            { name: 'any_division_1', weekDays: [0, 1] },
+            { name: 'any_division_2', weekDays: [2, 3] },
+          ],
+          exercises: [
+            { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+            { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+          ],
+        },
+        {
+          id: 'any_exercises_chart_id_2',
+          userId: 'any_user_id_1',
+          goals: 'any_goal_2',
+          divisions: [
+            { name: 'any_division_1', weekDays: [0, 1] },
+            { name: 'any_division_2', weekDays: [2, 3] },
+          ],
+          exercises: [
+            { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+            { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+          ],
+        },
+      ],
+      statusCode: 200,
     });
   });
 });
