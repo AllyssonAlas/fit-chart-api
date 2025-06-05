@@ -6,7 +6,7 @@ import { app } from '@/main/config/app';
 import { env } from '@/main/config/env';
 import { Permissions } from '@/main/enums';
 
-import { clearAllTables, createExercises, createRole, createUsers } from '@/tests/helpers';
+import { clearAllTables, createExercises, createExercisesChart, createRole, createUsers } from '@/tests/helpers';
 import { authorizationTokenMock } from '@/tests/mocks/infra';
 
 describe('User Routes', () => {
@@ -107,6 +107,39 @@ describe('User Routes', () => {
         .get('/api/user/some_valid_id/exercisesChart')
         .set('authorization', authorizationToken)
         .expect(204);
+    });
+
+    it('Should return 200 on success', async () => {
+      await createRole(prisma, 'user');
+      await createUsers(prisma, [{ id: 'some_valid_id', role: 'user' }]);
+
+      const authorizationToken = authorizationTokenMock(Permissions.LIST_USER_EXERCISES_CHARTS, 'some_valid_id');
+
+      await createExercises(prisma, 'Peito', [
+        { id: 'any_exercise_id_1', name: 'Supino reto', equipment: 'barra', availableAt: [] },
+        { id: 'any_exercise_id_2', name: 'Supino inclinado', availableAt: [] },
+      ]);
+
+      await createExercisesChart(prisma, [
+        {
+          userId: 'some_valid_id',
+          goals: 'Hipertrofia',
+          observation: 'any_observation',
+          divisions: [
+            { name: 'A', weekDays: [0, 2, 4] },
+            { name: 'B', weekDays: [1, 3, 5] },
+          ],
+          exercises: [
+            { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'A' },
+            { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'B' },
+          ],
+        },
+      ]);
+
+      await request(app)
+        .get('/api/user/some_valid_id/exercisesChart')
+        .set('authorization', authorizationToken)
+        .expect(200);
     });
   });
 });
