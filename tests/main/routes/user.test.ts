@@ -95,4 +95,18 @@ describe('User Routes', () => {
         .expect(204);
     });
   });
+
+  describe('POST /user/:userId/exercisesChart', () => {
+    it('Should return 204 if user does not have exercises charts', async () => {
+      await createRole(prisma, 'user');
+      await createUsers(prisma, [{ id: 'some_valid_id', role: 'user' }]);
+
+      const authorizationToken = authorizationTokenMock(Permissions.LIST_USER_EXERCISES_CHARTS, 'some_valid_id');
+
+      await request(app)
+        .get('/api/user/some_valid_id/exercisesChart')
+        .set('authorization', authorizationToken)
+        .expect(204);
+    });
+  });
 });
