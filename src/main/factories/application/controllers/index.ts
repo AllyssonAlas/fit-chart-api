@@ -4,3 +4,4 @@ export * from './create-exercises-chart';
 export * from './create-gym';
 export * from './create-user';
 export * from './list-gym-exercises';
+export * from './list-user-exercises-charts';
