@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { UserRepository } from '@/infra/database/postgres/repositories';
 
-import { clearUserTable, createRole } from '@/tests/helpers';
+import { clearUserTable, createExercisesChart, createRole, createUsers } from '@/tests/helpers';
 
 describe('UserRepository', () => {
   let prisma: PrismaClient;
@@ -152,6 +152,32 @@ describe('UserRepository', () => {
       expect(users[1].password).toBe('any_password_2');
       expect(users[1].role).toBe('any_role_name');
       expect(users[1].contact).toBe('any_contact_2');
+    });
+  });
+
+  describe('updateActiveChart', () => {
+    it('Should update active chart id', async () => {
+      await createRole(prisma, 'any_role_name');
+      await createUsers(prisma, [{ id: 'any_user_id', role: 'any_role_name' }]);
+      await createExercisesChart(prisma, [
+        {
+          id: 'any_exercises_chat_id',
+          userId: 'any_user_id',
+          goals: 'any_goal_1',
+          divisions: [],
+          exercises: [],
+        },
+      ]);
+
+      const userRecentlyCreated = await prisma.user.findUnique({ where: { id: 'any_user_id' } });
+
+      expect(userRecentlyCreated?.activeChartId).toBeFalsy();
+
+      await sut.updateActiveChart({ exercisesChartId: 'any_exercises_chat_id', userId: 'any_user_id' });
+
+      const userUpdated = await prisma.user.findUnique({ where: { id: 'any_user_id' } });
+
+      expect(userUpdated?.activeChartId).toBe('any_exercises_chat_id');
     });
   });
 });
