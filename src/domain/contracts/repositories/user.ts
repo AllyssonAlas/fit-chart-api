@@ -33,3 +33,18 @@ export namespace LoadManyUsersRepository {
 export interface LoadManyUsersRepository {
   loadMany(input: LoadManyUsersRepository.Input): Promise<LoadManyUsersRepository.Output>;
 }
+
+export namespace UpdateUserActiveExercisesChartRepository {
+  export type Input = {
+    exercisesChartId: string;
+    userId: string;
+  };
+
+  export type Output = void;
+}
+
+export interface UpdateUserActiveExercisesChartRepository {
+  updateActiveChart(
+    input: UpdateUserActiveExercisesChartRepository.Input,
+  ): Promise<UpdateUserActiveExercisesChartRepository.Output>;
+}

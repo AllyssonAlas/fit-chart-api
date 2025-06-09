@@ -3,7 +3,7 @@ import type { ExercisesChart } from '@/domain/entities/generic-types';
 export namespace SaveExercisesChartRepository {
   export type Input = ExercisesChart;
 
-  export type Output = void;
+  export type Output = { id: string };
 }
 
 export interface SaveExercisesChartRepository {
