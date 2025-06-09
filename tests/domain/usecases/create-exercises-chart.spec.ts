@@ -37,4 +37,13 @@ describe('CreateExercisesChart', () => {
     expect(exercisesChartRepository.saveExercisesChart).toHaveBeenCalledWith(input);
     expect(exercisesChartRepository.saveExercisesChart).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if LoadManyUsersRepository throws', async () => {
+    const error = new Error('create_exercises_chart_repository_error');
+    exercisesChartRepository.saveExercisesChart.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
