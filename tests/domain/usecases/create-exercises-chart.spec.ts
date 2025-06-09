@@ -1,0 +1,40 @@
+import { type MockProxy, mock } from 'jest-mock-extended';
+
+import type { SaveExercisesChartRepository } from '@/domain/contracts/repositories';
+import { type CreateExercisesChart, setupCreateExercisesChart } from '@/domain/usecases';
+
+jest.mock('@/domain/entities/user');
+
+describe('CreateExercisesChart', () => {
+  const input = {
+    userId: 'any_user_id',
+    goals: 'any_goal',
+    observation: 'any_observation',
+    divisions: [
+      { name: 'any_division_1', weekDays: [0, 2] },
+      { name: 'any_division_2', weekDays: [1, 3] },
+    ],
+    exercises: [
+      { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+      { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+    ],
+  };
+
+  let sut: MockProxy<CreateExercisesChart>;
+  let exercisesChartRepository: MockProxy<SaveExercisesChartRepository>;
+
+  beforeAll(() => {
+    exercisesChartRepository = mock();
+  });
+
+  beforeEach(() => {
+    sut = setupCreateExercisesChart(exercisesChartRepository);
+  });
+
+  it('Should call SaveExercisesChartRepository with correct input', async () => {
+    await sut(input);
+
+    expect(exercisesChartRepository.saveExercisesChart).toHaveBeenCalledWith(input);
+    expect(exercisesChartRepository.saveExercisesChart).toHaveBeenCalledTimes(1);
+  });
+});
