@@ -62,4 +62,13 @@ describe('CreateExercisesChart', () => {
     });
     expect(userRepository.updateActiveChart).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if UpdateUserActiveExercisesChartRepository throws', async () => {
+    const error = new Error('update_user_active_exercises_chart_repository_error');
+    userRepository.updateActiveChart.mockRejectedValueOnce(error);
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(error);
+  });
 });
