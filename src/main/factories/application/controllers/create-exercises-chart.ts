@@ -1,6 +1,6 @@
 import { CreateExercisesChartController } from '@/application/controllers';
-import { makeExercisesChartRepository } from '@/main/factories/infra/repositories';
+import { makeCreateExercisesChartUsecase } from '@/main/factories/domain/usecases';
 
 export const makeCreateExercisesChartController = (): CreateExercisesChartController => {
-  return new CreateExercisesChartController(makeExercisesChartRepository());
+  return new CreateExercisesChartController(makeCreateExercisesChartUsecase());
 };
