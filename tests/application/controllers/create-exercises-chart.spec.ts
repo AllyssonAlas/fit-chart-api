@@ -9,7 +9,6 @@ import {
   RequiredParam,
   RequiredString,
 } from '@/application/validation';
-import type { SaveExercisesChartRepository } from '@/domain/contracts/repositories';
 
 describe('CreateExercisesChartController', () => {
   const request = {
@@ -27,14 +26,14 @@ describe('CreateExercisesChartController', () => {
   };
 
   let sut: CreateExercisesChartController;
-  let exercisesRepository: MockProxy<SaveExercisesChartRepository>;
+  let createExercisesChart: jest.Mock;
 
   beforeAll(() => {
-    exercisesRepository = mock();
+    createExercisesChart = jest.fn();
   });
 
   beforeEach(() => {
-    sut = new CreateExercisesChartController(exercisesRepository);
+    sut = new CreateExercisesChartController(createExercisesChart);
   });
 
   it('Should extend controller', () => {
@@ -88,16 +87,16 @@ describe('CreateExercisesChartController', () => {
     ]);
   });
 
-  it('Should call SaveExercisesChartRepository with correct input', async () => {
+  it('Should call CreateExercisesChart with correct input', async () => {
     await sut.handle(request);
 
-    expect(exercisesRepository.saveExercisesChart).toHaveBeenCalledWith(request);
-    expect(exercisesRepository.saveExercisesChart).toHaveBeenCalledTimes(1);
+    expect(createExercisesChart).toHaveBeenCalledWith(request);
+    expect(createExercisesChart).toHaveBeenCalledTimes(1);
   });
 
-  it('Should return 500 if LoadGymExercisesRepository throws', async () => {
-    const error = new Error('save_exercises_chart_repository_error');
-    exercisesRepository.saveExercisesChart.mockRejectedValueOnce(error);
+  it('Should return 500 if CreateExercisesChart throws infra error', async () => {
+    const error = new Error('infra_error');
+    createExercisesChart.mockRejectedValueOnce(error);
 
     const response = await sut.handle(request);
 

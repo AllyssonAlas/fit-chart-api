@@ -1,19 +1,20 @@
 import { Controller } from '@/application/controllers';
 import { type HttpResponse, noContent } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
-import type { SaveExercisesChartRepository } from '@/domain/contracts/repositories';
+import type { ExercisesChart } from '@/domain/entities/generic-types';
+import type { CreateExercisesChart } from '@/domain/usecases';
 
-type Request = SaveExercisesChartRepository.Input;
+type Request = ExercisesChart;
 
 type Model = null | Error;
 
 export class CreateExercisesChartController extends Controller {
-  constructor(private readonly exercisesRepository: SaveExercisesChartRepository) {
+  constructor(private readonly createExercisesChart: CreateExercisesChart) {
     super();
   }
 
   async perform(request: Request): Promise<HttpResponse<Model>> {
-    await this.exercisesRepository.saveExercisesChart(request);
+    await this.createExercisesChart(request);
     return noContent();
   }
 
