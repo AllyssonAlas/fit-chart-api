@@ -30,7 +30,7 @@ describe('ExercisesChartRepository', () => {
         { id: 'any_exercise_id_3', name: 'any_exercise_name_3', availableAt: [] },
       ]);
 
-      await sut.saveExercisesChart({
+      const savedChart = await sut.saveExercisesChart({
         userId: 'any_user_id',
         goals: 'any_goal',
         observation: 'any_observation',
@@ -48,6 +48,7 @@ describe('ExercisesChartRepository', () => {
         include: { divisions: true, exercises: true },
       });
 
+      expect(savedChart.id).toBeTruthy();
       expect(exercisesChart?.id).toBeTruthy();
       expect(exercisesChart?.goals).toBe('any_goal');
       expect(exercisesChart?.userId).toBe('any_user_id');
