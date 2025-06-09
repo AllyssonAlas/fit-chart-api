@@ -55,7 +55,10 @@ export const createRole = async (prisma: PrismaClient, name = 'admin'): Promise<
   });
 };
 
-export const createExercisesChart = async (prisma: PrismaClient, charts: Partial<ExercisesChart>[]): Promise<void> => {
+export const createExercisesChart = async (
+  prisma: PrismaClient,
+  charts: Partial<ExercisesChart & { id: string }>[],
+): Promise<void> => {
   for (const { divisions, exercises, ...chart } of charts) {
     await prisma.exercisesChart.create({
       data: {

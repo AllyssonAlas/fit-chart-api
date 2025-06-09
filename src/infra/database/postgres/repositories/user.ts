@@ -1,8 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 
-import type { LoadManyUsersRepository, LoadUserRepository, SaveUserRepository } from '@/domain/contracts/repositories';
+import type {
+  LoadManyUsersRepository,
+  LoadUserRepository,
+  SaveUserRepository,
+  UpdateUserActiveExercisesChartRepository,
+} from '@/domain/contracts/repositories';
 
-export class UserRepository implements SaveUserRepository, LoadUserRepository, LoadManyUsersRepository {
+type Repository = SaveUserRepository &
+  LoadUserRepository &
+  LoadManyUsersRepository &
+  UpdateUserActiveExercisesChartRepository;
+export class UserRepository implements Repository {
   async save(input: SaveUserRepository.Input): Promise<SaveUserRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.user.create({
@@ -27,5 +36,15 @@ export class UserRepository implements SaveUserRepository, LoadUserRepository, L
       where: { email: { in: emails } },
     });
     return users;
+  }
+
+  async updateActiveChart(
+    input: UpdateUserActiveExercisesChartRepository.Input,
+  ): Promise<UpdateUserActiveExercisesChartRepository.Output> {
+    const prisma = new PrismaClient();
+    await prisma.user.update({
+      where: { id: input.userId },
+      data: { activeChartId: input.exercisesChartId },
+    });
   }
 }
