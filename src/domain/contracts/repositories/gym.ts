@@ -1,13 +1,13 @@
 import type { GymData } from '@/domain/entities';
 
-export namespace SaveGymRepository {
+export namespace CreateGymRepository {
   export type Input = GymData;
 
   export type Output = void;
 }
 
-export interface SaveGymRepository {
-  save(input: SaveGymRepository.Input): Promise<SaveGymRepository.Output>;
+export interface CreateGymRepository {
+  create(input: CreateGymRepository.Input): Promise<CreateGymRepository.Output>;
 }
 
 export namespace LoadGymRepository {

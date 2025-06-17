@@ -1,6 +1,6 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
-import type { LoadManyUsersRepository, SaveGymRepository } from '@/domain/contracts/repositories';
+import type { CreateGymRepository, LoadManyUsersRepository } from '@/domain/contracts/repositories';
 import { Gym } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 import { type CreateGym, setupCreateGym } from '@/domain/usecases';
@@ -20,7 +20,7 @@ describe('CreateGym', () => {
 
   let sut: CreateGym;
   let userRepository: MockProxy<LoadManyUsersRepository>;
-  let gymRepository: MockProxy<SaveGymRepository>;
+  let gymRepository: MockProxy<CreateGymRepository>;
 
   beforeAll(() => {
     userRepository = mock();
@@ -69,16 +69,16 @@ describe('CreateGym', () => {
     expect(userRepository.loadMany).toHaveBeenCalledTimes(0);
   });
 
-  it('Should call SaveGymRepository with correct input', async () => {
+  it('Should call CreateGymRepository with correct input', async () => {
     await sut(input);
 
-    expect(gymRepository.save).toHaveBeenCalledWith(jest.mocked(Gym).mock.instances[0]);
-    expect(gymRepository.save).toHaveBeenCalledTimes(1);
+    expect(gymRepository.create).toHaveBeenCalledWith(jest.mocked(Gym).mock.instances[0]);
+    expect(gymRepository.create).toHaveBeenCalledTimes(1);
   });
 
-  it('Should rethrow if SaveGymRepository throws', async () => {
-    const error = new Error('save_gym_repository_error');
-    gymRepository.save.mockRejectedValueOnce(error);
+  it('Should rethrow if CreateGymRepository throws', async () => {
+    const error = new Error('create_gym_repository_error');
+    gymRepository.create.mockRejectedValueOnce(error);
 
     const promise = sut(input);
 

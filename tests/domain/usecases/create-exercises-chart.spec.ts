@@ -1,7 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type {
-  SaveExercisesChartRepository,
+  CreateExercisesChartRepository,
   UpdateUserActiveExercisesChartRepository,
 } from '@/domain/contracts/repositories';
 import { type CreateExercisesChart, setupCreateExercisesChart } from '@/domain/usecases';
@@ -24,12 +24,12 @@ describe('CreateExercisesChart', () => {
   };
 
   let sut: MockProxy<CreateExercisesChart>;
-  let exercisesChartRepository: MockProxy<SaveExercisesChartRepository>;
+  let exercisesChartRepository: MockProxy<CreateExercisesChartRepository>;
   let userRepository: MockProxy<UpdateUserActiveExercisesChartRepository>;
 
   beforeAll(() => {
     exercisesChartRepository = mock();
-    exercisesChartRepository.saveExercisesChart.mockResolvedValue({ id: 'any_exercises_chart_id' });
+    exercisesChartRepository.createExercisesChart.mockResolvedValue({ id: 'any_exercises_chart_id' });
     userRepository = mock();
   });
 
@@ -37,16 +37,16 @@ describe('CreateExercisesChart', () => {
     sut = setupCreateExercisesChart(exercisesChartRepository, userRepository);
   });
 
-  it('Should call SaveExercisesChartRepository with correct input', async () => {
+  it('Should call CreateExercisesChartRepository with correct input', async () => {
     await sut(input);
 
-    expect(exercisesChartRepository.saveExercisesChart).toHaveBeenCalledWith(input);
-    expect(exercisesChartRepository.saveExercisesChart).toHaveBeenCalledTimes(1);
+    expect(exercisesChartRepository.createExercisesChart).toHaveBeenCalledWith(input);
+    expect(exercisesChartRepository.createExercisesChart).toHaveBeenCalledTimes(1);
   });
 
   it('Should rethrow if LoadManyUsersRepository throws', async () => {
     const error = new Error('create_exercises_chart_repository_error');
-    exercisesChartRepository.saveExercisesChart.mockRejectedValueOnce(error);
+    exercisesChartRepository.createExercisesChart.mockRejectedValueOnce(error);
 
     const promise = sut(input);
 

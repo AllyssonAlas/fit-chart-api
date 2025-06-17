@@ -20,11 +20,11 @@ describe('UserRepository', () => {
     await clearUserTable(prisma);
   });
 
-  describe('save', () => {
-    it('Should save an User', async () => {
+  describe('create', () => {
+    it('Should create an User', async () => {
       await createRole(prisma, 'any_role_name');
 
-      await sut.save({
+      await sut.create({
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',

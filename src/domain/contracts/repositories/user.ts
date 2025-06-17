@@ -12,14 +12,14 @@ export interface LoadUserRepository {
   load(input: LoadUserRepository.Input): Promise<LoadUserRepository.Output>;
 }
 
-export namespace SaveUserRepository {
+export namespace CreateUserRepository {
   export type Input = User;
 
   export type Output = void;
 }
 
-export interface SaveUserRepository {
-  save(input: SaveUserRepository.Input): Promise<SaveUserRepository.Output>;
+export interface CreateUserRepository {
+  create(input: CreateUserRepository.Input): Promise<CreateUserRepository.Output>;
 }
 
 export namespace LoadManyUsersRepository {

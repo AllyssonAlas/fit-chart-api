@@ -2,15 +2,15 @@ import { PrismaClient } from '@prisma/client';
 
 import type {
   AssignUsersToGymRepository,
+  CreateGymRepository,
   LoadGymExercisesRepository,
   LoadGymRepository,
-  SaveGymRepository,
 } from '@/domain/contracts/repositories';
 
-type RepositoryType = SaveGymRepository & LoadGymRepository & AssignUsersToGymRepository & LoadGymExercisesRepository;
+type RepositoryType = CreateGymRepository & LoadGymRepository & AssignUsersToGymRepository & LoadGymExercisesRepository;
 
 export class GymRepository implements RepositoryType {
-  async save(input: SaveGymRepository.Input): Promise<SaveGymRepository.Output> {
+  async create(input: CreateGymRepository.Input): Promise<CreateGymRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.gym.create({
       data: {

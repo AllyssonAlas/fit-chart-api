@@ -1,11 +1,11 @@
-import type { LoadManyUsersRepository, SaveGymRepository } from '@/domain/contracts/repositories';
+import type { CreateGymRepository, LoadManyUsersRepository } from '@/domain/contracts/repositories';
 import { Gym, type GymData } from '@/domain/entities';
 import { EmailDoesNotExistError } from '@/domain/errors';
 
 type Input = GymData;
 type Output = void;
 export type CreateGym = (input: Input) => Promise<Output>;
-type Setup = (userRepository: LoadManyUsersRepository, gymRepository: SaveGymRepository) => CreateGym;
+type Setup = (userRepository: LoadManyUsersRepository, gymRepository: CreateGymRepository) => CreateGym;
 
 export const setupCreateGym: Setup = (userRepository, gymRepository) => {
   return async ({ administrators, ...input }) => {
@@ -16,6 +16,6 @@ export const setupCreateGym: Setup = (userRepository, gymRepository) => {
       const nonExistentUser = gymData.finNonExistentUser(administrators);
       if (nonExistentUser) throw new EmailDoesNotExistError(nonExistentUser);
     }
-    await gymRepository.save(gymData);
+    await gymRepository.create(gymData);
   };
 };

@@ -1,18 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 
 import type {
+  CreateUserRepository,
   LoadManyUsersRepository,
   LoadUserRepository,
-  SaveUserRepository,
   UpdateUserActiveExercisesChartRepository,
 } from '@/domain/contracts/repositories';
 
-type Repository = SaveUserRepository &
+type Repository = CreateUserRepository &
   LoadUserRepository &
   LoadManyUsersRepository &
   UpdateUserActiveExercisesChartRepository;
 export class UserRepository implements Repository {
-  async save(input: SaveUserRepository.Input): Promise<SaveUserRepository.Output> {
+  async create(input: CreateUserRepository.Input): Promise<CreateUserRepository.Output> {
     const prisma = new PrismaClient();
     await prisma.user.create({
       data: {

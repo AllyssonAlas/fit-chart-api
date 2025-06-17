@@ -20,15 +20,15 @@ describe('GymRepository', () => {
     await clearAllTables(prisma);
   });
 
-  describe('save', () => {
-    it('Should save a Gym', async () => {
+  describe('create', () => {
+    it('Should create a Gym', async () => {
       await createRole(prisma);
       await createUsers(prisma, [
         { email: 'any_user_email_1@mail.com' },
         { email: 'any_user_email_2@mail.com' },
         { email: 'any_user_email_3@mail.com' },
       ]);
-      await sut.save({
+      await sut.create({
         name: 'any_name',
         email: 'any_email@mail.com',
         administrators: ['any_user_email_1@mail.com'],

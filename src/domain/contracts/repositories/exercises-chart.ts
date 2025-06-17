@@ -1,13 +1,13 @@
 import type { ExercisesChart } from '@/domain/entities/generic-types';
 
-export namespace SaveExercisesChartRepository {
+export namespace CreateExercisesChartRepository {
   export type Input = ExercisesChart;
 
   export type Output = { id: string };
 }
 
-export interface SaveExercisesChartRepository {
-  saveExercisesChart(input: SaveExercisesChartRepository.Input): Promise<SaveExercisesChartRepository.Output>;
+export interface CreateExercisesChartRepository {
+  createExercisesChart(input: CreateExercisesChartRepository.Input): Promise<CreateExercisesChartRepository.Output>;
 }
 
 export namespace LoadUserExercisesChartsRepository {

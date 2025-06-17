@@ -20,8 +20,8 @@ describe('ExercisesChartRepository', () => {
     await clearAllTables(prisma);
   });
 
-  describe('saveExercisesChart', () => {
-    it('Should save an exercise chart', async () => {
+  describe('createExercisesChart', () => {
+    it('Should create an exercise chart', async () => {
       await createRole(prisma, 'any_role_name');
       await createUsers(prisma, [{ id: 'any_user_id', role: 'any_role_name' }]);
       await createExercises(prisma, 'any_category', [
@@ -30,7 +30,7 @@ describe('ExercisesChartRepository', () => {
         { id: 'any_exercise_id_3', name: 'any_exercise_name_3', availableAt: [] },
       ]);
 
-      const savedChart = await sut.saveExercisesChart({
+      const createdChart = await sut.createExercisesChart({
         userId: 'any_user_id',
         goals: 'any_goal',
         observation: 'any_observation',
@@ -48,7 +48,7 @@ describe('ExercisesChartRepository', () => {
         include: { divisions: true, exercises: true },
       });
 
-      expect(savedChart.id).toBeTruthy();
+      expect(createdChart.id).toBeTruthy();
       expect(exercisesChart?.id).toBeTruthy();
       expect(exercisesChart?.goals).toBe('any_goal');
       expect(exercisesChart?.userId).toBe('any_user_id');

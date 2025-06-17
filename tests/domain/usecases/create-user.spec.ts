@@ -1,7 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { HashGenerator } from '@/domain/contracts/gateways';
-import type { LoadRoleRepository, LoadUserRepository, SaveUserRepository } from '@/domain/contracts/repositories';
+import type { CreateUserRepository, LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
 import { User } from '@/domain/entities';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 import { type CreateUser, setupCreateUser } from '@/domain/usecases';
@@ -18,7 +18,7 @@ describe('CreateUser', () => {
   };
 
   let sut: MockProxy<CreateUser>;
-  let userRepository: MockProxy<LoadUserRepository & SaveUserRepository>;
+  let userRepository: MockProxy<LoadUserRepository & CreateUserRepository>;
   let roleRepository: MockProxy<LoadRoleRepository>;
   let hashGenerator: MockProxy<HashGenerator>;
 
@@ -100,18 +100,18 @@ describe('CreateUser', () => {
     await expect(promise).rejects.toThrow(new Error('hahser_generator_error'));
   });
 
-  it('Should call SaveUserRepository with correct input', async () => {
+  it('Should call CreateUserRepository with correct input', async () => {
     await sut(input);
 
-    expect(userRepository.save).toHaveBeenCalledWith(jest.mocked(User).mock.instances[0]);
-    expect(userRepository.save).toHaveBeenCalledTimes(1);
+    expect(userRepository.create).toHaveBeenCalledWith(jest.mocked(User).mock.instances[0]);
+    expect(userRepository.create).toHaveBeenCalledTimes(1);
   });
 
-  it('Should rethrow if SaveUserRepository throws', async () => {
-    userRepository.save.mockRejectedValueOnce(new Error('save_user_repository_error'));
+  it('Should rethrow if CreateUserRepository throws', async () => {
+    userRepository.create.mockRejectedValueOnce(new Error('create_user_repository_error'));
 
     const promise = sut(input);
 
-    await expect(promise).rejects.toThrow(new Error('save_user_repository_error'));
+    await expect(promise).rejects.toThrow(new Error('create_user_repository_error'));
   });
 });
