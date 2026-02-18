@@ -54,4 +54,12 @@ describe('LoadUserActiveExercisesChart', () => {
     expect(exercisesChartRepository.loadById).toHaveBeenCalledWith({ id: userMock().activeChartId });
     expect(exercisesChartRepository.loadById).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if LoadExercisesChartByIdRepository throws', async () => {
+    exercisesChartRepository.loadById.mockRejectedValueOnce(new Error('load_exercises_chart_by_id_repository_error'));
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new Error('load_exercises_chart_by_id_repository_error'));
+  });
 });
