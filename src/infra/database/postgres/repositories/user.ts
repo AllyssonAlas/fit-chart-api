@@ -17,6 +17,7 @@ export class UserRepository implements Repository {
     await prisma.user.create({
       data: {
         ...input,
+        activeChartId: undefined,
         address: {
           create: input.address,
         },
@@ -27,7 +28,9 @@ export class UserRepository implements Repository {
   async load(input: LoadUserRepository.Input): Promise<LoadUserRepository.Output> {
     const prisma = new PrismaClient();
     const user = await prisma.user.findUnique({ where: input });
-    return user;
+    if (!user) return null;
+    const { activeChartId, ...userData } = user;
+    return userData;
   }
 
   async loadMany({ emails }: LoadManyUsersRepository.Input): Promise<LoadManyUsersRepository.Output> {
@@ -35,7 +38,7 @@ export class UserRepository implements Repository {
     const users = await prisma.user.findMany({
       where: { email: { in: emails } },
     });
-    return users;
+    return users.map(({ activeChartId, ...user }) => user);
   }
 
   async updateActiveChart(

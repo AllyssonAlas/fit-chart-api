@@ -7,6 +7,7 @@ export class User {
   password: string;
   role: string;
   contact: string;
+  activeChartId?: string;
   address?: Address;
 
   constructor(data: User) {
@@ -15,6 +16,7 @@ export class User {
     this.email = data.email;
     this.password = data.password;
     this.role = data.role;
+    this.activeChartId = data.activeChartId;
     this.contact = data.contact;
     this.address = data.address;
   }
