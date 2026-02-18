@@ -21,3 +21,13 @@ export interface LoadUserExercisesChartsRepository {
     input: LoadUserExercisesChartsRepository.Input,
   ): Promise<LoadUserExercisesChartsRepository.Output>;
 }
+
+export namespace LoadExercisesChartByIdRepository {
+  export type Input = { id: string };
+
+  export type Output = ExercisesChart & { id: string };
+}
+
+export interface LoadExercisesChartByIdRepository {
+  loadById(input: LoadExercisesChartByIdRepository.Input): Promise<LoadExercisesChartByIdRepository.Output>;
+}
