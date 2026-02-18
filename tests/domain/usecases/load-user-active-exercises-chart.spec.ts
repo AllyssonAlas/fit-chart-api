@@ -1,6 +1,6 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
-import type { LoadUserByIdRepository } from '@/domain/contracts/repositories';
+import type { LoadExercisesChartByIdRepository, LoadUserByIdRepository } from '@/domain/contracts/repositories';
 import { type LoadUserActiveExercisesChart, setupLoadUserActiveExercisesChart } from '@/domain/usecases';
 import { userMock } from '@/tests/mocks/domain';
 
@@ -13,14 +13,16 @@ describe('LoadUserActiveExercisesChart', () => {
 
   let sut: MockProxy<LoadUserActiveExercisesChart>;
   let userRepository: MockProxy<LoadUserByIdRepository>;
+  let exercisesChartRepository: MockProxy<LoadExercisesChartByIdRepository>;
 
   beforeAll(() => {
     userRepository = mock();
     userRepository.loadById.mockResolvedValue(userMock());
+    exercisesChartRepository = mock();
   });
 
   beforeEach(() => {
-    sut = setupLoadUserActiveExercisesChart(userRepository);
+    sut = setupLoadUserActiveExercisesChart(userRepository, exercisesChartRepository);
   });
 
   it('Should call LoadUserByIdRepository with correct input', async () => {
@@ -44,5 +46,12 @@ describe('LoadUserActiveExercisesChart', () => {
     const result = await sut(input);
 
     expect(result).toBeNull();
+  });
+  6;
+  it('Should call LoadExercisesChartByIdRepository with correct input', async () => {
+    await sut(input);
+
+    expect(exercisesChartRepository.loadById).toHaveBeenCalledWith({ id: userMock().activeChartId });
+    expect(exercisesChartRepository.loadById).toHaveBeenCalledTimes(1);
   });
 });
