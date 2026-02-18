@@ -12,6 +12,18 @@ export interface LoadUserRepository {
   load(input: LoadUserRepository.Input): Promise<LoadUserRepository.Output>;
 }
 
+export namespace LoadUserByIdRepository {
+  export type Input = {
+    id: string;
+  };
+
+  export type Output = User;
+}
+
+export interface LoadUserByIdRepository {
+  loadById(input: LoadUserByIdRepository.Input): Promise<LoadUserByIdRepository.Output>;
+}
+
 export namespace CreateUserRepository {
   export type Input = User;
 
