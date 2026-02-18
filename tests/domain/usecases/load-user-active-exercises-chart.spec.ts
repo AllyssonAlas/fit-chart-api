@@ -27,4 +27,12 @@ describe('LoadUserActiveExercisesChart', () => {
     expect(userRepository.loadById).toHaveBeenCalledWith({ id: input.userId });
     expect(userRepository.loadById).toHaveBeenCalledTimes(1);
   });
+
+  it('Should rethrow if LoadUserByIdRepository throws', async () => {
+    userRepository.loadById.mockRejectedValueOnce(new Error('load_user_by_id_repository_error'));
+
+    const promise = sut(input);
+
+    await expect(promise).rejects.toThrow(new Error('load_user_by_id_repository_error'));
+  });
 });
