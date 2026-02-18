@@ -2,6 +2,7 @@ import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { LoadUserByIdRepository } from '@/domain/contracts/repositories';
 import { type LoadUserActiveExercisesChart, setupLoadUserActiveExercisesChart } from '@/domain/usecases';
+import { userMock } from '@/tests/mocks/domain';
 
 jest.mock('@/domain/entities/user');
 
@@ -15,6 +16,7 @@ describe('LoadUserActiveExercisesChart', () => {
 
   beforeAll(() => {
     userRepository = mock();
+    userRepository.loadById.mockResolvedValue(userMock());
   });
 
   beforeEach(() => {
@@ -34,5 +36,13 @@ describe('LoadUserActiveExercisesChart', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(new Error('load_user_by_id_repository_error'));
+  });
+
+  it('Should return null if LoadUserByIdRepository output activeChartId is undefined', async () => {
+    userRepository.loadById.mockResolvedValueOnce({ ...userMock(), activeChartId: undefined });
+
+    const result = await sut(input);
+
+    expect(result).toBeNull();
   });
 });
