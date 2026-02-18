@@ -2,6 +2,7 @@ import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { LoadExercisesChartByIdRepository, LoadUserByIdRepository } from '@/domain/contracts/repositories';
 import { type LoadUserActiveExercisesChart, setupLoadUserActiveExercisesChart } from '@/domain/usecases';
+
 import { userMock } from '@/tests/mocks/domain';
 
 jest.mock('@/domain/entities/user');
@@ -19,6 +20,20 @@ describe('LoadUserActiveExercisesChart', () => {
     userRepository = mock();
     userRepository.loadById.mockResolvedValue(userMock());
     exercisesChartRepository = mock();
+    exercisesChartRepository.loadById.mockResolvedValue({
+      id: 'any_exercises_chart_id',
+      userId: 'any_user_id',
+      goals: 'any_goal',
+      observation: 'any_observation',
+      divisions: [
+        { name: 'any_division_1', weekDays: [0, 1] },
+        { name: 'any_division_2', weekDays: [2, 3] },
+      ],
+      exercises: [
+        { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+        { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+      ],
+    });
   });
 
   beforeEach(() => {
@@ -47,7 +62,7 @@ describe('LoadUserActiveExercisesChart', () => {
 
     expect(result).toBeNull();
   });
-  6;
+
   it('Should call LoadExercisesChartByIdRepository with correct input', async () => {
     await sut(input);
 
@@ -61,5 +76,24 @@ describe('LoadUserActiveExercisesChart', () => {
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(new Error('load_exercises_chart_by_id_repository_error'));
+  });
+
+  it('Should return correct output on success', async () => {
+    const result = await sut(input);
+
+    expect(result).toEqual({
+      id: 'any_exercises_chart_id',
+      userId: 'any_user_id',
+      goals: 'any_goal',
+      observation: 'any_observation',
+      divisions: [
+        { name: 'any_division_1', weekDays: [0, 1] },
+        { name: 'any_division_2', weekDays: [2, 3] },
+      ],
+      exercises: [
+        { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+        { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+      ],
+    });
   });
 });
