@@ -8,6 +8,7 @@ describe('User', () => {
     password: 'any_password',
     role: 'any_role_name',
     contact: 'any_contact',
+    activeChartId: 'any_exercises_chart_id',
     address: {
       city: 'any_city',
       neighborhood: 'any_neighborhood',
@@ -30,6 +31,14 @@ describe('User', () => {
     const sut = new User(data);
 
     expect(sut).toEqual(data);
+  });
+
+  it('Should return an user with address complement', () => {
+    const { activeChartId, ...user } = userData;
+
+    const sut = new User(user);
+
+    expect(sut).toEqual(user);
   });
 
   it('Should return an user with address complement', () => {

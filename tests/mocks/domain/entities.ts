@@ -17,6 +17,7 @@ export const userMock = (input: Partial<User> = {}): User => ({
   name: 'any_user_name',
   email: 'any_email@mail.com',
   password: 'any_hashed_password',
+  activeChartId: 'any_exercises_chart_id',
   contact: 'any_contact',
   role: 'any_role',
   ...input,
