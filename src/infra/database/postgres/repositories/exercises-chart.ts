@@ -2,10 +2,13 @@ import { PrismaClient } from '@prisma/client';
 
 import type {
   CreateExercisesChartRepository,
+  LoadExercisesChartByIdRepository,
   LoadUserExercisesChartsRepository,
 } from '@/domain/contracts/repositories';
 
-export class ExercisesChartRepository implements CreateExercisesChartRepository, LoadUserExercisesChartsRepository {
+type Repository = CreateExercisesChartRepository & LoadExercisesChartByIdRepository & LoadUserExercisesChartsRepository;
+
+export class ExercisesChartRepository implements Repository {
   async createExercisesChart(
     input: CreateExercisesChartRepository.Input,
   ): Promise<CreateExercisesChartRepository.Output> {
@@ -30,15 +33,31 @@ export class ExercisesChartRepository implements CreateExercisesChartRepository,
     return createdChart;
   }
 
-  async loadExercisesCharts({
-    userId,
-  }: LoadUserExercisesChartsRepository.Input): Promise<LoadUserExercisesChartsRepository.Output> {
+  async loadById(input: LoadExercisesChartByIdRepository.Input): Promise<LoadExercisesChartByIdRepository.Output> {
+    const prisma = new PrismaClient();
+
+    const { observation, ...exercisesChart } = await prisma.exercisesChart.findUniqueOrThrow({
+      where: input,
+      include: { exercises: true, divisions: true },
+    });
+    const exercisesList = await prisma.exercise.findMany({
+      where: { id: { in: exercisesChart.exercises.map(({ exerciseId }) => exerciseId) } },
+    });
+    const exercisesFormatted = exercisesChart.exercises.map((exercise) => {
+      const exerciseIndex = exercisesList.findIndex(({ id }) => exercise.exerciseId === id);
+      const { reference, equipment, ...exerciseData } = exercisesList[exerciseIndex];
+      return { ...exercise, ...exerciseData };
+    });
+    return { ...exercisesChart, exercises: exercisesFormatted };
+  }
+
+  async loadExercisesCharts(
+    input: LoadUserExercisesChartsRepository.Input,
+  ): Promise<LoadUserExercisesChartsRepository.Output> {
     const prisma = new PrismaClient();
 
     const exercisesCharts = await prisma.exercisesChart.findMany({
-      where: {
-        userId,
-      },
+      where: input,
       include: { exercises: true, divisions: true },
     });
     return exercisesCharts.map((chart) => {
