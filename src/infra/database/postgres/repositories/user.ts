@@ -4,11 +4,13 @@ import type {
   CreateUserRepository,
   LoadManyUsersRepository,
   LoadUserByEmailRepository,
+  LoadUserByIdRepository,
   UpdateUserActiveExercisesChartRepository,
 } from '@/domain/contracts/repositories';
 
 type Repository = CreateUserRepository &
   LoadUserByEmailRepository &
+  LoadUserByIdRepository &
   LoadManyUsersRepository &
   UpdateUserActiveExercisesChartRepository;
 export class UserRepository implements Repository {
@@ -29,6 +31,13 @@ export class UserRepository implements Repository {
     const prisma = new PrismaClient();
     const user = await prisma.user.findUnique({ where: input });
     if (!user) return null;
+    const { activeChartId, ...userData } = user;
+    return userData;
+  }
+
+  async loadById(input: LoadUserByIdRepository.Input): Promise<LoadUserByIdRepository.Output> {
+    const prisma = new PrismaClient();
+    const user = await prisma.user.findUniqueOrThrow({ where: input });
     const { activeChartId, ...userData } = user;
     return userData;
   }
