@@ -13,6 +13,7 @@ type Repository = CreateUserRepository &
   LoadUserByIdRepository &
   LoadManyUsersRepository &
   UpdateUserActiveExercisesChartRepository;
+
 export class UserRepository implements Repository {
   async create(input: CreateUserRepository.Input): Promise<CreateUserRepository.Output> {
     const prisma = new PrismaClient();
@@ -39,6 +40,7 @@ export class UserRepository implements Repository {
     const prisma = new PrismaClient();
     const user = await prisma.user.findUniqueOrThrow({ where: input });
     const { activeChartId, ...userData } = user;
+    if (activeChartId) Object.assign(userData, { activeChartId });
     return userData;
   }
 
