@@ -72,8 +72,8 @@ describe('User Routes', () => {
       await createRole(prisma, 'client');
       await createUsers(prisma, [{ id: 'some_valid_id', role: 'client' }]);
       await createExercises(prisma, 'costa', [
-        { id: 'exercise_id_1', name: 'Supino Reto', equipment: 'barra', availableAt: [] },
-        { id: 'exercise_id_2', name: 'Supino Inclinado', equipment: '', availableAt: [] },
+        { id: 'exercise_id_1', name: 'Supino Reto', equipment: 'barra' },
+        { id: 'exercise_id_2', name: 'Supino Inclinado', equipment: '' },
       ]);
 
       const authorizationToken = authorizationTokenMock(Permissions.CREATE_EXERCISES_CHART, 'some_valid_id');
@@ -116,8 +116,8 @@ describe('User Routes', () => {
       const authorizationToken = authorizationTokenMock(Permissions.LIST_USER_EXERCISES_CHARTS, 'some_valid_id');
 
       await createExercises(prisma, 'Peito', [
-        { id: 'any_exercise_id_1', name: 'Supino reto', equipment: 'barra', availableAt: [] },
-        { id: 'any_exercise_id_2', name: 'Supino inclinado', availableAt: [] },
+        { id: 'any_exercise_id_1', name: 'Supino reto', equipment: 'barra' },
+        { id: 'any_exercise_id_2', name: 'Supino inclinado' },
       ]);
 
       await createExercisesChart(prisma, [

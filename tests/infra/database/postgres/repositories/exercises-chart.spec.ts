@@ -25,9 +25,9 @@ describe('ExercisesChartRepository', () => {
       await createRole(prisma, 'any_role_name');
       await createUsers(prisma, [{ id: 'any_user_id', role: 'any_role_name' }]);
       await createExercises(prisma, 'any_category', [
-        { id: 'any_exercise_id_1', name: 'any_exercise_name_1', equipment: 'any_equipment', availableAt: [] },
-        { id: 'any_exercise_id_2', name: 'any_exercise_name_2', availableAt: [] },
-        { id: 'any_exercise_id_3', name: 'any_exercise_name_3', availableAt: [] },
+        { id: 'any_exercise_id_1', name: 'any_exercise_name_1', equipment: 'any_equipment' },
+        { id: 'any_exercise_id_2', name: 'any_exercise_name_2' },
+        { id: 'any_exercise_id_3', name: 'any_exercise_name_3' },
       ]);
 
       const createdChart = await sut.createExercisesChart({
@@ -75,8 +75,8 @@ describe('ExercisesChartRepository', () => {
       await createRole(prisma, 'any_role_name');
       await createUsers(prisma, [{ id: 'any_user_id', email: 'any_email_1@mail.com', role: 'any_role_name' }]);
       await createExercises(prisma, 'any_category', [
-        { id: 'any_exercise_id_1', name: 'any_exercise_name_1', availableAt: [] },
-        { id: 'any_exercise_id_2', name: 'any_exercise_name_2', availableAt: [] },
+        { id: 'any_exercise_id_1', name: 'any_exercise_name_1' },
+        { id: 'any_exercise_id_2', name: 'any_exercise_name_2' },
       ]);
       await createExercisesChart(prisma, [
         {
@@ -136,7 +136,6 @@ describe('ExercisesChartRepository', () => {
           name: 'any_exercise_name_1',
           equipment: 'any_equipment',
           reference: 'any_reference',
-          availableAt: [],
         },
       ]);
       await createExercisesChart(prisma, [
@@ -190,9 +189,9 @@ describe('ExercisesChartRepository', () => {
         { id: 'any_user_id_2', email: 'any_email_2@mail.com', role: 'any_role_name' },
       ]);
       await createExercises(prisma, 'any_category', [
-        { id: 'any_exercise_id_1', name: 'any_exercise_name_1', equipment: 'any_equipment', availableAt: [] },
-        { id: 'any_exercise_id_2', name: 'any_exercise_name_2', availableAt: [] },
-        { id: 'any_exercise_id_3', name: 'any_exercise_name_3', availableAt: [] },
+        { id: 'any_exercise_id_1', name: 'any_exercise_name_1', equipment: 'any_equipment' },
+        { id: 'any_exercise_id_2', name: 'any_exercise_name_2' },
+        { id: 'any_exercise_id_3', name: 'any_exercise_name_3' },
       ]);
 
       await createExercisesChart(prisma, [

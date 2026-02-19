@@ -28,7 +28,7 @@ export const createGym = async (prisma: PrismaClient, gym: Partial<Gym>): Promis
 export const createExercises = async (
   prisma: PrismaClient,
   categoryName: string,
-  exercises: Array<Partial<Exercise> & { availableAt: string[] }>,
+  exercises: Array<Partial<Exercise> & { availableAt?: string[] }>,
 ): Promise<void> => {
   await prisma.exerciseCategory.create({
     data: { name: categoryName },
@@ -40,7 +40,7 @@ export const createExercises = async (
         name: 'any_exercise',
         category: categoryName,
         ...exercise,
-        availableAt: { connect: exercise.availableAt.map((id) => ({ id })) },
+        availableAt: { connect: exercise.availableAt?.map((id) => ({ id })) || [] },
       },
     });
   }
