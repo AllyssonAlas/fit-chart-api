@@ -2,9 +2,9 @@ import type {
   CreateExercisesChartRepository,
   UpdateUserActiveExercisesChartRepository,
 } from '@/domain/contracts/repositories';
-import type { ExercisesChart } from '@/domain/entities/generic-types/exercises-chart';
+import type { RawExercisesChart } from '@/domain/entities/generic-types/exercises-chart';
 
-type Input = ExercisesChart;
+type Input = RawExercisesChart;
 type Output = void;
 export type CreateExercisesChart = (input: Input) => Promise<Output>;
 type Setup = (

@@ -2,7 +2,7 @@ import type { LoadExercisesChartByIdRepository, LoadUserByIdRepository } from '@
 import type { ExercisesChart } from '@/domain/entities/generic-types';
 
 type Input = { userId: string };
-type Output = (ExercisesChart & { id: string }) | null;
+type Output = ExercisesChart | null;
 export type LoadUserActiveExercisesChart = (input: Input) => Promise<Output>;
 type Setup = (
   userRepository: LoadUserByIdRepository,

@@ -1,10 +1,10 @@
 import { Controller } from '@/application/controllers';
 import { type HttpResponse, noContent } from '@/application/helpers';
 import { ValidationBuilder as Builder, type Validator } from '@/application/validation';
-import type { ExercisesChart } from '@/domain/entities/generic-types';
+import type { RawExercisesChart } from '@/domain/entities/generic-types';
 import type { CreateExercisesChart } from '@/domain/usecases';
 
-type Request = ExercisesChart;
+type Request = RawExercisesChart;
 
 type Model = null | Error;
 

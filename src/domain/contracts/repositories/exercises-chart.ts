@@ -1,7 +1,7 @@
-import type { ExercisesChart } from '@/domain/entities/generic-types';
+import type { ExercisesChart, RawExercisesChart } from '@/domain/entities/generic-types';
 
 export namespace CreateExercisesChartRepository {
-  export type Input = ExercisesChart;
+  export type Input = RawExercisesChart;
 
   export type Output = { id: string };
 }
@@ -13,7 +13,7 @@ export interface CreateExercisesChartRepository {
 export namespace LoadUserExercisesChartsRepository {
   export type Input = { userId: string };
 
-  export type Output = Array<ExercisesChart & { id: string }>;
+  export type Output = Array<RawExercisesChart & { id: string }>;
 }
 
 export interface LoadUserExercisesChartsRepository {
@@ -25,7 +25,7 @@ export interface LoadUserExercisesChartsRepository {
 export namespace LoadExercisesChartByIdRepository {
   export type Input = { id: string };
 
-  export type Output = ExercisesChart & { id: string };
+  export type Output = ExercisesChart;
 }
 
 export interface LoadExercisesChartByIdRepository {

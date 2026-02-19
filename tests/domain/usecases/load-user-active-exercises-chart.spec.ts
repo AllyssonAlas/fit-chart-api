@@ -30,8 +30,26 @@ describe('LoadUserActiveExercisesChart', () => {
         { name: 'any_division_2', weekDays: [2, 3] },
       ],
       exercises: [
-        { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
-        { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+        {
+          exerciseId: 'any_exercise_id_1',
+          name: 'any_exercise_name_1',
+          category: 'any_category_1',
+          equipment: 'any_exercise_equipment',
+          reference: 'any_exercise_reference',
+          series: 4,
+          repts: 12,
+          weight: 20,
+          division: 'any_division_1',
+        },
+        {
+          exerciseId: 'any_exercise_id_2',
+          name: 'any_exercise_name_2',
+          category: 'any_category_2',
+          series: 3,
+          repts: 10,
+          weight: 30,
+          division: 'any_division_2',
+        },
       ],
     });
   });
@@ -91,8 +109,26 @@ describe('LoadUserActiveExercisesChart', () => {
         { name: 'any_division_2', weekDays: [2, 3] },
       ],
       exercises: [
-        { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
-        { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+        {
+          exerciseId: 'any_exercise_id_1',
+          name: 'any_exercise_name_1',
+          category: 'any_category_1',
+          equipment: 'any_exercise_equipment',
+          reference: 'any_exercise_reference',
+          series: 4,
+          repts: 12,
+          weight: 20,
+          division: 'any_division_1',
+        },
+        {
+          exerciseId: 'any_exercise_id_2',
+          name: 'any_exercise_name_2',
+          category: 'any_category_2',
+          series: 3,
+          repts: 10,
+          weight: 30,
+          division: 'any_division_2',
+        },
       ],
     });
   });

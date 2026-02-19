@@ -1,4 +1,4 @@
-import type { ExercisesChart } from '@/domain/entities/generic-types';
+import type { RawExercisesChart } from '@/domain/entities/generic-types';
 import type { Exercise, Gym, PrismaClient, User } from '@prisma/client';
 
 export const createUsers = async (prisma: PrismaClient, users: Partial<User>[]): Promise<void> => {
@@ -57,7 +57,7 @@ export const createRole = async (prisma: PrismaClient, name = 'admin'): Promise<
 
 export const createExercisesChart = async (
   prisma: PrismaClient,
-  charts: Partial<ExercisesChart & { id: string }>[],
+  charts: Partial<RawExercisesChart & { id: string }>[],
 ): Promise<void> => {
   for (const { divisions, exercises, ...chart } of charts) {
     await prisma.exercisesChart.create({
