@@ -46,8 +46,11 @@ export class ExercisesChartRepository implements Repository {
     const exercisesFormatted = exercisesChart.exercises.map((exercise) => {
       const exerciseIndex = exercisesList.findIndex(({ id }) => exercise.exerciseId === id);
       const { reference, equipment, ...exerciseData } = exercisesList[exerciseIndex];
+      if (reference) Object.assign(exerciseData, { reference });
+      if (equipment) Object.assign(exerciseData, { equipment });
       return { ...exercise, ...exerciseData };
     });
+    if (observation) Object.assign(exercisesChart, { observation });
     return { ...exercisesChart, exercises: exercisesFormatted };
   }
 
