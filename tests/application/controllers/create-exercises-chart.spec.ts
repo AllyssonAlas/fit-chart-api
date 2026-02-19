@@ -1,5 +1,3 @@
-import { type MockProxy, mock } from 'jest-mock-extended';
-
 import { Controller, CreateExercisesChartController } from '@/application/controllers';
 import { ServerError } from '@/application/errors';
 import {
