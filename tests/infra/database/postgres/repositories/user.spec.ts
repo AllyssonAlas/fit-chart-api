@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { UserRepository } from '@/infra/database/postgres/repositories';
 
-import { clearUserTable, createExercisesChart, createRole, createUsers } from '@/tests/helpers';
+import { clearUserTable, createExercises, createExercisesChart, createRole, createUsers } from '@/tests/helpers';
 
 describe('UserRepository', () => {
   let prisma: PrismaClient;
@@ -110,6 +110,45 @@ describe('UserRepository', () => {
       expect(user.email).toBe('any_email@mail.com');
       expect(user.password).toBe('any_password');
       expect(user.activeChartId).toBeUndefined();
+      expect(user.role).toBe('any_role_name');
+      expect(user.contact).toBe('any_contact');
+      expect(user.address).toBeUndefined();
+    });
+
+    it('Should return an User', async () => {
+      await createRole(prisma, 'any_role_name');
+      await prisma.user.create({
+        data: {
+          id: 'any_user_id',
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          role: 'any_role_name',
+          contact: 'any_contact',
+        },
+      });
+      await createExercisesChart(prisma, [
+        {
+          id: 'any_exercise_chart_id',
+          userId: 'any_user_id',
+          goals: 'any_goal_1',
+          observation: 'any_observation',
+          divisions: [],
+          exercises: [],
+        },
+      ]);
+      await prisma.user.update({
+        where: { id: 'any_user_id' },
+        data: { activeChartId: 'any_exercise_chart_id' },
+      });
+
+      const user = await sut.loadById({ id: 'any_user_id' });
+
+      expect(user.id).toBe('any_user_id');
+      expect(user.name).toBe('any_name');
+      expect(user.email).toBe('any_email@mail.com');
+      expect(user.password).toBe('any_password');
+      expect(user.activeChartId).toBe('any_exercise_chart_id');
       expect(user.role).toBe('any_role_name');
       expect(user.contact).toBe('any_contact');
       expect(user.address).toBeUndefined();
