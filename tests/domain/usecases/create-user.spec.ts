@@ -1,7 +1,11 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { HashGenerator } from '@/domain/contracts/gateways';
-import type { CreateUserRepository, LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
+import type {
+  CreateUserRepository,
+  LoadRoleRepository,
+  LoadUserByEmailRepository,
+} from '@/domain/contracts/repositories';
 import { User } from '@/domain/entities';
 import { EmailAlreadyExistsError, NonexistentRoleError } from '@/domain/errors';
 import { type CreateUser, setupCreateUser } from '@/domain/usecases';
@@ -18,7 +22,7 @@ describe('CreateUser', () => {
   };
 
   let sut: MockProxy<CreateUser>;
-  let userRepository: MockProxy<LoadUserRepository & CreateUserRepository>;
+  let userRepository: MockProxy<LoadUserByEmailRepository & CreateUserRepository>;
   let roleRepository: MockProxy<LoadRoleRepository>;
   let hashGenerator: MockProxy<HashGenerator>;
 
@@ -26,7 +30,7 @@ describe('CreateUser', () => {
     hashGenerator = mock();
     roleRepository = mock();
     userRepository = mock();
-    userRepository.load.mockResolvedValue(null);
+    userRepository.loadByEmail.mockResolvedValue(null);
     roleRepository.load.mockResolvedValue({
       id: 'any_role_id',
       name: 'any_role',
@@ -39,23 +43,23 @@ describe('CreateUser', () => {
     sut = setupCreateUser(userRepository, roleRepository, hashGenerator);
   });
 
-  it('Should call LoadUserRepository with correct input', async () => {
+  it('Should call LoadUserByEmailRepository with correct input', async () => {
     await sut(input);
 
-    expect(userRepository.load).toHaveBeenCalledWith({ email: input.email });
-    expect(userRepository.load).toHaveBeenCalledTimes(1);
+    expect(userRepository.loadByEmail).toHaveBeenCalledWith({ email: input.email });
+    expect(userRepository.loadByEmail).toHaveBeenCalledTimes(1);
   });
 
-  it('Should throw an EmailAlreadyExistsError if LoadUserRepository returns an user', async () => {
-    userRepository.load.mockResolvedValueOnce({ ...input, id: 'any_id' });
+  it('Should throw an EmailAlreadyExistsError if LoadUserByEmailRepository returns an user', async () => {
+    userRepository.loadByEmail.mockResolvedValueOnce({ ...input, id: 'any_id' });
 
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(new EmailAlreadyExistsError());
   });
 
-  it('Should rethrow if LoadUserRepository throws', async () => {
-    userRepository.load.mockRejectedValueOnce(new Error('load_user_repository_error'));
+  it('Should rethrow if LoadUserByEmailRepository throws', async () => {
+    userRepository.loadByEmail.mockRejectedValueOnce(new Error('load_user_repository_error'));
 
     const promise = sut(input);
 
@@ -69,7 +73,7 @@ describe('CreateUser', () => {
     expect(roleRepository.load).toHaveBeenCalledTimes(1);
   });
 
-  it('Should throw an NonexistentRoleError if LoadUserRepository returns null', async () => {
+  it('Should throw an NonexistentRoleError if LoadUserByEmailRepository returns null', async () => {
     roleRepository.load.mockResolvedValueOnce(null);
 
     const promise = sut(input);

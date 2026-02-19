@@ -3,12 +3,12 @@ import { PrismaClient } from '@prisma/client';
 import type {
   CreateUserRepository,
   LoadManyUsersRepository,
-  LoadUserRepository,
+  LoadUserByEmailRepository,
   UpdateUserActiveExercisesChartRepository,
 } from '@/domain/contracts/repositories';
 
 type Repository = CreateUserRepository &
-  LoadUserRepository &
+  LoadUserByEmailRepository &
   LoadManyUsersRepository &
   UpdateUserActiveExercisesChartRepository;
 export class UserRepository implements Repository {
@@ -25,7 +25,7 @@ export class UserRepository implements Repository {
     });
   }
 
-  async load(input: LoadUserRepository.Input): Promise<LoadUserRepository.Output> {
+  async loadByEmail(input: LoadUserByEmailRepository.Input): Promise<LoadUserByEmailRepository.Output> {
     const prisma = new PrismaClient();
     const user = await prisma.user.findUnique({ where: input });
     if (!user) return null;

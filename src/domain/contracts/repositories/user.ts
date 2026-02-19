@@ -1,6 +1,6 @@
 import type { User } from '@/domain/entities';
 
-export namespace LoadUserRepository {
+export namespace LoadUserByEmailRepository {
   export type Input = {
     email: string;
   };
@@ -8,8 +8,8 @@ export namespace LoadUserRepository {
   export type Output = User | null;
 }
 
-export interface LoadUserRepository {
-  load(input: LoadUserRepository.Input): Promise<LoadUserRepository.Output>;
+export interface LoadUserByEmailRepository {
+  loadByEmail(input: LoadUserByEmailRepository.Input): Promise<LoadUserByEmailRepository.Output>;
 }
 
 export namespace LoadUserByIdRepository {

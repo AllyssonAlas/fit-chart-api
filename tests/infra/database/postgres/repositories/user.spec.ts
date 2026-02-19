@@ -58,9 +58,9 @@ describe('UserRepository', () => {
     });
   });
 
-  describe('load', () => {
+  describe('loadByEmail', () => {
     it('Should return null if email does not exist', async () => {
-      const user = await sut.load({ email: 'any_email@mail.com' });
+      const user = await sut.loadByEmail({ email: 'any_email@mail.com' });
 
       expect(user).toBeNull();
     });
@@ -77,7 +77,7 @@ describe('UserRepository', () => {
         },
       });
 
-      const user = await sut.load({ email: 'any_email@mail.com' });
+      const user = await sut.loadByEmail({ email: 'any_email@mail.com' });
 
       expect(user?.id).toBeTruthy();
       expect(user?.name).toBe('any_name');

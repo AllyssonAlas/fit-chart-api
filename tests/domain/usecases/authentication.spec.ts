@@ -1,7 +1,7 @@
 import { type MockProxy, mock } from 'jest-mock-extended';
 
 import type { HashComparer, JwtTokenGenerator } from '@/domain/contracts/gateways';
-import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
+import type { LoadRoleRepository, LoadUserByEmailRepository } from '@/domain/contracts/repositories';
 import { AuthToken } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 import { type Authentication, setupAuthentication } from '@/domain/usecases';
@@ -17,14 +17,14 @@ describe('Authentication', () => {
   };
 
   let sut: MockProxy<Authentication>;
-  let userRepository: MockProxy<LoadUserRepository>;
+  let userRepository: MockProxy<LoadUserByEmailRepository>;
   let hasher: MockProxy<HashComparer>;
   let roleRepository: MockProxy<LoadRoleRepository>;
   let authToken: MockProxy<JwtTokenGenerator>;
 
   beforeAll(() => {
     userRepository = mock();
-    userRepository.load.mockResolvedValue(userMock());
+    userRepository.loadByEmail.mockResolvedValue(userMock());
     hasher = mock();
     hasher.compare.mockResolvedValue({ isValid: true });
     roleRepository = mock();
@@ -41,24 +41,24 @@ describe('Authentication', () => {
     sut = setupAuthentication(userRepository, hasher, roleRepository, authToken);
   });
 
-  it('Should call LoadUserRepository with correct input', async () => {
+  it('Should call LoadUserByEmailRepository with correct input', async () => {
     await sut(input);
 
-    expect(userRepository.load).toHaveBeenCalledWith({ email: 'any_email@mail.com' });
-    expect(userRepository.load).toHaveBeenCalledTimes(1);
+    expect(userRepository.loadByEmail).toHaveBeenCalledWith({ email: 'any_email@mail.com' });
+    expect(userRepository.loadByEmail).toHaveBeenCalledTimes(1);
   });
 
-  it('Should rethrow if LoadUserRepository throws', async () => {
+  it('Should rethrow if LoadUserByEmailRepository throws', async () => {
     const error = new Error('load_user_repository_error');
-    userRepository.load.mockRejectedValueOnce(error);
+    userRepository.loadByEmail.mockRejectedValueOnce(error);
 
     const promise = sut(input);
 
     await expect(promise).rejects.toThrow(error);
   });
 
-  it('Should throw InvalidCredentialsError if LoadUserRepository returns null', async () => {
-    userRepository.load.mockResolvedValueOnce(null);
+  it('Should throw InvalidCredentialsError if LoadUserByEmailRepository returns null', async () => {
+    userRepository.loadByEmail.mockResolvedValueOnce(null);
 
     const promise = sut(input);
 
@@ -74,7 +74,7 @@ describe('Authentication', () => {
 
   it('Should rethrow if HasherComparer throws', async () => {
     const error = new Error('hasher_comparer_error');
-    userRepository.load.mockRejectedValueOnce(error);
+    userRepository.loadByEmail.mockRejectedValueOnce(error);
 
     const promise = sut(input);
 
@@ -96,7 +96,7 @@ describe('Authentication', () => {
     expect(roleRepository.load).toHaveBeenCalledTimes(1);
   });
 
-  it('Should rethrow if LoadUserRepository throws', async () => {
+  it('Should rethrow if LoadUserByEmailRepository throws', async () => {
     const error = new Error('load_role_repository_error');
     roleRepository.load.mockRejectedValueOnce(error);
 
@@ -105,7 +105,7 @@ describe('Authentication', () => {
     await expect(promise).rejects.toThrow(error);
   });
 
-  it('Should throw an NonexistentRoleError if LoadUserRepository returns null', async () => {
+  it('Should throw an NonexistentRoleError if LoadUserByEmailRepository returns null', async () => {
     roleRepository.load.mockResolvedValueOnce(null);
 
     const promise = sut(input);

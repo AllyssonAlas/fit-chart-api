@@ -1,5 +1,5 @@
 import type { HashComparer, JwtTokenGenerator } from '@/domain/contracts/gateways';
-import type { LoadRoleRepository, LoadUserRepository } from '@/domain/contracts/repositories';
+import type { LoadRoleRepository, LoadUserByEmailRepository } from '@/domain/contracts/repositories';
 import { AuthToken, type AuthedUser, type User } from '@/domain/entities';
 import { InvalidCredentialsError, NonexistentRoleError } from '@/domain/errors';
 
@@ -7,7 +7,7 @@ type Input = Pick<User, 'email' | 'password'>;
 type Output = AuthedUser;
 export type Authentication = (input: Input) => Promise<Output>;
 type Setup = (
-  userRepository: LoadUserRepository,
+  userRepository: LoadUserByEmailRepository,
   hasher: HashComparer,
   roleRepository: LoadRoleRepository,
   authToken: JwtTokenGenerator,
@@ -15,7 +15,7 @@ type Setup = (
 
 export const setupAuthentication: Setup = (userRepository, hasher, roleRepository, authToken) => {
   return async ({ email, password }) => {
-    const user = await userRepository.load({ email });
+    const user = await userRepository.loadByEmail({ email });
     if (!user?.id) throw new InvalidCredentialsError();
     const { isValid } = await hasher.compare({ plainText: password, digest: user.password });
     if (!isValid) throw new InvalidCredentialsError();
