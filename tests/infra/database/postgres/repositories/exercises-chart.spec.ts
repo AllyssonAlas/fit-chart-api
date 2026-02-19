@@ -70,6 +70,65 @@ describe('ExercisesChartRepository', () => {
     });
   });
 
+  describe('loadById', () => {
+    it('Should return an exercise chart without optional fields', async () => {
+      await createRole(prisma, 'any_role_name');
+      await createUsers(prisma, [{ id: 'any_user_id', email: 'any_email_1@mail.com', role: 'any_role_name' }]);
+      await createExercises(prisma, 'any_category', [
+        { id: 'any_exercise_id_1', name: 'any_exercise_name_1', equipment: 'any_equipment', availableAt: [] },
+        { id: 'any_exercise_id_2', name: 'any_exercise_name_2', availableAt: [] },
+      ]);
+      await createExercisesChart(prisma, [
+        {
+          id: 'any_exercise_chart_id',
+          userId: 'any_user_id',
+          goals: 'any_goal',
+          observation: 'any_observation',
+          divisions: [
+            { name: 'any_division_1', weekDays: [0, 1] },
+            { name: 'any_division_2', weekDays: [2, 3] },
+          ],
+          exercises: [
+            { exerciseId: 'any_exercise_id_1', series: 4, repts: 12, weight: 20, division: 'any_division_1' },
+            { exerciseId: 'any_exercise_id_2', series: 3, repts: 10, weight: 30, division: 'any_division_2' },
+          ],
+        },
+      ]);
+
+      await prisma.user.update({
+        where: { id: 'any_user_id' },
+        data: { activeChartId: 'any_exercise_chart_id' },
+      });
+
+      const exercisesChart = await sut.loadById({ id: 'any_exercise_chart_id' });
+
+      expect(exercisesChart.id).toBe('any_exercise_chart_id');
+      expect(exercisesChart.goals).toBe('any_goal');
+      expect(exercisesChart.userId).toBe('any_user_id');
+      expect(exercisesChart.observation).toBeUndefined();
+      expect(exercisesChart.divisions[0].name).toBe('any_division_1');
+      expect(exercisesChart.divisions[0].weekDays).toEqual([0, 1]);
+      expect(exercisesChart.divisions[1].name).toBe('any_division_2');
+      expect(exercisesChart.divisions[1].weekDays).toEqual([2, 3]);
+      expect(exercisesChart.exercises[0].exerciseId).toBe('any_exercise_id_1');
+      expect(exercisesChart.exercises[0].name).toBe('any_exercise_name_1');
+      expect(exercisesChart.exercises[0].equipment).toBeUndefined();
+      expect(exercisesChart.exercises[0].reference).toBeUndefined();
+      expect(exercisesChart.exercises[0].series).toBe(4);
+      expect(exercisesChart.exercises[0].repts).toBe(12);
+      expect(exercisesChart.exercises[0].weight).toBe(20);
+      expect(exercisesChart.exercises[0].division).toBe('any_division_1');
+      expect(exercisesChart.exercises[1].exerciseId).toBe('any_exercise_id_2');
+      expect(exercisesChart.exercises[1].name).toBe('any_exercise_name_2');
+      expect(exercisesChart.exercises[1].equipment).toBeUndefined();
+      expect(exercisesChart.exercises[1].reference).toBeUndefined();
+      expect(exercisesChart.exercises[1].series).toBe(3);
+      expect(exercisesChart.exercises[1].repts).toBe(10);
+      expect(exercisesChart.exercises[1].weight).toBe(30);
+      expect(exercisesChart.exercises[1].division).toBe('any_division_2');
+    });
+  });
+
   describe('loadExercisesCharts', () => {
     it('Should return an empty array if user does not have exercises chart', async () => {
       const exercisesCharts = await sut.loadExercisesCharts({ userId: 'any_user_id' });
