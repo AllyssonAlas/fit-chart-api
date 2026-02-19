@@ -89,6 +89,33 @@ describe('UserRepository', () => {
     });
   });
 
+  describe('loadById', () => {
+    it('Should return an User with activeChartId undefined', async () => {
+      await createRole(prisma, 'any_role_name');
+      await prisma.user.create({
+        data: {
+          id: 'any_user_id',
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          role: 'any_role_name',
+          contact: 'any_contact',
+        },
+      });
+
+      const user = await sut.loadById({ id: 'any_user_id' });
+
+      expect(user.id).toBe('any_user_id');
+      expect(user.name).toBe('any_name');
+      expect(user.email).toBe('any_email@mail.com');
+      expect(user.password).toBe('any_password');
+      expect(user.activeChartId).toBeUndefined();
+      expect(user.role).toBe('any_role_name');
+      expect(user.contact).toBe('any_contact');
+      expect(user.address).toBeUndefined();
+    });
+  });
+
   describe('loadMany', () => {
     it('Should return an empty list if all emails do not exist', async () => {
       const users = await sut.loadMany({ emails: ['any_email_1@mail.com', 'any_email_2@mail.com'] });
