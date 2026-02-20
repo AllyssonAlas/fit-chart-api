@@ -39,4 +39,15 @@ describe('LoadUserActiveExercisesChartController', () => {
       statusCode: 500,
     });
   });
+
+  it('Should return 204 if LoadGymExercisesRepository returns null', async () => {
+    loadUserActiveExercisesChart.mockResolvedValueOnce(null);
+
+    const response = await sut.handle(request);
+
+    expect(response).toEqual({
+      data: null,
+      statusCode: 204,
+    });
+  });
 });
