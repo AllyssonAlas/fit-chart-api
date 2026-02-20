@@ -6,11 +6,12 @@ import {
   makeAuthenticationController,
   makeCreateExercisesChartController,
   makeListUserExercisesChartsController,
+  makeLoadUserActiveExercisesChartController,
 } from '@/main/factories/application/controllers';
 import { makeAuthorizationMiddleware } from '@/main/factories/application/middlewares';
 import { makeForbidRoleCreationDecorator } from '@/main/factories/main/decorators';
 
-const { CREATE_EXERCISES_CHART, LIST_USER_EXERCISES_CHARTS } = Permissions;
+const { CREATE_EXERCISES_CHART, LIST_USER_EXERCISES_CHARTS, LOAD_USER_ACTIVE_EXERCISES_CHART } = Permissions;
 
 export default (router: Router): void => {
   router.post('/user', adaptExpressRoute(makeForbidRoleCreationDecorator([Roles.ADMIN])));
@@ -24,5 +25,10 @@ export default (router: Router): void => {
     '/user/:userId/exercisesChart',
     adaptExpressMiddleware(makeAuthorizationMiddleware(LIST_USER_EXERCISES_CHARTS)),
     adaptExpressRoute(makeListUserExercisesChartsController()),
+  );
+  router.get(
+    '/user/:userId/exercisesChart/active',
+    adaptExpressMiddleware(makeAuthorizationMiddleware(LOAD_USER_ACTIVE_EXERCISES_CHART)),
+    adaptExpressRoute(makeLoadUserActiveExercisesChartController()),
   );
 };
