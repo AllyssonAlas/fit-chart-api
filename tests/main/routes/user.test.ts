@@ -96,7 +96,7 @@ describe('User Routes', () => {
     });
   });
 
-  describe('POST /user/:userId/exercisesChart', () => {
+  describe('GET /user/:userId/exercisesChart', () => {
     it('Should return 204 if user does not have exercises charts', async () => {
       await createRole(prisma, 'user');
       await createUsers(prisma, [{ id: 'some_valid_id', role: 'user' }]);
@@ -140,6 +140,20 @@ describe('User Routes', () => {
         .get('/api/user/some_valid_id/exercisesChart')
         .set('authorization', authorizationToken)
         .expect(200);
+    });
+  });
+
+  describe('GET /user/:userId/exercisesChart/active', () => {
+    it('Should return 204 if user does not have active exercises chart', async () => {
+      await createRole(prisma, 'user');
+      await createUsers(prisma, [{ id: 'some_valid_id', role: 'user' }]);
+
+      const authorizationToken = authorizationTokenMock(Permissions.LOAD_USER_ACTIVE_EXERCISES_CHART, 'some_valid_id');
+
+      await request(app)
+        .get('/api/user/some_valid_id/exercisesChart/active')
+        .set('authorization', authorizationToken)
+        .expect(204);
     });
   });
 });
