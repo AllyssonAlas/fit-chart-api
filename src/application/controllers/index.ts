@@ -6,3 +6,4 @@ export * from './create-exercises-chart';
 export * from './create-user';
 export * from './list-gym-exercises';
 export * from './list-user-exercises-chart';
+export * from './load-user-active-exercises-chart';
