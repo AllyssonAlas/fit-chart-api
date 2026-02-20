@@ -155,5 +155,23 @@ describe('User Routes', () => {
         .set('authorization', authorizationToken)
         .expect(204);
     });
+
+    it('Should return 200 on success', async () => {
+      await createRole(prisma, 'user');
+      await createUsers(prisma, [{ id: 'some_valid_id', role: 'user' }]);
+
+      await createExercisesChart(prisma, [
+        { id: 'any_exercise_chart_id', userId: 'some_valid_id', divisions: [], exercises: [] },
+      ]);
+
+      await prisma.user.update({ where: { id: 'some_valid_id' }, data: { activeChartId: 'any_exercise_chart_id' } });
+
+      const authorizationToken = authorizationTokenMock(Permissions.LOAD_USER_ACTIVE_EXERCISES_CHART, 'some_valid_id');
+
+      await request(app)
+        .get('/api/user/some_valid_id/exercisesChart/active')
+        .set('authorization', authorizationToken)
+        .expect(200);
+    });
   });
 });
